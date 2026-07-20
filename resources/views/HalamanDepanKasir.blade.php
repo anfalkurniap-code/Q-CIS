@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Q-CIS E-Commerce</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons for clean UI elements -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -17,10 +15,8 @@
 </head>
 <body class="bg-gray-100 flex justify-center">
 
-  <!-- Mobile Container Wrapper -->
   <div class="w-full max-w-md bg-[#F8F9FD] min-h-screen shadow-lg flex flex-col justify-between relative pb-20">
     
-    <!-- HEADER -->
     <header class="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-100 sticky top-0 z-50">
       <div class="text-[#107C41] font-bold text-xl tracking-wide">Q-CIS</div>
       <div class="flex items-center gap-4 text-gray-700">
@@ -33,14 +29,11 @@
       </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 px-4 py-4 space-y-6">
       
-      <!-- SPECIAL OFFERS SECTION -->
       <section class="space-y-3">
         <h2 class="text-[#2D3748] font-semibold text-base">Special Offers</h2>
         
-        <!-- Banner 1: Sandwich -->
         <div class="relative rounded-2xl overflow-hidden h-36 bg-gradient-to-r from-amber-700 to-amber-900 shadow-sm flex items-end">
           <div class="absolute inset-0 bg-black/30 z-0"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end z-10">
@@ -50,7 +43,6 @@
           </div>
         </div>
 
-        <!-- Banner 2: Buku Tulis -->
         <div class="relative rounded-2xl overflow-hidden h-36 bg-gradient-to-r from-slate-600 to-slate-800 shadow-sm flex items-end">
           <div class="absolute inset-0 bg-black/30 z-0"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end z-10">
@@ -60,7 +52,6 @@
           </div>
         </div>
 
-        <!-- Banner 3: Minuman Dingin -->
         <div class="relative rounded-2xl overflow-hidden h-36 bg-gradient-to-r from-cyan-800 to-blue-900 shadow-sm flex items-end">
           <div class="absolute inset-0 bg-black/30 z-0"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end z-10">
@@ -71,21 +62,17 @@
         </div>
       </section>
 
-      <!-- FEATURED PRODUCTS SECTION -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-[#2D3748] font-semibold text-base">Featured Products</h2>
-          <a href="#" class="text-[#107C41] text-xs font-semibold hover:underline">See All</a>
+          <a href="{{ url('/HalamanShop') }}" class="text-[#107C41] text-xs font-semibold hover:underline">See All</a>
         </div>
         
-        <!-- Product Grid (2 Columns) -->
         <div class="grid grid-cols-2 gap-3">
           
-          <!-- Product 1: Air Mineral -->
           <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative">
             <span class="absolute top-2 right-2 bg-[#006A33] text-white text-[9px] font-medium px-2 py-0.5 rounded-full z-10">Bestseller</span>
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <!-- SVG Air Mineral -->
               <svg class="w-12 h-24" viewBox="0 0 50 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="15" y="10" width="20" height="8" rx="2" fill="#2563EB"/>
                 <path d="M10 30C10 23.3726 15.3726 18 22 18H28C34.6274 18 40 23.3726 40 30V90C40 92.2091 38.2091 94 36 94H14C11.7909 94 10 92.2091 10 90V30Z" fill="#93C5FD" fill-opacity="0.6" stroke="#2563EB" stroke-width="2"/>
@@ -98,10 +85,8 @@
             </div>
           </div>
 
-          <!-- Product 2: Roti Coklat Lumer -->
           <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <!-- SVG Roti/Box -->
               <svg class="w-16 h-16" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="15" width="50" height="40" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="2"/>
                 <path d="M5 25L30 5L55 25" stroke="#D97706" stroke-width="2" fill="#FEF3C7"/>
@@ -113,10 +98,8 @@
             </div>
           </div>
 
-          <!-- Product 3: Buku Tulis Sidu -->
           <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <!-- SVG Buku -->
               <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
                 <rect x="5" y="5" width="10" height="50" fill="#4A5568"/>
@@ -130,10 +113,8 @@
             </div>
           </div>
 
-          <!-- Product 4: Pulpen Pilot 0.5 -->
           <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <!-- SVG Pulpen -->
               <svg class="w-6 h-20" viewBox="0 0 20 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="6" y="20" width="8" height="50" rx="1" fill="#1E293B"/>
                 <path d="M6 20L10 5L14 20H6Z" fill="#94A3B8"/>
@@ -150,13 +131,12 @@
       </section>
     </main>
 
-    <!-- BOTTOM NAVIGATION BAR -->
     <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 flex justify-around items-center z-50">
-      <a href="#" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] px-5 py-1.5 rounded-xl font-bold text-xs gap-0.5">
+      <a href="{{ url('/HalamaDepanKasir') }}" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] px-5 py-1.5 rounded-xl font-bold text-xs gap-0.5">
         <i data-lucide="home" class="w-5 h-5 stroke-[2.5]"></i>
         <span>Home</span>
       </a>
-      <a href="#" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
+      <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
         <span>Shop</span>
       </a>
