@@ -1,6 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/belajar', function () {
+    return view('belajar');
+});
+
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\DashboardController;
 
@@ -112,3 +121,4 @@ Route::get('/halamanpembayaran', function () {
 Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
+
