@@ -2,31 +2,66 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthKasirController;
+use App\Http\Controllers\DashboardController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// 1. HALAMAN UTAMA / TAMPILAN AWAL
 Route::get('/', function () {
-    return view('welcome');
+    return view('TampilanAwalLogin');
 });
 
 Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');
 });
 
+
+// 2. AUTHENTICATION (LOGIN & LOGOUT)
+// Login Kasir
 Route::get('/loginKasir', function () {
     return view('loginKasir');
 })->name('login');
 
 Route::post('/loginKasir/proses', [AuthKasirController::class, 'login'])->name('login.post');
 
+// Login Gudang
+Route::get('/LoginGudang', function () {
+    return view('LoginGudang');
+})->name('login.gudang');
+
+// Route Logout
+Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
+
+
+// 3. AREA KHUSUS PETUGAS KASIR
 Route::middleware(['auth'])->group(function () {
-
-Route::get('/HalamanDepanKasir', function () {
-    return view('HalamanDepanKasir');
-})->name('dashboard.kasir');
-
-Route::post('/logoutKasir', [AuthKasirController::class, 'logout'])->name('logout');
-
+    Route::get('/HalamanDepanKasir', function () {
+        // Pengecekan Hak Akses Kasir
+        if (auth()->user()->role !== 'kasir') {
+            abort(403, 'Akses ditolak! Halaman ini khusus untuk Kasir.');
+        }
+        return view('HalamanDepanKasir');
+    })->name('dashboard.kasir');
 });
 
+
+// 4. AREA KHUSUS PETUGAS GUDANG
+Route::middleware(['auth'])->group(function () {
+    Route::get('/HalamanDepanGudang', function () {
+        // Pengecekan Hak Akses Gudang
+        if (auth()->user()->role !== 'gudang') {
+            abort(403, 'Akses ditolak! Halaman ini khusus untuk Petugas Gudang.');
+        }
+        return view('dashboard');
+    })->name('dashboard.gudang');
+});
+
+
+// 5. HALAMAN KATALOG / SHOP
 Route::get('/HalamanShop', function () {
     $product = [
         [
