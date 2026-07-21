@@ -104,3 +104,7 @@ Route::get('/HalamanShop', function () {
 
     return view('HalamanShop', ['products' => $product]);
 });
+
+Route::get('/halamanpembayaran', function () {
+    return view('halamanpembayaran');
+});

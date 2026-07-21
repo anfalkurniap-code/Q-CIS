@@ -89,28 +89,6 @@
                 </button>
             </form>
 
-            <div class="relative my-6 flex items-center justify-center">
-                <div class="border-t border-gray-200 w-full absolute"></div>
-                <span class="bg-white px-3 text-[10px] font-bold text-gray-400 tracking-wider uppercase relative z-10">
-                    Opsi Masuk Cepat
-                </span>
-            </div>
-
-            <div class="space-y-3">
-                <button type="button" class="w-full flex items-center justify-center gap-2 border border-emerald-800/20 bg-emerald-50/30 hover:bg-emerald-50 text-slate-700 py-2.5 rounded-xl font-medium text-sm transition">
-                    <i class="fa-solid fa-fingerprint text-emerald-700 text-lg"></i>
-                    Biometrik Web
-                </button>
-                <button type="button" class="w-full flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-slate-700 py-2.5 rounded-xl font-medium text-sm transition">
-                    <i class="fa-solid fa-grip-pad text-gray-500 text-lg"></i>
-                    PIN Shift
-                </button>
-            </div>
-
-            <p class="text-[11px] text-gray-500 text-center mt-4 px-4 leading-relaxed">
-                Gunakan Biometrik atau PIN untuk pergantian shift yang lebih cepat tanpa mengetik kata sandi panjang.
-            </p>
-
             <div class="text-center mt-8 text-xs">
                 <p class="text-gray-500 font-medium">Belum punya akses?</p>
                 <a href="#" class="text-emerald-700 font-bold hover:underline block mt-0.5">
