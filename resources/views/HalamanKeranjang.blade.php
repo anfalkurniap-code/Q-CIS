@@ -46,10 +46,10 @@
                     <span id="total-tagihan" class="text-xl font-black text-emerald-700">Rp 0</span>
                 </div>
 
-                <button type="button" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md shadow-emerald-900/20 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
+                <a href="{{ url('/halamanpembayaran') }}" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md shadow-emerald-900/20 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
                     <span>Bayar Sekarang</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
-                </button>
+                </a>
             </div>
 
         </div>

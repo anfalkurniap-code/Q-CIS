@@ -15,6 +15,18 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+
+        if (in_array($userRole, ['kasir', 'admin'])) {
+            return $next($request);
+        }
+
+        if ($userRole === 'kasir') {
+            return $next($request);
+        }
+
+        abort(403, 'AKSES DITOLAK! HALAMAN INI KHUSUS UNTUK KASIR.');
     }
 }
