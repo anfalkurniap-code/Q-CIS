@@ -70,6 +70,6 @@ Route::get('/HalamanShop', function () {
     return view('HalamanShop', ['products' => $product]);
 });
 
-Route::get('/HalamanKeranjang', function () {
-    return view('HalamanKeranjang');
+Route::get('/halamanpembayaran', function () {
+    return view('halamanpembayaran');
 });
