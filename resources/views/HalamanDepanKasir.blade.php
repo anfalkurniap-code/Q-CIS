@@ -17,15 +17,38 @@
 
   <div class="w-full max-w-md bg-[#F8F9FD] min-h-screen shadow-lg flex flex-col justify-between relative pb-20">
     
-    <header class="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-100 sticky top-0 z-50">
-      <div class="text-[#107C41] font-bold text-xl tracking-wide">Q-CIS</div>
-      <div class="flex items-center gap-4 text-gray-700">
-        <button><i data-lucide="search" class="w-6 h-6 stroke-[2.5]"></i></button>
-        <button class="relative">
-          <i data-lucide="shopping-cart" class="w-6 h-6 stroke-[2.5]"></i>
-          <span class="absolute -top-1.5 -right-1.5 bg-[#D32F2F] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">3</span>
+    <header class="bg-white px-4 py-3 border-b border-gray-100 sticky top-0 z-50">
+      <div class="flex items-center justify-between">
+        <div class="text-[#107C41] font-bold text-xl tracking-wide">Q-CIS</div>
+        <div class="flex items-center gap-4 text-gray-700">
+          
+          <button id="btn-toggle-search" onclick="toggleSearch()" class="p-1 hover:text-[#107C41] transition">
+            <i data-lucide="search" class="w-6 h-6 stroke-[2.5]"></i>
+          </button>
+          
+          <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 hover:text-[#107C41] transition">
+            <i data-lucide="shopping-cart" class="w-6 h-6 stroke-[2.5]"></i>
+            <span id="badge-cart-header" class="absolute -top-1.5 -right-1.5 bg-[#D32F2F] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+          </a>
+          
+          <button class="p-1 hover:text-[#107C41] transition">
+            <i data-lucide="bell" class="w-6 h-6 stroke-[2.5]"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="search-bar-container" class="hidden mt-3 relative transition-all duration-300">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+        <input 
+          type="text" 
+          id="input-search-header"
+          placeholder="Cari produk..." 
+          class="w-full bg-gray-100 text-gray-800 text-xs pl-9 pr-8 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#107C41]"
+          onkeyup="handleHeaderSearch(event)"
+        >
+        <button onclick="toggleSearch()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
-        <button><i data-lucide="bell" class="w-6 h-6 stroke-[2.5]"></i></button>
       </div>
     </header>
 
@@ -68,9 +91,9 @@
           <a href="{{ url('/HalamanShop') }}" class="text-[#107C41] text-xs font-semibold hover:underline">See All</a>
         </div>
         
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3" id="featured-products-grid">
           
-          <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative">
+          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative">
             <span class="absolute top-2 right-2 bg-[#006A33] text-white text-[9px] font-medium px-2 py-0.5 rounded-full z-10">Bestseller</span>
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
               <svg class="w-12 h-24" viewBox="0 0 50 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,11 +104,11 @@
             </div>
             <div class="p-3">
               <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 block mb-0.5">Minuman</span>
-              <h4 class="text-gray-800 text-sm font-semibold truncate">Air Mineral 600ml</h4>
+              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Air Mineral 600ml</h4>
             </div>
           </div>
 
-          <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
               <svg class="w-16 h-16" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="15" width="50" height="40" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="2"/>
@@ -94,11 +117,11 @@
             </div>
             <div class="p-3">
               <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 block mb-0.5">Makanan</span>
-              <h4 class="text-gray-800 text-sm font-semibold truncate">Roti Coklat Lumer</h4>
+              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Roti Coklat Lumer</h4>
             </div>
           </div>
 
-          <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
               <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
@@ -109,11 +132,11 @@
             </div>
             <div class="p-3">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-              <h4 class="text-gray-800 text-sm font-semibold truncate">Buku Tulis Sidu</h4>
+              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Buku Tulis Sidu</h4>
             </div>
           </div>
 
-          <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
             <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
               <svg class="w-6 h-20" viewBox="0 0 20 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="6" y="20" width="8" height="50" rx="1" fill="#1E293B"/>
@@ -123,7 +146,7 @@
             </div>
             <div class="p-3">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-              <h4 class="text-gray-800 text-sm font-semibold truncate">Pulpen Pilot 0.5</h4>
+              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Pulpen Pilot 0.5</h4>
             </div>
           </div>
 
@@ -132,7 +155,7 @@
     </main>
 
     <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 flex justify-around items-center z-50">
-      <a href="{{ url('/HalamaDepanKasir') }}" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] px-5 py-1.5 rounded-xl font-bold text-xs gap-0.5">
+      <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] px-5 py-1.5 rounded-xl font-bold text-xs gap-0.5">
         <i data-lucide="home" class="w-5 h-5 stroke-[2.5]"></i>
         <span>Home</span>
       </a>
@@ -154,6 +177,55 @@
 
   <script>
     lucide.createIcons();
+
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+      
+      const badge = document.getElementById('badge-cart-header');
+      if (badge) {
+        badge.innerText = totalItems;
+      }
+    }
+
+    function toggleSearch() {
+      const searchContainer = document.getElementById('search-bar-container');
+      const searchInput = document.getElementById('input-search-header');
+      
+      searchContainer.classList.toggle('hidden');
+      
+      if (!searchContainer.classList.contains('hidden')) {
+        searchInput.focus();
+      } else {
+        searchInput.value = '';
+        resetSearchFilter();
+      }
+    }
+
+    function resetSearchFilter() {
+      const productItems = document.querySelectorAll('.product-item');
+      productItems.forEach(item => {
+        item.style.display = ''; // Kembali ke CSS bawaan class (flex)
+      });
+    }
+
+    function handleHeaderSearch(event) {
+      const keyword = event.target.value.toLowerCase();
+      const productItems = document.querySelectorAll('.product-item');
+
+      productItems.forEach(item => {
+        const title = item.querySelector('.product-title').innerText.toLowerCase();
+        if (title.includes(keyword)) {
+          item.style.display = ''; 
+        } else {
+          item.style.display = 'none'; 
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCartBadge);
+    window.addEventListener('pageshow', updateCartBadge);
+    window.addEventListener('focus', updateCartBadge);
   </script>
 </body>
 </html>

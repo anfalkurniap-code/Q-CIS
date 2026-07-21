@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q-CIS SMK - Katalog Produk</title>  
+    <title>Q-CIS SMK - Katalog Produk</title>   
     <script src="https://cdn.tailwindcss.com"></script>   
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -13,17 +13,17 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen font-sans">
    
-    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative pb-32">
+    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative">
                
         <div class="px-5 pt-5 pb-3">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS SMK</h1>
-                               
+                                
                 <div class="flex items-center gap-2">                   
-                    <button class="relative p-1 text-emerald-800 mr-1">
+                    <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 text-emerald-800 mr-1 flex items-center justify-center z-10 cursor-pointer">
                         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
                         <span id="badge-cart-top" class="absolute -top-1 -right-1 bg-slate-600 text-[9px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-                    </button>
+                    </a>
                   
                     <button class="relative p-1 text-emerald-800">
                         <i data-lucide="bell" class="w-6 h-6"></i>
@@ -49,13 +49,13 @@
 
         <hr class="border-gray-100">
        
-        <div class="px-5 py-4 flex-1 mb-20">
+        <div class="px-5 py-4 flex-1">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
                 <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products) }}</b> Produk</span>
             </div>       
             <div class="grid grid-cols-2 gap-4" id="product-grid">
-                @foreach($products as $item)           
+                @foreach($products as $item)          
                 <div data-category="{{ $item['kategori'] ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     <span class="absolute top-3 right-3 {{ $item['warna_badge'] }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
                         {{ $item['badge'] }}
@@ -69,7 +69,7 @@
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-emerald-700 text-sm">Rp {{ number_format($item['harga'], 0, ',', '.') }}</span>
                             <button 
-                                onclick="tambahKeKeranjang({{ $item['harga'] }})"
+                                onclick="tambahKeKeranjang('{{ $item['id'] ?? $loop->index }}', '{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['img'] }}')"
                                 class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition"
                             >
                                 <i data-lucide="plus" class="w-4 h-4"></i>
@@ -81,7 +81,7 @@
             </div>
         </div>
        
-        <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
+        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
                   
             <div class="bg-blue-50/70 px-5 py-3 flex justify-between items-center border-b border-gray-100 rounded-t-2xl">
                 <div class="flex items-center gap-3">
@@ -94,9 +94,9 @@
                         <p id="total-harga" class="font-bold text-emerald-800 text-lg">Rp 0</p>
                     </div>
                 </div>
-                <button class="bg-emerald-800 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-1">
-                    Checkout <i data-lucide="chevron-up" class="w-4 h-4"></i>
-                </button>
+                <a href="{{ url('/HalamanKeranjang') }}" class="bg-emerald-800 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-1 cursor-pointer relative z-10">
+                    Checkout <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
             </div>
           
             <div class="grid grid-cols-4 pt-3 pb-4 text-center text-xs font-semibold text-gray-400">
@@ -125,62 +125,86 @@
     </div>   
 
     <script>
-    lucide.createIcons();
-   
-    let totalItem = 0;
-    let totalBayar = 0;
-   
-    function tambahKeKeranjang(harga) {
-        totalItem += 1;
-        totalBayar += harga;
-       
-        document.getElementById('badge-cart').innerText = totalItem;
-               
-        if (document.getElementById('badge-cart-top')) {
-            document.getElementById('badge-cart-top').innerText = totalItem;
+        lucide.createIcons();
+
+        function updateCartUI() {
+            let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            let totalItem = cart.reduce((sum, item) => sum + item.qty, 0);
+            let totalBayar = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+
+            const badgeCart = document.getElementById('badge-cart');
+            if (badgeCart) badgeCart.innerText = totalItem;
+
+            const badgeCartTop = document.getElementById('badge-cart-top');
+            if (badgeCartTop) badgeCartTop.innerText = totalItem;
+
+            const totalHarga = document.getElementById('total-harga');
+            if (totalHarga) totalHarga.innerText = 'Rp ' + totalBayar.toLocaleString('id-ID');
         }
-               
-        document.getElementById('total-harga').innerText = 'Rp ' + totalBayar.toLocaleString('id-ID');
-    }
-   
-    function filterProduk(kategori, element) {          
-        const cards = document.querySelectorAll('.product-card');
-        const targetKategori = kategori.toLowerCase().trim();
-        
-        cards.forEach(card => {
-            const cardCategory = (card.getAttribute('data-category') || '').toLowerCase().trim();
-                  
-            if (targetKategori === 'all' || targetKategori === 'semua' || cardCategory === targetKategori) {
-                card.style.setProperty('display', 'flex', 'important');
+
+        function tambahKeKeranjang(id, nama, harga, img) {
+            let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+            let itemIndex = cart.findIndex(item => item.id == id);
+
+            if (itemIndex > -1) {
+                cart[itemIndex].qty += 1;
             } else {
-                card.style.setProperty('display', 'none', 'important');
+                cart.push({
+                    id: id,
+                    nama: nama,
+                    harga: harga,
+                    img: img,
+                    qty: 1
+                });
             }
-        });
-         
-        const buttons = document.querySelectorAll('#category-filters button');
-        buttons.forEach(btn => {
-            btn.className = "category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap";
-        });
-        
-        element.className = "category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap";
-    }
 
-    const searchInput = document.querySelector('input[placeholder="Cari produk di mart..."]');
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            const keyword = e.target.value.toLowerCase();
+            localStorage.setItem('cartItems', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function filterProduk(kategori, element) {          
             const cards = document.querySelectorAll('.product-card');
-
+            const targetKategori = kategori.toLowerCase().trim();
+            
             cards.forEach(card => {
-                const productName = card.querySelector('h3').innerText.toLowerCase();
-                if (productName.includes(keyword)) {
+                const cardCategory = (card.getAttribute('data-category') || '').toLowerCase().trim();
+                      
+                if (targetKategori === 'all' || targetKategori === 'semua' || cardCategory === targetKategori) {
                     card.style.setProperty('display', 'flex', 'important');
                 } else {
                     card.style.setProperty('display', 'none', 'important');
                 }
             });
-        });
-    }
-</script>
+              
+            const buttons = document.querySelectorAll('#category-filters button');
+            buttons.forEach(btn => {
+                btn.className = "category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap";
+            });
+            
+            element.className = "category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap";
+        }
+
+        const searchInput = document.querySelector('input[placeholder="Cari produk di mart..."]');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const keyword = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.product-card');
+
+                cards.forEach(card => {
+                    const productName = card.querySelector('h3').innerText.toLowerCase();
+                    if (productName.includes(keyword)) {
+                        card.style.setProperty('display', 'flex', 'important');
+                    } else {
+                        card.style.setProperty('display', 'none', 'important');
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartUI);
+        window.addEventListener('pageshow', updateCartUI);
+        window.addEventListener('focus', updateCartUI);
+    </script>
 </body>
 </html>
