@@ -73,3 +73,7 @@ Route::get('/HalamanShop', function () {
 Route::get('/halamanpembayaran', function () {
     return view('halamanpembayaran');
 });
+
+Route::get('/HalamanKeranjang', function () {
+    return view('HalamanKeranjang');
+});
