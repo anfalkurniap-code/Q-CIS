@@ -6,9 +6,7 @@
     <title>Login - Q-CIS SMK Mart</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,22 +39,31 @@
             <h2 class="text-xl font-bold text-slate-800">Selamat Datang</h2>
             <p class="text-sm text-gray-500 mt-1 mb-6">Silakan masuk untuk mulai bertransaksi</p>
 
+            <!-- TAMPILKAN NOTIFIKASI ERROR JIKA LOGIN GAGAL -->
+            @if (session('error'))
+                <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 text-xs rounded-xl font-semibold text-center">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
-            @csrf
-                 <div>
-                    <label for="email" class="block text-sm font-semibold text-slate-700 mb-1">Email atau Username</label>
+                @csrf
+                <div>
+                    <label for="login" class="block text-sm font-semibold text-slate-700 mb-1">Email atau Username</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                             <i class="fa-regular fa-user"></i>
                         </span>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="nama@gmail.com" required autofocus
-                            class="w-full pl-10 pr-4 py-2.5 border @if($errors->any()) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
+                        <!-- DISESUAIKAN: id="login" name="login" & value="{{ old('login') }}" -->
+                        <input type="text" id="login" name="login" value="{{ old('login') }}" placeholder="Username atau Email" required autofocus
+                            class="w-full pl-10 pr-4 py-2.5 border @if($errors->any() || session('error')) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
                     </div>
-                    @error('email')
+                    @error('login')
                         <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                     @enderror
                 </div>
-                 <div>
+
+                <div>
                     <div class="flex justify-between items-center mb-1">
                         <label for="password" class="text-sm font-semibold text-slate-700">Kata Sandi</label>
                         @if (Route::has('password.request'))
@@ -70,7 +77,7 @@
                             <i class="fa-solid fa-lock"></i>
                         </span>
                         <input type="password" id="password" name="password" placeholder="Masukkan Kata Sandi" required
-                            class="w-full pl-10 pr-10 py-2.5 border @if($errors->any()) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
+                            class="w-full pl-10 pr-10 py-2.5 border @if($errors->any() || session('error')) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer hover:text-gray-600" onclick="togglePasswordVisibility()">
                             <i id="togglePasswordIcon" class="fa-regular fa-eye-slash"></i>
                         </span>

@@ -9,29 +9,55 @@ class AuthKasirController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        // 1. Validasi input dari form
+        $request->validate([
+            'login'    => 'required|string',
+            'password' => 'required|string',
         ]);
 
+        $input = $request->input('login');
+
+        // 2. Deteksi apakah input berupa email atau username
+        $fieldType = filter_var($input, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // 3. Susun array credentials
+        $credentials = [
+            $fieldType => $input,
+            'password'  => $request->password,
+        ];
+
+        // 4. Coba Autentikasi
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/HalamanDepanKasir');
+            $user = Auth::user();
+            
+            // Mengubah role menjadi huruf kecil dan menghapus spasi ekstra agar lebih aman
+            $role = strtolower(trim($user->role ?? ''));
+
+            // 5. Arahkan ke halaman sesuai role
+            if ($role === 'kasir') {
+                return redirect()->route('dashboard.kasir');
+            } 
+            
+            if ($role === 'gudang') {
+                return redirect()->route('dashboard.gudang');
+            }
+
+            // Jika role terisi hal lain, default lempar ke dashboard kasir
+            return redirect()->route('dashboard.kasir');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau Kata Sandi kasir salah.',
-        ])->onlyInput('email');
+        // Jika login gagal
+        return back()->with('error', 'Email/Username atau Kata Sandi salah.')->withInput();
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        return redirect('/loginKasir');
+
+        return redirect()->route('login');
     }
 }
