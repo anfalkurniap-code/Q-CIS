@@ -41,7 +41,8 @@
             <h2 class="text-xl font-bold text-slate-800">Selamat Datang</h2>
             <p class="text-sm text-gray-500 mt-1 mb-6">Silakan masuk untuk mulai bertransaksi</p>
 
-            <form action="/loginKasir" method="GET" class="space-y-4">
+            <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
+            @csrf
                  <div>
                     <label for="email" class="block text-sm font-semibold text-slate-700 mb-1">Email atau Username</label>
                     <div class="relative">
@@ -49,15 +50,15 @@
                             <i class="fa-regular fa-user"></i>
                         </span>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="nama@gmail.com" required autofocus
-                            class="w-full pl-10 pr-4 py-2.5 border @error('email') border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @enderror rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
-                </div>
+                            class="w-full pl-10 pr-4 py-2.5 border @if($errors->any()) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
+                    </div>
                     @error('email')
                         <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                     @enderror
                 </div>
                  <div>
                     <div class="flex justify-between items-center mb-1">
-                        <label mapping="password" class="text-sm font-semibold text-slate-700">Kata Sandi</label>
+                        <label for="password" class="text-sm font-semibold text-slate-700">Kata Sandi</label>
                         @if (Route::has('password.request'))
                             <a href="{{ route('password.request') }}" class="text-xs font-semibold text-emerald-700 hover:underline">
                                 Lupa Kata Sandi?
@@ -69,14 +70,11 @@
                             <i class="fa-solid fa-lock"></i>
                         </span>
                         <input type="password" id="password" name="password" placeholder="Masukkan Kata Sandi" required
-                            class="w-full pl-10 pr-10 py-2.5 border @error('password') border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @enderror rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
+                            class="w-full pl-10 pr-10 py-2.5 border @if($errors->any()) border-red-500 focus:ring-red-500 @else border-gray-300 focus:ring-emerald-700 @endif rounded-xl focus:outline-none focus:ring-2 text-sm placeholder-gray-400 transition" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer hover:text-gray-600" onclick="togglePasswordVisibility()">
                             <i id="togglePasswordIcon" class="fa-regular fa-eye-slash"></i>
                         </span>
                     </div>
-                    @error('password')
-                        <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
-                    @enderror
                 </div>
 
                 <button type="submit" class="w-full bg-emerald-800 text-white py-3 rounded-full font-semibold text-sm hover:bg-emerald-900 transition shadow-md mt-2">
