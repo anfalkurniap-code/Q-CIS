@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q-CIS - Login Petugas</title>
+    <title>Q-CIS - Login Petugas Gudang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -29,12 +29,31 @@
         <div class="text-center mb-6">
             <h1 class="text-xl font-bold text-[#034d35] tracking-wide mb-1">Q-CIS SMK MART</h1>
             <p class="text-xs font-semibold text-slate-700 mt-2">
-                Selamat Datang, Silakan masuk untuk mulai bertransaksi
+                Selamat Datang, Silakan masuk untuk mengelola Gudang
             </p>
         </div>
 
         <!-- Main Card Form -->
         <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm mb-6">
+            
+            <!-- ALERT PESAN ERROR (Jika Login Gagal/Password Salah) -->
+            @if(session('error'))
+                <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-sm"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg">
+                    <ul class="list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('login.post') }}" method="POST">
                 @csrf
 
@@ -44,9 +63,9 @@
                         Email atau Username
                     </label>
                     <div class="relative flex items-center">
-                        <input type="text" name="login" placeholder="nama@gmail.com" 
+                        <input type="text" name="login" value="{{ old('login') }}" placeholder="gudang@gmail.com" 
                             class="w-full text-sm px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#034d35] focus:bg-white text-slate-700 placeholder-slate-400 transition" required>
-                        <i class="fa-solid fa-qrcode absolute right-3 text-slate-400 text-base pointer-events-none"></i>
+                        <i class="fa-solid fa-user absolute right-3 text-slate-400 text-base pointer-events-none"></i>
                     </div>
                 </div>
 
@@ -72,7 +91,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-[#034d35] hover:bg-[#023a28] text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 text-sm shadow-md transition duration-200">
-                    <span>Masuk ke Aplikasi</span>
+                    <span>Masuk ke Dashboard Gudang</span>
                     <i class="fa-solid fa-right-to-bracket text-base"></i>
                 </button>
             </form>

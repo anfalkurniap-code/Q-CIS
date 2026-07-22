@@ -15,15 +15,16 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // 1. Cek apakah user sudah login
         if (!auth()->check()) {
             return redirect('/login');
         }
 
-        if (in_array($userRole, ['kasir', 'admin'])) {
-            return $next($request);
-        }
+        // 2. Ambil role user yang sedang login
+        $userRole = auth()->user()->role;
 
-        if ($userRole === 'kasir') {
+        // 3. Cek apakah rolenya kasir atau admin
+        if (in_array($userRole, ['kasir', 'admin'])) {
             return $next($request);
         }
 

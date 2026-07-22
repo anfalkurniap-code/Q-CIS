@@ -23,7 +23,7 @@ class AuthKasirController extends Controller
         // 3. Susun array credentials
         $credentials = [
             $fieldType => $input,
-            'password'  => $request->password,
+            'password' => $request->password,
         ];
 
         // 4. Coba Autentikasi
@@ -44,8 +44,8 @@ class AuthKasirController extends Controller
                 return redirect()->route('dashboard.gudang');
             }
 
-            // Jika role terisi hal lain, default lempar ke dashboard kasir
-            return redirect()->route('dashboard.kasir');
+            // Jika role tidak dikenali, lempar kembali ke halaman awal
+            return redirect('/');
         }
 
         // Jika login gagal
@@ -54,9 +54,17 @@ class AuthKasirController extends Controller
 
     public function logout(Request $request)
     {
+        // Simpan role sebelum logout untuk menentukan arah redirect
+        $role = Auth::user()?->role;
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Redirect ke halaman login yang sesuai berdasarkan role
+        if ($role === 'gudang') {
+            return redirect()->route('login.gudang');
+        }
 
         return redirect()->route('login');
     }
