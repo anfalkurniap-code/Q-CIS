@@ -1,15 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/belajar', function () {
-    return view('belajar');
-});
-
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\DashboardController;
 
@@ -26,6 +17,10 @@ Route::get('/', function () {
 
 Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');
+});
+
+Route::get('/belajar', function () {
+    return view('belajar');
 });
 
 
@@ -65,7 +60,8 @@ Route::middleware(['auth'])->group(function () {
         if (auth()->user()->role !== 'gudang') {
             abort(403, 'Akses ditolak! Halaman ini khusus untuk Petugas Gudang.');
         }
-        return view('dashboard');
+        // DIUBAH: Mengarahkan ke file view DashboardGudang.blade.php
+        return view('DashboardGudang');
     })->name('dashboard.gudang');
 });
 
