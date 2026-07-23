@@ -21,13 +21,13 @@
 
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden relative">
         
-        <a href="{{ url('/TampilanAwalLogin') }}" class="absolute top-4 left-4 bg-white text-emerald-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 transition">
+        <a href="{{ url('HalamanDepanKasir') }}" class="absolute top-4 left-4 bg-white text-emerald-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 transition">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <div class="bg-emerald-800 text-white text-center pt-10 pb-8 px-6 flex flex-col items-center">
-            <div class="bg-white text-emerald-800 rounded-full w-16 h-16 flex items-center justify-center shadow-inner mb-4 text-2xl">
-                <i class="fa-solid fa-user-graduate"></i>
+            <div class="bg-white text-emerald-800 rounded-full w-16 h-16 flex items-center justify-center shadow-inner mb-4 text-3xl">
+                <i class="fa-solid fa-bag-shopping"></i>
             </div>
             <h1 class="text-2xl font-bold tracking-wide">Q-CIS SMK Mart</h1>
             <p class="text-xs text-emerald-100 mt-2 max-w-xs leading-relaxed">

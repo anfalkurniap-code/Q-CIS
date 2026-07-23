@@ -135,8 +135,8 @@
 
         <!-- 6. Bottom Navigation Bar (Fixed at bottom) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-30">
-            <!-- Active Tab -->
-            <a href="#" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
+            <!-- Active Tab (Dashboard) -->
+            <a href="{{ route('dashboard.gudang') }}" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
                 <i class="fa-solid fa-border-all text-base mb-0.5"></i>
                 <span>Dashboard</span>
             </a>
@@ -162,8 +162,8 @@
                 <span>Kritis</span>
             </a>
 
-            <!-- Tab Profile -->
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+            <!-- Tab Profile (DIHUBUNGKAN KE ROUTE PROFIL) -->
+            <a href="{{ route('profil.gudang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-user text-base mb-0.5"></i>
                 <span>Profile</span>
             </a>

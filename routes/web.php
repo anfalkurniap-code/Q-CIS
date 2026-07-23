@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ Route::get('/belajar', function () {
 });
 
 
-// 2. AUTHENTICATION (LOGIN & LOGOUT)
+// 2. AUTHENTICATION (LOGIN & LOGOUT) - CARA 1 (CLOSURE)
 // Login Kasir
 Route::get('/loginKasir', function () {
     return view('loginKasir');
@@ -37,36 +38,44 @@ Route::get('/LoginGudang', function () {
     return view('LoginGudang');
 })->name('login.gudang');
 
+Route::post('/LoginGudang/proses', [AuthKasirController::class, 'login'])->name('login.gudang.post');
+
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
 
 
-// 3. AREA KHUSUS PETUGAS KASIR
+// 3. AREA PROTEKSI AUTHENTICATION (KASIR & GUDANG)
 Route::middleware(['auth'])->group(function () {
+
+    // --- AREA KHUSUS PETUGAS KASIR ---
     Route::get('/HalamanDepanKasir', function () {
-        // Pengecekan Hak Akses Kasir
         if (auth()->user()->role !== 'kasir') {
             abort(403, 'Akses ditolak! Halaman ini khusus untuk Kasir.');
         }
         return view('HalamanDepanKasir');
     })->name('dashboard.kasir');
-});
 
 
-// 4. AREA KHUSUS PETUGAS GUDANG
-Route::middleware(['auth'])->group(function () {
+    // --- AREA KHUSUS PETUGAS GUDANG ---
     Route::get('/HalamanDepanGudang', function () {
-        // Pengecekan Hak Akses Gudang
         if (auth()->user()->role !== 'gudang') {
             abort(403, 'Akses ditolak! Halaman ini khusus untuk Petugas Gudang.');
         }
-        // DIUBAH: Mengarahkan ke file view DashboardGudang.blade.php
         return view('DashboardGudang');
     })->name('dashboard.gudang');
+
+    // Route Halaman Profil Gudang
+    Route::get('/profil-gudang', function () {
+        if (auth()->user()->role !== 'gudang') {
+            abort(403, 'Akses ditolak!');
+        }
+        return view('ProfilGudang'); 
+    })->name('profil.gudang');
+
 });
 
 
-// 5. HALAMAN KATALOG / SHOP
+// 4. HALAMAN KATALOG / SHOP & TRANSAKSI
 Route::get('/HalamanShop', function () {
     $product = [
         [
@@ -108,7 +117,7 @@ Route::get('/HalamanShop', function () {
     ];
 
     return view('HalamanShop', ['products' => $product]);
-});
+})->name('halaman.shop');
 
 Route::get('/halamanpembayaran', function () {
     return view('halamanpembayaran');
@@ -118,6 +127,14 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
+<<<<<<< HEAD
 Route::get('/laporan-stok', function () {
     return view('LaporanStokAkhir');
 });
+=======
+// Transaksi Controller Routes
+Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
+Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
+Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
+Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
+>>>>>>> 4ce36112076b05bfdf6c17cbcfd6cd292ae17c53

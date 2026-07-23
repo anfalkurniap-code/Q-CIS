@@ -50,6 +50,7 @@
 
         <main class="flex flex-col gap-4">
 
+            <!-- KASIR -->
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#1D2D24] rounded-lg flex items-center justify-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -62,7 +63,7 @@
                         Kelola transaksi pelanggan real-time dengan antarmuka POS yang intuitif.
                     </p>
                 </div>
-                <a href="{{ url('/loginKasir') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
+                <a href="{{ route('login') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
                     Masuk 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -70,6 +71,7 @@
                 </a>
             </div>
 
+            <!-- KEPALA TOKO -->
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#A7F3D0] rounded-lg flex items-center justify-center text-[#065F46]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -90,6 +92,7 @@
                 </a>
             </div>
 
+            <!-- GUDANG -->
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#24332A] rounded-lg flex items-center justify-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -97,12 +100,12 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-[18px] font-bold text-[#111] mb-1.5"> Gudang</h2>
+                    <h2 class="text-[18px] font-bold text-[#111] mb-1.5">Gudang</h2>
                     <p class="text-[12px] text-[#757575] leading-relaxed">
                         Optimalkan stok barang, manajemen supplier, dan pantau keluar masuknya inventaris dengan presisi tinggi.
                     </p>
                 </div>
-                <a href="{{ url('/LoginGudang') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
+                <a href="{{ route('login.gudang') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
                     Masuk 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
