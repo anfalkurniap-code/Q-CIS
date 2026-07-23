@@ -9,6 +9,28 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
         body{background:#f2f2f2;}
         .container{width:380px;margin:20px auto;}
+        
+        /* Tombol Kembali Style */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.08);
+            transition: all 0.2s ease;
+        }
+        .btn-back:hover {
+            color: #18a84a;
+            background: #f8f9fa;
+        }
+
         .card{background:#fff;border-radius:8px;padding:15px;margin-bottom:15px;box-shadow:0 1px 5px rgba(0,0,0,.1);}
         .title{font-size:11px;color:#777;font-weight:bold;margin-bottom:15px;text-transform:uppercase;}
         .right{float:right;font-weight:normal;}
@@ -40,34 +62,31 @@
         .summary{display:flex;justify-content:space-between;margin-bottom:10px;}
         .total{display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:15px;margin-top:10px;}
         .total h2{color:#16a34a;}
-        button{width:100%;padding:14px;margin-top:18px;background:#18a84a;border:none;color:white;border-radius:8px;font-size:16px;cursor:pointer;}
-        button:hover{background:#12853b;}
+        button.btn-submit{width:100%;padding:14px;margin-top:18px;background:#18a84a;border:none;color:white;border-radius:8px;font-size:16px;cursor:pointer;}
+        button.btn-submit:hover{background:#12853b;}
     </style>
 </head>
 <body>
 
 <form id="paymentForm" action="{{ route('pembayaran.proses') }}" method="POST">
     @csrf
+    <!-- Input hidden untuk mengirim data ke Backend Laravel -->
+    <input type="hidden" name="cart_data" id="cartDataInput">
+    <input type="hidden" name="payment_method" id="paymentMethodInput" value="qris">
+    <input type="hidden" name="total_price" id="totalPriceInput" value="0">
+
     <div class="container">
+
+        <!-- TOMBOL KEMBALI -->
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Kembali
+        </a>
+
         <div class="card">
-            <div class="title">RINCIAN PESANAN<span class="right">2 Items</span></div>
-            <div class="item">
-                <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=100&auto=format&fit=crop&q=60" alt="Susu Ultramilk" class="product-img">
-                <div class="detail">
-                    <h4>Susu Ultramilk Strawberry 250ml</h4>
-                    <p>Kuantitas : 1</p>
-                </div>
-                <div class="price">Rp 6.000</div>
-            </div>
-            <hr style="margin:15px 0;border:1px solid #eee;">
-            <div class="item">
-                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&auto=format&fit=crop&q=60" alt="Roti Tawar" class="product-img">
-                <div class="detail">
-                    <h4>Roti Tawar Sari Roti</h4>
-                    <p>Kuantitas : 1</p>
-                </div>
-                <div class="price">Rp 6.500</div>
-            </div>
+            <div class="title">RINCIAN PESANAN<span class="right" id="totalItemsText">0 Items</span></div>
+            
+            <!-- Tempat daftar barang akan di-render dinamis -->
+            <div id="cartItemsContainer"></div>
         </div>
 
         <div class="card">
@@ -94,7 +113,7 @@
             <div id="sectionCash" class="content-section">
                 <div class="input-group">
                     <label for="cashAmount">Jumlah Uang Diterima (Rp):</label>
-                    <input type="number" id="cashAmount" placeholder="Masukkan nominal, misal: 20000" oninput="calculateChange()">
+                    <input type="number" id="cashAmount" name="cash_amount" placeholder="Masukkan nominal, misal: 20000" oninput="calculateChange()">
                 </div>
                 <div class="change-box">
                     <span>Uang Kembalian:</span>
@@ -105,9 +124,9 @@
 
         <div class="card">
             <div class="title">RINGKASAN</div>
-            <div class="summary"><span>Subtotal</span><span>Rp 12.500</span></div>
-            <div class="total"><strong>Total</strong><h2>Rp 12.500</h2></div>
-            <button type="button" onclick="processPayment()">
+            <div class="summary"><span>Subtotal</span><span id="subtotalText">Rp 0</span></div>
+            <div class="total"><strong>Total</strong><h2 id="totalText">Rp 0</h2></div>
+            <button type="button" class="btn-submit" onclick="processPayment()">
                 <i class="fa-solid fa-circle-check"></i> Selesaikan Pembayaran
             </button>
         </div>
@@ -115,17 +134,70 @@
 </form>
 
 <script>
-    const totalPrice = 12500;
+    let totalPrice = 0;
     let currentMethod = 'qris';
+    let cart = [];
 
+    // 1. Memuat keranjang belanja dari LocalStorage saat halaman pertama kali dibuka
+    document.addEventListener('DOMContentLoaded', function() {
+        const storedCart = localStorage.getItem('qcis_cart');
+        if (storedCart) {
+            cart = JSON.parse(storedCart);
+        }
+        renderCart();
+    });
+
+    // 2. Fungsi untuk menampilkan item barang dan menghitung total harga
+    function renderCart() {
+        const container = document.getElementById('cartItemsContainer');
+        container.innerHTML = '';
+        totalPrice = 0;
+        let totalCount = 0;
+
+        if (cart.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kamu kosong.</p>';
+        } else {
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                totalPrice += itemTotal;
+                totalCount += item.quantity;
+
+                const itemHTML = `
+                    <div class="item">
+                        <img src="${item.image || 'https://via.placeholder.com/45'}" alt="${item.name}" class="product-img">
+                        <div class="detail">
+                            <h4>${item.name}</h4>
+                            <p>Kuantitas : ${item.quantity}</p>
+                        </div>
+                        <div class="price">Rp ${itemTotal.toLocaleString('id-ID')}</div>
+                    </div>
+                    ${index < cart.length - 1 ? '<hr style="margin:15px 0;border:1px solid #eee;">' : ''}
+                `;
+                container.innerHTML += itemHTML;
+            });
+        }
+
+        // Update tampilan harga & ringkasan
+        document.getElementById('totalItemsText').innerText = `${totalCount} Items`;
+        document.getElementById('subtotalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        document.getElementById('totalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        
+        // Simpan nilai total harga ke input hidden
+        document.getElementById('totalPriceInput').value = totalPrice;
+        document.getElementById('cartDataInput').value = JSON.stringify(cart);
+    }
+
+    // 3. Fungsi Ganti Metode Pembayaran
     function switchPayment(method) {
         currentMethod = method;
+        document.getElementById('paymentMethodInput').value = method;
         document.getElementById('btnQris').classList.toggle('active', method === 'qris');
         document.getElementById('btnCash').classList.toggle('active', method === 'cash');
         document.getElementById('sectionQris').classList.toggle('active', method === 'qris');
         document.getElementById('sectionCash').classList.toggle('active', method === 'cash');
     }
 
+    // 4. Hitung Kembalian
     function calculateChange() {
         const cash = parseFloat(document.getElementById('cashAmount').value) || 0;
         const change = cash - totalPrice;
@@ -140,7 +212,13 @@
         }
     }
 
+    // 5. Eksekusi Pembayaran
     function processPayment() {
+        if (cart.length === 0) {
+            alert('Keranjang belanja kosong!');
+            return;
+        }
+
         if (currentMethod === 'cash') {
             const cashInput = parseFloat(document.getElementById('cashAmount').value) || 0;
             if (cashInput < totalPrice) {
@@ -148,7 +226,11 @@
                 return;
             }
         }
+
+        // Hapus penyimpanan keranjang di browser setelah sukses checkout
         localStorage.removeItem('qcis_cart');
+        
+        // Kirim Form ke Backend Controller
         document.getElementById('paymentForm').submit();
     }
 </script>
