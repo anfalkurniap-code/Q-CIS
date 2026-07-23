@@ -21,7 +21,7 @@
 
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden relative">
         
-        <a href="{{ url('/TampilanAwalLogin') }}" class="absolute top-4 left-4 bg-white text-emerald-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 transition">
+        <a href="{{ url('HalamanDepanKasir') }}" class="absolute top-4 left-4 bg-white text-emerald-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 transition">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
 
