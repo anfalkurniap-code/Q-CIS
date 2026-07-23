@@ -117,3 +117,7 @@ Route::get('/halamanpembayaran', function () {
 Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
+
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
+});
