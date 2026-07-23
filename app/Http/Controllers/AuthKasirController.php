@@ -62,7 +62,7 @@ class AuthKasirController extends Controller
         $request->session()->regenerateToken();
 
         // Redirect ke halaman login yang sesuai berdasarkan role
-        if ($role === 'gudang') {
+        if (strtolower(trim($role)) === 'gudang') {
             return redirect()->route('login.gudang');
         }
 
