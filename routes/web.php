@@ -285,3 +285,7 @@ Route::get('/dashboardkepalatoko', function () {
         ]
     ]);
 });
+
+Route::get('/HalamanProfile', function () {
+    return view('HalamanProfile');
+});

@@ -115,7 +115,7 @@
                     <span>Trans</span>
                 </a>
                 
-                <a href="#" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
+                <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
                     <i data-lucide="user" class="w-5 h-5"></i>
                     <span>Profile</span>
                 </a>
