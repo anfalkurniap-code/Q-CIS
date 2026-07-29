@@ -15,30 +15,43 @@
    
     <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative">
                
+        <!-- ================= TOP HEADER BAR ================= -->
         <div class="px-5 pt-5 pb-3">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS SMK</h1>
+                <div class="flex items-center gap-2.5">
+                    <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS SMK</h1>
+                </div>
                                 
-                <div class="flex items-center gap-2">                   
-                    <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 text-emerald-800 mr-1 flex items-center justify-center z-10 cursor-pointer">
+                <div class="flex items-center gap-3">                   
+                    <!-- Link Keranjang Top Bar -->
+                    <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors hover:text-emerald-600">
                         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-                        <span id="badge-cart-top" class="absolute -top-1 -right-1 bg-slate-600 text-[9px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                        <span id="badge-cart-top" class="absolute -top-1.5 -right-2 bg-slate-700 text-[10px] text-white w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm">0</span>
                     </a>
                   
-                    <button class="relative p-1 text-emerald-800">
+                    <!-- Lonceng Notifikasi dengan Badge Hijau -->
+                    <button class="relative p-1 text-emerald-800 hover:text-emerald-600 transition-colors">
                         <i data-lucide="bell" class="w-6 h-6"></i>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-emerald-500 rounded-full"></span>
+                        <span class="absolute top-0.5 right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
                     </button>
                   
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Profile" class="w-9 h-9 rounded-full border-2 border-emerald-100 object-cover">
+                    <!-- Foto Profil Header: Sudah disamakan dengan Halaman Profil -->
+                    <a href="{{ url('/HalamanProfile') }}" class="block relative transition-transform active:scale-95" title="Ke Halaman Profil">
+                        <img id="header-avatar" 
+                             src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300' }}" 
+                             alt="Profile" 
+                             class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-300 ring-offset-1 border border-transparent shadow-sm">
+                    </a>
                 </div>
             </div>
           
+            <!-- Input Search Produk -->
             <div class="relative mb-4">
                 <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
                 <input type="text" placeholder="Cari produk di mart..." class="w-full bg-blue-50 text-gray-700 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
             </div>
            
+            <!-- Filter Kategori -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-sm font-medium" id="category-filters">
                 <button onclick="filterProduk('all', this)" class="category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap">Semua</button>
                 <button onclick="filterProduk('Minuman', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">Minuman</button>
@@ -49,6 +62,7 @@
 
         <hr class="border-gray-100">
        
+        <!-- ================= KATALOG PRODUK ================= -->
         <div class="px-5 py-4 flex-1">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
@@ -81,8 +95,10 @@
             </div>
         </div>
        
+        <!-- ================= BOTTOM BAR & NAVIGATION ================= -->
         <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
                   
+            <!-- Total Harga & Tombol Checkout -->
             <div class="bg-blue-50/70 px-5 py-3 flex justify-between items-center border-b border-gray-100 rounded-t-2xl">
                 <div class="flex items-center gap-3">
                     <div class="relative bg-white p-2 rounded-xl shadow-sm border border-gray-100">
@@ -99,6 +115,7 @@
                 </a>
             </div>
           
+            <!-- Bottom Navigation Bar -->
             <div class="grid grid-cols-4 pt-3 pb-4 text-center text-xs font-semibold text-gray-400">
                 <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
                     <i data-lucide="home" class="w-5 h-5"></i>

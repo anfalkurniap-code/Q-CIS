@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
+use App\Http\Controllers\ProfileController; // <-- DITAMBAHKAN DI SINI
+
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +60,7 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
+<<<<<<< HEAD
 // Gudang Dashboard (Sudah diperbaiki dengan membawa data variabel ke view)
 Route::get('/HalamanDepanGudang', function () {
     $totalSku = "1,284";
@@ -160,6 +163,13 @@ Route::get('/kelola-gudang', function () {
     return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'items'));
 })->name('kelola.gudang');
 
+=======
+// Gudang
+Route::get('/HalamanDepanGudang', function () {
+    return view('DashboardGudang');
+})->name('dashboard.gudang');
+
+>>>>>>> b988267 (menyelesaikan halaman informasi profile)
 Route::get('/profil-gudang', function () {
     return view('ProfilGudang');
 })->name('profil.gudang');
@@ -282,4 +292,14 @@ Route::get('/dashboardkepalatoko', function () {
             ],
         ]
     ]);
+<<<<<<< HEAD
 });
+=======
+});
+
+Route::get('/HalamanInformasiAkun', function () {
+    return view('HalamanInformasiAkun');
+});
+
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+>>>>>>> b988267 (menyelesaikan halaman informasi profile)
