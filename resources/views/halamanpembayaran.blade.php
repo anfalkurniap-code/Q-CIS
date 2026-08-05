@@ -64,6 +64,7 @@
         .total h2{color:#16a34a;}
         button.btn-submit{width:100%;padding:14px;margin-top:18px;background:#18a84a;border:none;color:white;border-radius:8px;font-size:16px;cursor:pointer;}
         button.btn-submit:hover{background:#12853b;}
+        button.btn-submit:disabled{background:#a5d6a7;cursor:not-allowed;}
     </style>
 </head>
 <body>
@@ -164,7 +165,7 @@
 
                 const itemHTML = `
                     <div class="item">
-                        <img src="${item.image || 'https://via.placeholder.com/45'}" alt="${item.name}" class="product-img">
+                        <img src="${item.image ? item.image : 'https://via.placeholder.com/45'}" alt="${item.name}" class="product-img">
                         <div class="detail">
                             <h4>${item.name}</h4>
                             <p>Kuantitas : ${item.quantity}</p>
@@ -226,6 +227,11 @@
                 return;
             }
         }
+
+        // Mencegah double click submit
+        const btnSubmit = document.querySelector('.btn-submit');
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
         // Hapus penyimpanan keranjang di browser setelah sukses checkout
         localStorage.removeItem('qcis_cart');
