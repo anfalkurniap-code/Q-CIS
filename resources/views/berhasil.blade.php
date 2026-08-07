@@ -74,8 +74,10 @@
         </div>
 
         <div class="mt-6 mb-2">
-            <a href="{{ route('katalog') }}" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl block text-center shadow-lg shadow-emerald-600/20 transition">
-                Selesai
+    <a href="{{ url('/HalamanShop') }}" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl block text-center shadow-lg shadow-emerald-600/20 transition">
+        Selesai
+    </a>
+</div>
             </a>
         </div>
 

@@ -141,8 +141,8 @@
                 <span>Dashboard</span>
             </a>
 
-            <!-- Tab Kelola -->
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+            <!-- Tab Kelola (Sudah Terhubung ke route kelola.gudang) -->
+            <a href="{{ route('kelola.gudang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
                 <span>Kelola</span>
             </a>
@@ -162,7 +162,7 @@
                 <span>Kritis</span>
             </a>
 
-            <!-- Tab Profile (DIHUBUNGKAN KE ROUTE PROFIL) -->
+            <!-- Tab Profile -->
             <a href="{{ route('profil.gudang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-user text-base mb-0.5"></i>
                 <span>Profile</span>
