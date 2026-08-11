@@ -4,19 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
+use App\Http\Controllers\ProfileController;
 
->>>>>>> ea823451b82cdff3b81df9663a7e1cdb65f566f8
-
-=======
-use App\Http\Controllers\StockReportController;
-use App\Http\Controllers\dashboardkepalatokoController;
-
->>>>>>> 24357d693f2fd5615c605146071a7f0441ff5957
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,7 +59,8 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
-// Gudang Dashboard (Sudah diperbaiki dengan membawa data variabel ke view)
+
+// Gudang Dashboard (Dengan Data Dummy)
 Route::get('/HalamanDepanGudang', function () {
     $totalSku = "1,284";
     $stokKritisCount = 24;
@@ -233,36 +225,23 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-Route::get('/laporan-stok', function () {
-    return view('LaporanStokAkhir');
-});
-=======
-=======
 Route::get('/HalamanProfile', function () {
     return view('HalamanProfile');
 });
 
->>>>>>> 24357d693f2fd5615c605146071a7f0441ff5957
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
+});
+
 // Transaksi Controller Routes
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
 Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
 Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
-<<<<<<< HEAD
->>>>>>> 4ce36112076b05bfdf6c17cbcfd6cd292ae17c53
-=======
-Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
-Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
-Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
-=======
->>>>>>> 24357d693f2fd5615c605146071a7f0441ff5957
 
 
 // ==========================================
-// 5. ROUTE DASHBOARD KEPALA TOKO
+// 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
     return view('dashboardkepalatoko', [
@@ -309,13 +288,14 @@ Route::get('/dashboardkepalatoko', function () {
             ],
         ]
     ]);
-<<<<<<< HEAD
 });
 
-Route::get('/HalamanProfile', function () {
-    return view('HalamanProfile');
+Route::get('/HalamanInformasiAkun', function () {
+    return view('HalamanInformasiAkun');
 });
->>>>>>> ea823451b82cdff3b81df9663a7e1cdb65f566f8
-=======
+
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/Riwayattransaksi', function () {
+    return view('Riwayattransaksi');
 });
->>>>>>> 24357d693f2fd5615c605146071a7f0441ff5957
