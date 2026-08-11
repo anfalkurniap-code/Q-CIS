@@ -50,93 +50,135 @@
                 <!-- Transaction List Card -->
                 <div class="bg-white rounded-2xl border border-gray-200/80 p-3 shadow-sm">
                     
-                    <!-- Item 1: Kantin Bu Ani -->
-                    <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-sm">Kantin Bu Ani</h3>
-                                <div class="flex items-center space-x-2 mt-0.5">
-                                    <span class="text-[10px] text-gray-400">12 Okt 2023</span>
-                                    <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">KONSUMSI</span>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="text-red-500 font-semibold text-sm">- Rp 15.000</span>
-                    </div>
+                    <!-- Container Utama Daftar Transaksi -->
+                    <div id="transaction-list">
 
-                    <!-- Item 2: Top-Up Saldo -->
-                    <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-sm">Top-Up Saldo</h3>
-                                <div class="flex items-center space-x-2 mt-0.5">
-                                    <span class="text-[10px] text-gray-400">10 Okt 2023</span>
-                                    <span class="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded tracking-wider uppercase">TOP-UP</span>
+                        <!-- Item 1: Kantin Bu Ani -->
+                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">Kantin Bu Ani</h3>
+                                    <div class="flex items-center space-x-2 mt-0.5">
+                                        <span class="text-[10px] text-gray-400">12 Okt 2023</span>
+                                        <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">KONSUMSI</span>
+                                    </div>
                                 </div>
                             </div>
+                            <span class="text-red-500 font-semibold text-sm">- Rp 15.000</span>
                         </div>
-                        <span class="text-emerald-500 font-semibold text-sm">+ Rp 50.000</span>
-                    </div>
 
-                    <!-- Item 3: Koperasi Sekolah -->
-                    <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-sm">Koperasi Sekolah</h3>
-                                <div class="flex items-center space-x-2 mt-0.5">
-                                    <span class="text-[10px] text-gray-400">08 Okt 2023</span>
-                                    <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">PERALATAN</span>
+                        <!-- Item 2: Top-Up Saldo -->
+                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">Top-Up Saldo</h3>
+                                    <div class="flex items-center space-x-2 mt-0.5">
+                                        <span class="text-[10px] text-gray-400">10 Okt 2023</span>
+                                        <span class="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded tracking-wider uppercase">TOP-UP</span>
+                                    </div>
                                 </div>
                             </div>
+                            <span class="text-emerald-500 font-semibold text-sm">+ Rp 50.000</span>
                         </div>
-                        <span class="text-red-500 font-semibold text-sm">- Rp 24.500</span>
-                    </div>
 
-                    <!-- Item 4: Toko Buku Sejahtera -->
-                    <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-sm">Toko Buku Sejahtera</h3>
-                                <div class="flex items-center space-x-2 mt-0.5">
-                                    <span class="text-[10px] text-gray-400">05 Okt 2023</span>
-                                    <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">BUKU</span>
+                        <!-- Item 3: Koperasi Sekolah -->
+                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">Koperasi Sekolah</h3>
+                                    <div class="flex items-center space-x-2 mt-0.5">
+                                        <span class="text-[10px] text-gray-400">08 Okt 2023</span>
+                                        <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">PERALATAN</span>
+                                    </div>
                                 </div>
                             </div>
+                            <span class="text-red-500 font-semibold text-sm">- Rp 24.500</span>
                         </div>
-                        <span class="text-red-500 font-semibold text-sm">- Rp 32.000</span>
-                    </div>
 
-                    <!-- Item 5: Top-Up Saldo -->
-                    <div class="flex items-center justify-between py-3 px-1">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-sm">Top-Up Saldo</h3>
-                                <div class="flex items-center space-x-2 mt-0.5">
-                                    <span class="text-[10px] text-gray-400">01 Okt 2023</span>
-                                    <span class="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded tracking-wider uppercase">TOP-UP</span>
+                        <!-- Item 4: Toko Buku Sejahtera -->
+                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">Toko Buku Sejahtera</h3>
+                                    <div class="flex items-center space-x-2 mt-0.5">
+                                        <span class="text-[10px] text-gray-400">05 Okt 2023</span>
+                                        <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">BUKU</span>
+                                    </div>
                                 </div>
                             </div>
+                            <span class="text-red-500 font-semibold text-sm">- Rp 32.000</span>
                         </div>
-                        <span class="text-emerald-500 font-semibold text-sm">+ Rp 100.000</span>
+
+                        <!-- Item 5: Top-Up Saldo -->
+                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">Top-Up Saldo</h3>
+                                    <div class="flex items-center space-x-2 mt-0.5">
+                                        <span class="text-[10px] text-gray-400">01 Okt 2023</span>
+                                        <span class="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded tracking-wider uppercase">TOP-UP</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-emerald-500 font-semibold text-sm">+ Rp 100.000</span>
+                        </div>
+
+                        <!-- Item Tambahan (Disembunyikan Terlebih Dahulu dengan class 'hidden') -->
+                        <div class="more-items hidden flex-col">
+                            <!-- Item 6 -->
+                            <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                        <i class="fa-solid fa-bag-shopping"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 text-sm">Foto Copy & Jilid</h3>
+                                        <div class="flex items-center space-x-2 mt-0.5">
+                                            <span class="text-[10px] text-gray-400">28 Sep 2023</span>
+                                            <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">JASA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="text-red-500 font-semibold text-sm">- Rp 8.000</span>
+                            </div>
+
+                            <!-- Item 7 -->
+                            <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                        <i class="fa-solid fa-bag-shopping"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 text-sm">Kantin Pak Slamet</h3>
+                                        <div class="flex items-center space-x-2 mt-0.5">
+                                            <span class="text-[10px] text-gray-400">25 Sep 2023</span>
+                                            <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">KONSUMSI</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="text-red-500 font-semibold text-sm">- Rp 12.000</span>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Muat Lebih Banyak Button -->
-                    <button class="w-full mt-3 py-2 border border-emerald-500 text-emerald-600 text-xs font-semibold rounded-xl hover:bg-emerald-50 transition">
+                    <button id="load-more-btn" onclick="loadMoreData()" class="w-full mt-3 py-2 border border-emerald-500 text-emerald-600 text-xs font-semibold rounded-xl hover:bg-emerald-50 transition active:scale-95">
                         Muat Lebih Banyak
                     </button>
                 </div>
@@ -158,7 +200,7 @@
             </a>
             
             <!-- Trans (Active) -->
-            <a href="{{ url('/riwayat') }}" class="flex flex-col items-center text-white text-xs">
+            <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center text-white text-xs">
                 <div class="bg-emerald-600 px-4 py-2 rounded-xl flex flex-col items-center">
                     <i class="fa-solid fa-receipt text-base mb-0.5"></i>
                     <span class="font-medium text-[11px]">Trans</span>
@@ -173,6 +215,28 @@
         </nav>
 
     </div>
+
+    <!-- Script JavaScript untuk Fitur Load More -->
+    <script>
+        function loadMoreData() {
+            const hiddenItems = document.querySelector('.more-items');
+            const btn = document.getElementById('load-more-btn');
+
+            // Menampilkan efek loading pada tombol
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Memuat...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Tampilkan item tersembunyi
+                hiddenItems.classList.remove('hidden');
+                
+                // Ubah teks tombol menjadi 'Semua Data Dimuat' dan matikan tombol
+                btn.innerHTML = 'Semua Data Telah Dimuat';
+                btn.classList.remove('border-emerald-500', 'text-emerald-600', 'hover:bg-emerald-50');
+                btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+            }, 600); // Penundaan 0.6 detik agar terasa dinamis
+        }
+    </script>
 
 </body>
 </html>
