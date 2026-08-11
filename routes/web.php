@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthKasirController;
+use App\Http\Controllers\AuthGudangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +33,7 @@ Route::get('/belajar', function () {
 
 
 // ==========================================
-// 2. AUTHENTICATION (LOGIN & LOGOUT)
+// 2. AUTHENTICATION (LOGIN, LOGOUT, & PENDAFTARAN)
 // ==========================================
 // Login Kasir
 Route::get('/loginKasir', function () {
@@ -45,7 +47,12 @@ Route::get('/LoginGudang', function () {
     return view('LoginGudang');
 })->name('login.gudang');
 
-Route::post('/LoginGudang/proses', [AuthKasirController::class, 'login'])->name('login.gudang.post');
+Route::post('/LoginGudang/proses', [AuthGudangController::class, 'login'])->name('login.gudang.post');
+
+// Route Pendaftaran / Informasi Admin
+Route::get('/pendaftaran', function () {
+    return view('pendaftaran');
+})->name('pendaftaran');
 
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
@@ -59,9 +66,8 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
-
-// Gudang Dashboard (Dengan Data Dummy)
-Route::get('/HalamanDepanGudang', function () {
+// Callback penanganan data dashboard gudang
+$gudangDashboardData = function () {
     $totalSku = "1,284";
     $stokKritisCount = 24;
 
@@ -109,7 +115,11 @@ Route::get('/HalamanDepanGudang', function () {
     ];
 
     return view('DashboardGudang', compact('totalSku', 'stokKritisCount', 'items'));
-})->name('dashboard.gudang');
+};
+
+// Route Gudang Dashboard
+Route::get('/HalamanDepanGudang', $gudangDashboardData)->name('dashboard.gudang');
+Route::get('/dashboard-gudang', $gudangDashboardData);
 
 // Route Kelola Gudang
 Route::get('/kelola-gudang', function () {
@@ -169,6 +179,14 @@ Route::get('/profil-gudang', function () {
 Route::get('/ubah-password-gudang', function () {
     return view('UbahPaswordGudang');
 })->name('password.gudang.change');
+
+// Route Input Barang (Gudang)
+Route::get('/input-barang', [ProductController::class, 'create'])->name('input.barang');
+Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
+
+Route::get('/stok-kritis', function () {
+    return view('stok-kritis');
+})->name('stok.kritis');
 
 
 // ==========================================
@@ -237,7 +255,7 @@ Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->
 
 
 // ==========================================
-// 5. ROUTE DASHBOARD KEPALA TOKO
+// 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
     return view('dashboardkepalatoko', [

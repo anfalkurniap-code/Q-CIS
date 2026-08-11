@@ -141,20 +141,20 @@
                 <span>Dashboard</span>
             </a>
 
-            <!-- Tab Kelola (Sudah Terhubung ke route kelola.gudang) -->
+            <!-- Tab Kelola -->
             <a href="{{ route('kelola.gudang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
                 <span>Kelola</span>
             </a>
 
-            <!-- Tab Input -->
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+            <!-- Tab Input (Sudah terhubung ke route input.barang) -->
+            <a href="{{ route('input.barang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-square-plus text-base mb-0.5"></i>
                 <span>Input</span>
             </a>
 
-            <!-- Tab Kritis -->
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition relative">
+            <!-- Tab Kritis (Sudah terhubung ke route stok.kritis) -->
+            <a href="{{ route('stok.kritis') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition relative">
                 <div class="relative">
                     <i class="fa-solid fa-triangle-exclamation text-base mb-0.5"></i>
                     <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>

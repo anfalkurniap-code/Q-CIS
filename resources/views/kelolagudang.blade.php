@@ -153,11 +153,11 @@
         </div>
 
         <!-- Tombol Floating Add (+) -->
-        <button class="absolute bottom-20 right-5 bg-[#00f0aa] text-[#024d35] w-12 h-12 rounded-2xl shadow-lg border border-[#024d35]/20 flex items-center justify-center hover:scale-105 active:scale-95 transition z-20">
+        <a href="{{ route('input.barang') }}" class="absolute bottom-20 right-5 bg-[#00f0aa] text-[#024d35] w-12 h-12 rounded-2xl shadow-lg border border-[#024d35]/20 flex items-center justify-center hover:scale-105 active:scale-95 transition z-20">
             <i class="fa-solid fa-plus text-xl font-bold"></i>
-        </button>
+        </a>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation Bar (Semua Route Terhubung) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-30">
             <a href="{{ route('dashboard.gudang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-solid fa-border-all text-base mb-0.5"></i>
@@ -169,12 +169,12 @@
                 <span>Kelola</span>
             </a>
 
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+            <a href="{{ route('input.barang') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-square-plus text-base mb-0.5"></i>
                 <span>Input</span>
             </a>
 
-            <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition relative">
+            <a href="{{ route('stok.kritis') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition relative">
                 <div class="relative">
                     <i class="fa-solid fa-triangle-exclamation text-base mb-0.5"></i>
                     <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
