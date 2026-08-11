@@ -243,15 +243,26 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
+});
+=======
+=======
 Route::get('/HalamanProfile', function () {
     return view('HalamanProfile');
 });
 
+>>>>>>> 0834c257a561678aeb76da5a4c216e754be05e5c
 // Transaksi Controller Routes
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
 Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
 Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
+<<<<<<< HEAD
+>>>>>>> 4ce36112076b05bfdf6c17cbcfd6cd292ae17c53
+=======
 
 
 // ==========================================
@@ -309,3 +320,4 @@ Route::get('/HalamanInformasiAkun', function () {
 });
 
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+>>>>>>> 0834c257a561678aeb76da5a4c216e754be05e5c
