@@ -35,19 +35,24 @@
                 </div>
                 <button class="relative text-slate-600 hover:text-slate-900 transition">
                     <i class="fa-regular fa-bell text-xl"></i>
+                    @if(isset($stokKritisCount) && $stokKritisCount > 0)
+                        <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
+                    @endif
                 </button>
             </header>
 
             <!-- Main Content Container -->
             <main class="p-4 space-y-4">
 
-                <!-- Card Total Stok Kritis (Fitur Restock Semua Dihilangkan) -->
+                <!-- Card Total Stok Kritis Dinamis -->
                 <div class="bg-[#024d35] text-white rounded-2xl p-5 relative overflow-hidden shadow-sm">
                     <i class="fa-solid fa-triangle-exclamation text-8xl absolute -right-3 -bottom-3 text-emerald-900/40 pointer-events-none"></i>
                     
                     <p class="text-[10px] font-extrabold tracking-widest text-emerald-300 uppercase mb-1">TOTAL STOK KRITIS</p>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-4xl font-black text-[#00f0aa] font-mono-custom">12</span>
+                        <span class="text-4xl font-black text-[#00f0aa] font-mono-custom">
+                            {{ sprintf('%02d', $stokKritisCount ?? count($itemsKritis ?? [])) }}
+                        </span>
                         <span class="text-base font-bold text-emerald-100">Barang</span>
                     </div>
                     <p class="text-xs text-emerald-100/80 font-medium max-w-[200px]">Perlu tindakan segera hari ini.</p>
@@ -67,108 +72,70 @@
                     </button>
                 </div>
 
-                <!-- List Items Kritis -->
+                <!-- List Items Kritis Dinamis -->
                 <div class="space-y-3">
+                    @forelse($itemsKritis ?? [] as $item)
+                        @php
+                            $stok = $item->stock ?? 0;
+                            $ambang = $item->threshold ?? 100;
+                            // Persentase stok terhadap ambang batas (maksimal 100%)
+                            $percentage = min(100, max(0, ($ambang > 0 ? ($stok / $ambang) * 100 : 0)));
+                            $isVeryCritical = $percentage <= 30;
+                        @endphp
 
-                    <!-- Item 1: Baut Baja -->
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm space-y-3">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=150" alt="Baut Baja" class="w-14 h-14 rounded-xl object-cover border border-slate-100">
-                                <div>
-                                    <h3 class="font-extrabold text-slate-800 text-sm leading-snug">Baut Baja M12 &times; 50mm</h3>
-                                    <p class="text-[11px] text-slate-400 font-bold font-mono-custom mt-0.5">ID: SKU-2910-A</p>
-                                    <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-600 font-extrabold text-[9px] rounded uppercase tracking-wider">
-                                        SANGAT KRITIS
+                        <div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="{{ $item->image_url ?? 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=150' }}" 
+                                         alt="{{ $item->name ?? 'Barang' }}" 
+                                         class="w-14 h-14 rounded-xl object-cover border border-slate-100">
+                                    <div>
+                                        <h3 class="font-extrabold text-slate-800 text-sm leading-snug">
+                                            {{ $item->name ?? 'Nama Barang' }}
+                                        </h3>
+                                        <p class="text-[11px] text-slate-400 font-bold font-mono-custom mt-0.5">
+                                            ID: {{ $item->sku ?? 'SKU-0000' }}
+                                        </p>
+
+                                        @if($isVeryCritical)
+                                            <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-600 font-extrabold text-[9px] rounded uppercase tracking-wider">
+                                                SANGAT KRITIS
+                                            </span>
+                                        @else
+                                            <span class="inline-block mt-1 px-2 py-0.5 bg-amber-100 text-amber-700 font-extrabold text-[9px] rounded uppercase tracking-wider">
+                                                STOK MENIPIS
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <button class="text-slate-400 hover:text-slate-600 p-1">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-slate-600 font-medium">
+                                        Stok Saat Ini: <strong class="{{ $isVeryCritical ? 'text-red-600' : 'text-amber-600' }} font-extrabold">{{ $stok }} {{ $item->unit ?? 'pcs' }}</strong>
                                     </span>
+                                    <span class="text-slate-400 font-medium">Ambang: {{ $ambang }} {{ $item->unit ?? 'pcs' }}</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                                    <div class="{{ $isVeryCritical ? 'bg-red-500' : 'bg-amber-500' }} h-2 rounded-full" style="width: {{ $percentage }}%"></div>
                                 </div>
                             </div>
-                            <button class="text-slate-400 hover:text-slate-600 p-1">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
+
+                            <a href="{{ route('kelola.gudang') }}" class="block text-center w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
+                                Detail
+                            </a>
                         </div>
-
-                        <div class="space-y-1.5">
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-600 font-medium">Stok Saat Ini: <strong class="text-red-600 font-extrabold">45 pcs</strong></span>
-                                <span class="text-slate-400 font-medium">Ambang: 200 pcs</span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                <div class="bg-red-500 h-2 rounded-full" style="width: 22.5%"></div>
-                            </div>
+                    @empty
+                        <div class="bg-white border border-slate-200/90 rounded-2xl p-8 text-center text-slate-500">
+                            <i class="fa-solid fa-[#029668] fa-circle-check text-3xl text-emerald-500 mb-2 block"></i>
+                            <p class="text-xs font-semibold text-slate-700">Tidak ada stok dalam kondisi kritis.</p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Semua persediaan barang aman.</p>
                         </div>
-
-                        <button class="w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
-                            Detail
-                        </button>
-                    </div>
-
-                    <!-- Item 2: Kabel Tembaga -->
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm space-y-3">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1605557202138-097824c3f8c4?w=150" alt="Kabel Tembaga" class="w-14 h-14 rounded-xl object-cover border border-slate-100">
-                                <div>
-                                    <h3 class="font-extrabold text-slate-800 text-sm leading-snug">Kabel Tembaga 2.5mm</h3>
-                                    <p class="text-[11px] text-slate-400 font-bold font-mono-custom mt-0.5">ID: SKU-1182-C</p>
-                                    <span class="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-600 font-extrabold text-[9px] rounded uppercase tracking-wider">
-                                        STOK MENIPIS
-                                    </span>
-                                </div>
-                            </div>
-                            <button class="text-slate-400 hover:text-slate-600 p-1">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-600 font-medium">Stok Saat Ini: <strong class="text-[#029668] font-extrabold">110 m</strong></span>
-                                <span class="text-slate-400 font-medium">Ambang: 150 m</span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                <div class="bg-[#029668] h-2 rounded-full" style="width: 73%"></div>
-                            </div>
-                        </div>
-
-                        <button class="w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
-                            Detail
-                        </button>
-                    </div>
-
-                    <!-- Item 3: Pelumas Mesin -->
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm space-y-3">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=150" alt="Pelumas Mesin" class="w-14 h-14 rounded-xl object-cover border border-slate-100">
-                                <div>
-                                    <h3 class="font-extrabold text-slate-800 text-sm leading-snug">Pelumas Mesin Gear-X</h3>
-                                    <p class="text-[11px] text-slate-400 font-bold font-mono-custom mt-0.5">ID: SKU-8801-L</p>
-                                    <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-600 font-extrabold text-[9px] rounded uppercase tracking-wider">
-                                        SANGAT KRITIS
-                                    </span>
-                                </div>
-                            </div>
-                            <button class="text-slate-400 hover:text-slate-600 p-1">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-600 font-medium">Stok Saat Ini: <strong class="text-red-600 font-extrabold">5 L</strong></span>
-                                <span class="text-slate-400 font-medium">Ambang: 50 L</span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                <div class="bg-red-500 h-2 rounded-full" style="width: 10%"></div>
-                            </div>
-                        </div>
-
-                        <button class="w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
-                            Detail
-                        </button>
-                    </div>
-
+                    @endforelse
                 </div>
 
             </main>
@@ -176,9 +143,9 @@
 
         <!-- Floating Action Button (+ Plus) -->
         <div class="absolute bottom-16 right-4 z-20">
-            <button class="w-12 h-12 bg-[#024d35] text-white rounded-2xl flex items-center justify-center shadow-xl hover:bg-[#013826] transition-all">
+            <a href="{{ route('input.barang') }}" class="w-12 h-12 bg-[#024d35] text-white rounded-2xl flex items-center justify-center shadow-xl hover:bg-[#013826] transition-all">
                 <i class="fa-solid fa-plus text-lg"></i>
-            </button>
+            </a>
         </div>
 
         <!-- Bottom Navigation Bar (Fixed at bottom) -->
