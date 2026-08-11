@@ -291,3 +291,11 @@ Route::get('/HalamanInformasiAkun', function () {
 });
 
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/HalamanKeamananAkun', function () {
+    return view('HalamanKeamananAkun');
+});
+
+Route::get('/BantuanKasir', function () {
+    return view('BantuanKasir');
+});
