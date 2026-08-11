@@ -10,24 +10,20 @@ class CheckRole
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         // 1. Cek apakah user sudah login
         if (!auth()->check()) {
             return redirect('/login');
         }
 
-        // 2. Ambil role user yang sedang login
-        $userRole = auth()->user()->role;
-
-        // 3. Cek apakah rolenya kasir atau admin
-        if (in_array($userRole, ['kasir', 'admin'])) {
+        // 2. Cek apakah role user ada di dalam daftar role yang diizinkan untuk route tersebut
+        if (in_array(auth()->user()->role, $roles)) {
             return $next($request);
         }
 
-        abort(403, 'AKSES DITOLAK! HALAMAN INI KHUSUS UNTUK KASIR.');
+        // 3. Jika tidak sesuai role-nya
+        abort(403, 'AKSES DITOLAK! Anda tidak memiliki hak akses ke halaman ini.');
     }
 }

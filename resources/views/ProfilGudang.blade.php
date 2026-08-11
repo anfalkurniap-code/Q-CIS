@@ -132,21 +132,21 @@
             </main>
         </div>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation Bar (Semua Route Terhubung) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2.5 px-3 flex justify-between items-center z-20">
             <a href="{{ route('dashboard.gudang') }}" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
                 <i class="fa-solid fa-border-all text-sm"></i>
                 <span class="text-[9px] font-extrabold">Dashboard</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
+            <a href="{{ route('kelola.gudang') }}" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
                 <i class="fa-solid fa-box-archive text-sm"></i>
                 <span class="text-[9px] font-extrabold">Kelola</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
+            <a href="{{ route('input.barang') }}" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
                 <i class="fa-solid fa-square-plus text-sm"></i>
                 <span class="text-[9px] font-extrabold">Input</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
+            <a href="{{ route('stok.kritis') }}" class="flex flex-col items-center gap-1 text-gray-400 hover:text-[#004D40]">
                 <i class="fa-solid fa-triangle-exclamation text-sm"></i>
                 <span class="text-[9px] font-extrabold">Kritis</span>
             </a>

@@ -35,7 +35,7 @@
                         <span class="absolute top-0.5 right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
                     </button>
                   
-                    <!-- Foto Profil Header: Sudah disamakan dengan Halaman Profil -->
+                    <!-- Foto Profil Header -->
                     <a href="{{ url('/HalamanProfile') }}" class="block relative transition-transform active:scale-95" title="Ke Halaman Profil">
                         <img id="header-avatar" 
                              src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300' }}" 
@@ -70,20 +70,38 @@
             </div>       
             <div class="grid grid-cols-2 gap-4" id="product-grid">
                 @foreach($products as $item)          
-                <div data-category="{{ $item['kategori'] ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
-                    <span class="absolute top-3 right-3 {{ $item['warna_badge'] }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
-                        {{ $item['badge'] }}
+                <div data-category="{{ $item->kategori ?? $item->category ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
+                    
+                    @if(!empty($item->badge))
+                    <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
+                        {{ $item->badge }}
                     </span>
+                    @endif
+
                     <div class="bg-gray-50 rounded-xl p-2 flex justify-center items-center mb-3 h-32">
-                        <img src="{{ $item['img'] }}" alt="{{ $item['nama'] }}" class="h-24 object-contain">
+                        <img src="{{ $item->img ?? $item->image ?? $item->image_url ?? 'https://via.placeholder.com/150' }}" 
+                             alt="{{ $item->nama ?? $item->name ?? 'Produk' }}" 
+                             class="h-24 object-contain">
                     </div>
+
                     <div>
-                        <h3 class="font-bold text-sm text-slate-800 line-clamp-1">{{ $item['nama'] }}</h3>
-                        <p class="text-[10px] text-gray-400 mb-2">Stok: {{ $item['stok'] }}</p>
+                        <h3 class="font-bold text-sm text-slate-800 line-clamp-1">
+                            {{ $item->nama ?? $item->name ?? 'Tanpa Nama' }}
+                        </h3>
+                        <p class="text-[10px] text-gray-400 mb-2">
+                            Stok: {{ $item->stok ?? $item->stock ?? 0 }}
+                        </p>
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-emerald-700 text-sm">Rp {{ number_format($item['harga'], 0, ',', '.') }}</span>
+                            <span class="font-bold text-emerald-700 text-sm">
+                                Rp {{ number_format($item->harga ?? $item->price ?? 0, 0, ',', '.') }}
+                            </span>
                             <button 
-                                onclick="tambahKeKeranjang('{{ $item['id'] ?? $loop->index }}', '{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['img'] }}')"
+                                onclick="tambahKeKeranjang(
+                                    '{{ $item->id ?? $loop->index }}', 
+                                    '{{ addslashes($item->nama ?? $item->name ?? 'Produk') }}', 
+                                    {{ $item->harga ?? $item->price ?? 0 }}, 
+                                    '{{ $item->img ?? $item->image ?? $item->image_url ?? '' }}'
+                                )"
                                 class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition"
                             >
                                 <i data-lucide="plus" class="w-4 h-4"></i>

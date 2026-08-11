@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthKasirController;
+use App\Http\Controllers\AuthGudangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +34,7 @@ Route::get('/belajar', function () {
 
 
 // ==========================================
-// 2. AUTHENTICATION (LOGIN & LOGOUT)
+// 2. AUTHENTICATION (LOGIN, LOGOUT, & PENDAFTARAN)
 // ==========================================
 // Login Kasir
 Route::get('/loginKasir', function () {
@@ -45,7 +48,12 @@ Route::get('/LoginGudang', function () {
     return view('LoginGudang');
 })->name('login.gudang');
 
-Route::post('/LoginGudang/proses', [AuthKasirController::class, 'login'])->name('login.gudang.post');
+Route::post('/LoginGudang/proses', [AuthGudangController::class, 'login'])->name('login.gudang.post');
+
+// Route Pendaftaran / Informasi Admin
+Route::get('/pendaftaran', function () {
+    return view('pendaftaran');
+})->name('pendaftaran');
 
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
@@ -59,105 +67,31 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
+// Callback Penanganan Data Dashboard Gudang (Dinamis dari Database)
+$gudangDashboardData = function () {
+    $totalSku = DB::table('products')->count();
+    $stokKritisCount = DB::table('products')->where('stock', '<=', 5)->count();
 
-// Gudang Dashboard (Dengan Data Dummy)
-Route::get('/HalamanDepanGudang', function () {
-    $totalSku = "1,284";
-    $stokKritisCount = 24;
+    // Mengambil barang yang dimasukkan hari ini
+    $barangHariIni = DB::table('products')
+        ->whereDate('created_at', today())
+        ->orderBy('id', 'desc')
+        ->get();
 
-    $items = [
-        [
-            'sku' => '#SKU-88291-B',
-            'nama' => 'Piston Ring Set 4D56',
-            'kategori' => 'Suku Cadang',
-            'stok' => 5,
-            'satuan' => 'Pcs',
-            'status' => 'KRITIS',
-            'lokasi' => 'Rak A-02',
-            'is_kritis' => true
-        ],
-        [
-            'sku' => '#SKU-18293-C',
-            'nama' => 'Shell Helix HX7 10W-40',
-            'kategori' => 'Pelumas',
-            'stok' => 142,
-            'satuan' => 'Ltr',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Rak B-12',
-            'is_kritis' => false
-        ],
-        [
-            'sku' => '#SKU-55410-T',
-            'nama' => 'Bridgestone Dueler A/T',
-            'kategori' => 'Ban',
-            'stok' => 28,
-            'satuan' => 'Unit',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Gudang Luar',
-            'is_kritis' => false
-        ],
-        [
-            'sku' => '#SKU-11984-E',
-            'nama' => 'Pulpen Gel',
-            'kategori' => 'Elektronik',
-            'stok' => 132,
-            'satuan' => 'Unit',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Rak E-05',
-            'is_kritis' => false
-        ],
-    ];
+    return view('DashboardGudang', compact('totalSku', 'stokKritisCount', 'barangHariIni'));
+};
 
-    return view('DashboardGudang', compact('totalSku', 'stokKritisCount', 'items'));
-})->name('dashboard.gudang');
+// Route Gudang Dashboard
+Route::get('/HalamanDepanGudang', $gudangDashboardData)->name('dashboard.gudang');
+Route::get('/dashboard-gudang', $gudangDashboardData);
 
-// Route Kelola Gudang
+// Route Kelola Gudang (Dinamis dari Database)
 Route::get('/kelola-gudang', function () {
-    $totalSku = "1,284";
-    $stokKritisCount = 24;
+    $totalSku = DB::table('products')->count();
+    $stokKritisCount = DB::table('products')->where('stock', '<=', 5)->count();
 
-    $items = [
-        [
-            'sku' => '#SKU-88291-B',
-            'nama' => 'Piston Ring Set 4D56',
-            'kategori' => 'Suku Cadang',
-            'stok' => 5,
-            'satuan' => 'Pcs',
-            'status' => 'KRITIS',
-            'lokasi' => 'Rak A-02',
-            'is_kritis' => true
-        ],
-        [
-            'sku' => '#SKU-18293-C',
-            'nama' => 'Shell Helix HX7 10W-40',
-            'kategori' => 'Pelumas',
-            'stok' => 142,
-            'satuan' => 'Ltr',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Rak B-12',
-            'is_kritis' => false
-        ],
-        [
-            'sku' => '#SKU-55410-T',
-            'nama' => 'Bridgestone Dueler A/T',
-            'kategori' => 'Ban',
-            'stok' => 28,
-            'satuan' => 'Unit',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Gudang Luar',
-            'is_kritis' => false
-        ],
-        [
-            'sku' => '#SKU-11984-E',
-            'nama' => 'Pulpen Gel',
-            'kategori' => 'Elektronik',
-            'stok' => 132,
-            'satuan' => 'Unit',
-            'status' => 'TERSEDIA',
-            'lokasi' => 'Rak E-05',
-            'is_kritis' => false
-        ],
-    ];
+    // Mengambil semua data produk dari database
+    $items = DB::table('products')->orderBy('id', 'desc')->get();
 
     return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'items'));
 })->name('kelola.gudang');
@@ -170,51 +104,32 @@ Route::get('/ubah-password-gudang', function () {
     return view('UbahPaswordGudang');
 })->name('password.gudang.change');
 
+// Route Input Barang (Gudang)
+Route::get('/input-barang', [ProductController::class, 'create'])->name('input.barang');
+Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
+
+// Route Stok Kritis (Dinamis dari Database - Disesuaikan dengan stokkritis.blade.php)
+Route::get('/stok-kritis', function () {
+    $itemsKritis = DB::table('products')
+        ->where('stock', '<=', 5)
+        ->orderBy('stock', 'asc')
+        ->get();
+
+    $stokKritisCount = $itemsKritis->count();
+
+    // Mengarahkan ke file view stokkritis.blade.php dengan variabel $itemsKritis dan $stokKritisCount
+    return view('stok-kritis', compact('itemsKritis', 'stokKritisCount'));
+})->name('stok.kritis');
+
 
 // ==========================================
 // 4. HALAMAN KATALOG / SHOP & TRANSAKSI
 // ==========================================
+// Halaman Shop (Dinamis dari Database)
 Route::get('/HalamanShop', function () {
-    $product = [
-        [
-            'nama' => 'Coca-cola Kaleng',
-            'stok' => 24,
-            'harga' => 6500,
-            'kategori' => 'Minuman',
-            'badge' => 'TERSEDIA',
-            'warna_badge' => 'bg-emerald-400',
-            'img' => 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300'
-        ],
-        [
-            'nama' => 'Lays Classic 68g',
-            'stok' => 15,
-            'harga' => 10500,
-            'kategori' => 'Makanan Ringan',
-            'badge' => 'TERSEDIA',
-            'warna_badge' => 'bg-emerald-400',
-            'img' => 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=300'
-        ],
-        [
-            'nama' => 'Susu UHT 250ml',
-            'stok' => 42,
-            'harga' => 5500,
-            'kategori' => 'Minuman',
-            'badge' => 'TERSEDIA',
-            'warna_badge' => 'bg-emerald-400',
-            'img' => 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=300'
-        ],
-        [
-            'nama' => 'Pulpen Faster C600',
-            'stok' => 5,
-            'harga' => 3500,
-            'kategori' => 'Alat Tulis',
-            'badge' => 'HAMPIR HABIS',
-            'warna_badge' => 'bg-emerald-400',
-            'img' => 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=300'
-        ],
-    ];
+    $products = DB::table('products')->orderBy('id', 'desc')->get();
 
-    return view('HalamanShop', ['products' => $product]);
+    return view('HalamanShop', compact('products'));
 })->name('halaman.shop');
 
 Route::get('/halamanpembayaran', function () {
@@ -225,6 +140,10 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
+});
+
 Route::get('/HalamanProfile', function () {
     return view('HalamanProfile');
 });
@@ -233,27 +152,25 @@ Route::get('/HalamanProfile', function () {
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
 Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
-Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
+Route::get('/pembayaran/berhasil', [TransactionController::class, 'pembayaran.berhasil']);
 
 
 // ==========================================
-// 5. ROUTE DASHBOARD KEPALA TOKO
+// 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
+    $lowStockItems = DB::table('products')
+        ->where('stock', '<=', 5)
+        ->get();
+
     return view('dashboardkepalatoko', [
         'today_sales'         => 1450000,
         'sales_growth'        => 12,
         'active_orders'       => 24,
         'processing_orders'   => 18,
         'ready_pickup_orders' => 6,
-        'low_stock_count'     => 5,
-        'low_stock_items'     => [
-            ['name' => 'Coca-cola Kaleng', 'status' => 'CRITICAL'],
-            ['name' => 'Pulpen Faster C600', 'status' => 'WARNING'],
-            ['name' => 'Susu UHT 250ml', 'status' => 'WARNING'],
-            ['name' => 'Minyak Goreng 1L', 'status' => 'CRITICAL'],
-            ['name' => 'Indomie Goreng', 'status' => 'WARNING'],
-        ],
+        'low_stock_count'     => $lowStockItems->count(),
+        'low_stock_items'     => $lowStockItems,
         'sales_trend'         => [
             'Mon' => 450,
             'Tue' => 620,
