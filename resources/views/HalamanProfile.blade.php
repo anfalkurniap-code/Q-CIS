@@ -119,7 +119,7 @@
           </a>
 
           <!-- Pengaturan Keamanan -->
-          <a href="#" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          <a href="{{ url('/HalamanKeamananAkun') }}" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div class="flex items-center gap-3.5">
               <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
                 <i class="fa-solid fa-lock text-base"></i>
@@ -141,7 +141,7 @@
         <div class="bg-white rounded-2xl border border-slate-100 divide-y divide-slate-50 shadow-sm overflow-hidden">
 
           <!-- Bantuan & FAQ -->
-          <a href="#" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          <a href="{{ url('/BantuanKasir') }}" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div class="flex items-center gap-3.5">
               <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center">
                 <i class="fa-regular fa-circle-question text-lg"></i>
