@@ -16,6 +16,8 @@ use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfilGudangController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LoginKepalaTokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +57,10 @@ Route::get('/LoginGudang', function () {
 })->name('login.gudang');
 
 Route::post('/LoginGudang/proses', [AuthGudangController::class, 'login'])->name('login.gudang.post');
+
+// Login Kepala Toko
+Route::get('/LoginKepalaToko', [LoginKepalaTokoController::class, 'showLoginForm'])->name('login.kepalatoko');
+Route::post('/LoginKepalaToko', [LoginKepalaTokoController::class, 'login']);
 
 // Route Pendaftaran / Informasi Admin
 Route::get('/pendaftaran', function () {
@@ -252,3 +258,6 @@ Route::get('/HalamanKeamananAkun', function () {
 Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
 });
+
+// Route Report Index
+Route::get('/ReportIndex', [ReportController::class, 'index']);
