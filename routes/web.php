@@ -8,14 +8,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
-<<<<<<< Updated upstream
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
-
-=======
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LoginKepalaTokoController;
->>>>>>> Stashed changes
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -208,7 +205,6 @@ Route::get('/dashboardkepalatoko', function () {
     ]);
 });
 
-<<<<<<< Updated upstream
 Route::get('/HalamanInformasiAkun', function () {
     return view('HalamanInformasiAkun');
 });
@@ -221,7 +217,8 @@ Route::get('/HalamanKeamananAkun', function () {
 
 Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
-=======
+});
+
 //route reportindex
 Route::get('/ReportIndex', [ReportController::class, 'index']);
 
@@ -233,5 +230,4 @@ Route::post('/LoginKepalaToko', [LoginKepalaTokoController::class, 'login']);
 // Route untuk menampilkan halaman login kepala toko
 Route::get('/LoginKepalaToko', function () {
     return view('LoginKepalaToko'); // Pastikan nama file blade-nya selaras (LoginKepalaToko.blade.php)
->>>>>>> Stashed changes
 });
