@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\AuthGudangController;
 use App\Http\Controllers\DashboardController;
@@ -10,6 +15,9 @@ use App\Http\Controllers\StockReportController;
 use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfilGudangController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LoginKepalaTokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +58,10 @@ Route::get('/LoginGudang', function () {
 
 Route::post('/LoginGudang/proses', [AuthGudangController::class, 'login'])->name('login.gudang.post');
 
+// Login Kepala Toko
+Route::get('/LoginKepalaToko', [LoginKepalaTokoController::class, 'showLoginForm'])->name('login.kepalatoko');
+Route::post('/LoginKepalaToko', [LoginKepalaTokoController::class, 'login']);
+
 // Route Pendaftaran / Informasi Admin
 Route::get('/pendaftaran', function () {
     return view('pendaftaran');
@@ -88,7 +100,7 @@ Route::get('/dashboard-gudang', $gudangDashboardData);
 // Route Kelola Gudang (Dinamis dari Database)
 Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
-    $stokKritisCount = DB::table('products')->where('stock', '<=', 5)->count();
+    $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
 
     // Mengambil semua data produk dari database
     $items = DB::table('products')->orderBy('id', 'desc')->get();
@@ -96,19 +108,50 @@ Route::get('/kelola-gudang', function () {
     return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'items'));
 })->name('kelola.gudang');
 
-Route::get('/profil-gudang', function () {
-    return view('ProfilGudang');
-})->name('profil.gudang');
+// Route Profil Gudang (Tampil & Update)
+Route::get('/profil-gudang', [ProfilGudangController::class, 'index'])->name('profil.gudang');
+Route::put('/profil-gudang', [ProfilGudangController::class, 'update'])->name('profil.gudang.update');
 
+// Route Ubah Password Gudang (Halaman & Proses Update Langsung)
 Route::get('/ubah-password-gudang', function () {
     return view('UbahPaswordGudang');
 })->name('password.gudang.change');
+
+Route::put('/ubah-password-gudang', function (Request $request) {
+    // 1. Validasi Input Form
+    $request->validate([
+        'current_password' => ['required', 'current_password'],
+        'password'         => ['required', 'confirmed', Password::min(8)],
+    ], [
+        'current_password.required'         => 'Kata sandi saat ini wajib diisi.',
+        'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
+        'password.required'                 => 'Kata sandi baru wajib diisi.',
+        'password.confirmed'                => 'Konfirmasi kata sandi baru tidak cocok.',
+        'password.min'                      => 'Kata sandi baru minimal 8 karakter.',
+    ]);
+
+    // 2. Update Password Pengguna di Database
+    $user = Auth::user();
+    
+    if ($user) {
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+    } else {
+        DB::table('users')
+            ->where('id', session('user_id'))
+            ->update(['password' => Hash::make($request->password)]);
+    }
+
+    // 3. Kembali ke Halaman Profil Gudang dengan Notifikasi
+    return redirect()->route('profil.gudang')->with('success', 'Kata sandi berhasil diperbarui!');
+})->name('password.gudang.update');
 
 // Route Input Barang (Gudang)
 Route::get('/input-barang', [ProductController::class, 'create'])->name('input.barang');
 Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
 
-// Route Stok Kritis (Dinamis dari Database - Disesuaikan dengan stokkritis.blade.php)
+// Route Stok Kritis (Dinamis dari Database)
 Route::get('/stok-kritis', function () {
     $itemsKritis = DB::table('products')
         ->where('stock', '<=', 5)
@@ -117,7 +160,6 @@ Route::get('/stok-kritis', function () {
 
     $stokKritisCount = $itemsKritis->count();
 
-    // Mengarahkan ke file view stokkritis.blade.php dengan variabel $itemsKritis dan $stokKritisCount
     return view('stok-kritis', compact('itemsKritis', 'stokKritisCount'));
 })->name('stok.kritis');
 
@@ -220,3 +262,6 @@ Route::get('/HalamanKeamananAkun', function () {
 Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
 });
+
+// Route Report Index
+Route::get('/ReportIndex', [ReportController::class, 'index']);

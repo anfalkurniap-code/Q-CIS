@@ -4,108 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Q-CIS Mobile - Input Barang</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f1f5f9;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-custom { font-family: 'Roboto Mono', monospace; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="flex justify-center items-center min-h-screen">
+<body class="bg-slate-200 min-h-screen flex items-center justify-center p-0 sm:p-4">
 
-    <div class="w-full max-w-[400px] bg-[#f8fafc] min-h-screen flex flex-col justify-between shadow-2xl relative">
-        
-        <div class="p-5 pb-24">
-            
-            <!-- Header TopBar -->
-            <div class="flex justify-between items-center mb-5 pt-2">
-                <div class="flex items-center gap-2 text-[#064e3b] font-extrabold text-lg tracking-tight">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                    <span>Q-CIS</span>
-                </div>
-                <button class="text-gray-500 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                </button>
-            </div>
+    <!-- Container Tampilan Mobile -->
+    <div class="w-full max-w-[420px] bg-[#f8fafb] min-h-screen sm:min-h-[840px] shadow-2xl relative flex flex-col justify-between overflow-hidden sm:rounded-3xl border border-slate-200">
 
-            <!-- Page Title -->
-            <div class="mb-5">
-                <h1 class="text-xl font-bold text-gray-900 leading-tight">Input Barang</h1>
-                <p class="text-xs text-gray-500 mt-1">Catat barang masuk baru ke dalam inventaris gudang.</p>
-            </div>
+        <!-- CONTENT SECTION -->
+        <div class="overflow-y-auto pb-24">
 
-            <!-- Alert Sukses -->
-            @if(session('success'))
-                <div class="mb-4 p-3 bg-emerald-100 border border-emerald-400 text-emerald-700 text-xs rounded-lg font-medium">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Alert Error Validasi -->
-            @if ($errors->any())
-                <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-xs rounded-lg font-medium">
-                    <p class="font-bold">Gagal menyimpan data:</p>
-                    <ul class="list-disc pl-4 mt-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('products.store') }}" method="POST" class="space-y-4">
-                @csrf
-                
-                <!-- Nama Barang -->
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 tracking-wider uppercase mb-1">Nama Barang</label>
-                    <input type="text" name="product_name" value="{{ old('product_name') }}" placeholder="Contoh: Pallet Kayu Standard" class="w-full bg-white border border-gray-200 rounded-lg py-2.5 px-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-emerald-600" required>
-                    @error('product_name') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
-                </div>
-
-                <!-- Jumlah (QTY / Stock) -->
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 tracking-wider uppercase mb-1">Jumlah Stock</label>
-                    <div class="flex items-center gap-2">
-                        <button type="button" onclick="decrementQty()" class="w-10 h-10 bg-blue-100/70 text-blue-600 rounded-lg font-bold text-lg flex items-center justify-center hover:bg-blue-200 transition">-</button>
-                        <input type="number" id="qtyInput" name="current_stock" value="{{ old('current_stock', 1) }}" min="1" class="w-full h-10 bg-white border border-gray-200 rounded-lg text-center font-bold text-gray-800 text-sm focus:outline-none focus:border-emerald-600" required>
-                        <button type="button" onclick="incrementQty()" class="w-10 h-10 bg-[#064e3b] text-white rounded-lg font-bold text-lg flex items-center justify-center hover:bg-[#043a2c] transition">+</button>
+            <!-- Header Navbar -->
+            <header class="bg-white px-5 py-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-20 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <div class="text-[#024d35] text-xl">
+                        <i class="fa-solid fa-warehouse"></i>
                     </div>
-                    @error('current_stock') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    <span class="text-xl font-extrabold text-[#024d35] tracking-tight">Q-CIS</span>
                 </div>
+            </header>
 
-                <!-- Harga Barang -->
+            <!-- Main Content Container -->
+            <main class="p-5 space-y-4">
+
+                <!-- Title & Subtitle -->
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 tracking-wider uppercase mb-1">Harga Barang (Price)</label>
-                    <div class="relative flex items-center">
-                        <span class="absolute left-3 text-xs text-gray-500 font-medium">Rp</span>
-                        <input type="number" name="selling_price" value="{{ old('selling_price', 0) }}" class="w-full bg-white border border-gray-200 rounded-lg py-2.5 pl-9 pr-3 text-sm text-gray-800 focus:outline-none focus:border-emerald-600" required>
-                    </div>
-                    @error('selling_price') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    <h1 class="text-xl font-black text-slate-800 tracking-tight">Input Barang</h1>
+                    <p class="text-xs font-medium text-slate-500 mt-0.5">Catat barang masuk baru ke dalam inventaris gudang.</p>
                 </div>
 
-                <!-- Tombol Submit -->
-                <button type="submit" class="w-full bg-[#064e3b] text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#043a2c] transition shadow-md mt-6">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
-                    </svg>
-                    <span>Simpan Data</span>
-                </button>
+                <!-- Alert Sukses -->
+                @if(session('success'))
+                    <div class="p-3 bg-emerald-100 border border-emerald-400 text-emerald-700 text-xs rounded-xl font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                @endif
 
-            </form>
+                <!-- Alert Error Validasi -->
+                @if ($errors->any())
+                    <div class="p-3 bg-red-100 border border-red-400 text-red-700 text-xs rounded-xl font-medium">
+                        <p class="font-bold flex items-center gap-1.5 mb-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Gagal menyimpan data:
+                        </p>
+                        <ul class="list-disc pl-4 space-y-0.5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Form Input -->
+                <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+
+                    <!-- Barcode Produk -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">BARCODE PRODUK</label>
+                        <div class="relative flex items-center">
+                            <input 
+                                type="text" 
+                                name="barcode"
+                                id="barcode"
+                                value="{{ old('barcode') }}"
+                                placeholder="Scan atau ketik barcode..." 
+                                class="w-full bg-white border border-[#028b5e] text-xs font-mono-custom text-slate-800 pl-3.5 pr-10 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
+                            />
+                            <button type="button" class="absolute right-3 text-[#028b5e] hover:text-[#024d35]">
+                                <i class="fa-solid fa-barcode text-lg"></i>
+                            </button>
+                        </div>
+                        @error('barcode') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Nama Barang -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">NAMA BARANG</label>
+                        <input 
+                            type="text" 
+                            name="product_name"
+                            value="{{ old('product_name') }}"
+                            required
+                            placeholder="Contoh: Pallet Kayu Standard" 
+                            class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-800 px-3.5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35] placeholder:text-slate-400"
+                        />
+                        @error('product_name') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Jumlah (QTY) -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">JUMLAH STOCK (QTY)</label>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="decrementQty()" class="w-10 h-10 bg-slate-200/80 hover:bg-slate-300 text-slate-700 rounded-xl flex items-center justify-center font-bold text-lg transition active:scale-95">
+                                <i class="fa-solid fa-minus text-xs"></i>
+                            </button>
+                            <input 
+                                type="number" 
+                                name="current_stock"
+                                id="qtyInput"
+                                value="{{ old('current_stock', 1) }}" 
+                                min="1"
+                                required
+                                class="flex-1 bg-white border border-slate-200 text-center font-bold text-slate-800 text-base py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
+                            />
+                            <button type="button" onclick="incrementQty()" class="w-10 h-10 bg-[#024d35] hover:bg-[#013827] text-white rounded-xl flex items-center justify-center font-bold text-lg transition active:scale-95">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                        @error('current_stock') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Supplier -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">SUPPLIER</label>
+                        <div class="relative">
+                            <select name="supplier_id" class="w-full bg-white border border-[#028b5e] text-xs font-medium text-slate-700 px-3.5 py-3 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#024d35]">
+                                <option value="" disabled {{ old('supplier_id') ? '' : 'selected' }}>Pilih Supplier</option>
+                                @foreach($suppliers ?? [] as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                        {{ $supplier->name ?? $supplier->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+                        @error('supplier_id') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Harga Beli & Harga Jual Grid -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">HARGA BELI</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3 text-xs font-bold text-slate-400">Rp</span>
+                                <input 
+                                    type="number" 
+                                    name="purchase_price"
+                                    value="{{ old('purchase_price', 0) }}"
+                                    placeholder="0" 
+                                    class="w-full bg-white border border-slate-200 text-xs font-bold text-slate-800 pl-9 pr-3 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
+                                />
+                            </div>
+                            @error('purchase_price') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">HARGA JUAL</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3 text-xs font-bold text-slate-400">Rp</span>
+                                <input 
+                                    type="number" 
+                                    name="selling_price"
+                                    value="{{ old('selling_price', 0) }}"
+                                    required
+                                    placeholder="0" 
+                                    class="w-full bg-white border border-slate-200 text-xs font-bold text-slate-800 pl-9 pr-3 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
+                                />
+                            </div>
+                            @error('selling_price') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <!-- Bukti Nota / Resi -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">BUKTI NOTA / RESI</label>
+                        
+                        <!-- Area Klik Pembuka Modal -->
+                        <div onclick="openChoiceModal()" class="w-full border-2 border-dashed border-slate-200 bg-[#f1f5f9]/60 hover:bg-[#e2e8f0]/60 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition min-h-[120px] relative overflow-hidden">
+                            
+                            <!-- UI Default -->
+                            <div id="default-ui" class="flex flex-col items-center justify-center">
+                                <i class="fa-solid fa-camera-retro text-2xl text-slate-400 mb-1.5"></i>
+                                <span class="text-xs font-semibold text-slate-500">Ketuk untuk Ambil / Pilih Foto</span>
+                            </div>
+
+                            <!-- Preview Foto Terpilih -->
+                            <img id="image-preview" src="#" alt="Preview Foto" class="hidden w-full h-36 object-cover rounded-xl shadow-sm">
+                        </div>
+
+                        <!-- Input File Utama (Dikirim ke Server) -->
+                        <input type="file" id="input-galeri" name="receipt_image" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
+
+                        @error('receipt_image') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Tombol Simpan Data -->
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-[#024d35] hover:bg-[#013827] text-white py-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                            <i class="fa-solid fa-box-archive text-sm"></i>
+                            <span>Simpan Data</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </main>
         </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-30">
+            <a href="{{ Route::has('dashboard') ? route('dashboard') : (Route::has('dashboard.gudang') ? route('dashboard.gudang') : '#') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+                <i class="fa-solid fa-border-all text-base mb-0.5"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ Route::has('products.index') ? route('products.index') : (Route::has('kelola.gudang') ? route('kelola.gudang') : '#') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+                <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
+                <span>Kelola</span>
+            </a>
+
+            <a href="{{ Route::has('products.create') ? route('products.create') : (Route::has('input.barang') ? route('input.barang') : '#') }}" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
+                <i class="fa-regular fa-square-plus text-base mb-0.5"></i>
+                <span>Input</span>
+            </a>
+
+            <a href="{{ Route::has('stok.kritis') ? route('stok.kritis') : (Route::has('products.kritis') ? route('products.kritis') : '#') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition relative">
+                <div class="relative">
+                    <i class="fa-solid fa-triangle-exclamation text-base mb-0.5"></i>
+                    @if(isset($stokKritisCount) && $stokKritisCount > 0)
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    @endif
+                </div>
+                <span>Kritis</span>
+            </a>
+
+            <a href="{{ Route::has('profile') ? route('profile') : (Route::has('profil.gudang') ? route('profil.gudang') : '#') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+                <i class="fa-regular fa-user text-base mb-0.5"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
 
     </div>
 
+    <!-- MODAL PILIHAN SUMBER FOTO -->
+    <div id="choice-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center">
+        <div class="bg-white w-full max-w-[420px] rounded-t-3xl sm:rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-extrabold text-slate-800">Pilih Sumber Foto</h3>
+                <button type="button" onclick="closeChoiceModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Opsi 1: Kamera Realtime -->
+            <button type="button" onclick="startCamera()" class="w-full flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-[#024d35] rounded-xl transition font-bold text-xs border border-slate-200/80">
+                <div class="w-9 h-9 bg-emerald-100 text-[#024d35] rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-camera text-base"></i>
+                </div>
+                <div class="text-left">
+                    <p class="font-bold">Ambil Foto Realtime</p>
+                    <p class="text-[10px] text-slate-400 font-normal">Buka kamera webcam / HP</p>
+                </div>
+            </button>
+
+            <!-- Opsi 2: File / Galeri -->
+            <button type="button" onclick="triggerGallery()" class="w-full flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-[#024d35] rounded-xl transition font-bold text-xs border border-slate-200/80">
+                <div class="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-images text-base"></i>
+                </div>
+                <div class="text-left">
+                    <p class="font-bold">Pilih Dari Galeri / File</p>
+                    <p class="text-[10px] text-slate-400 font-normal">Pilih foto dari penyimpanan perangkat</p>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL KAMERA STREAMING REALTIME -->
+    <div id="camera-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-white w-full max-w-[400px] rounded-2xl p-4 space-y-4 flex flex-col items-center">
+            <div class="w-full flex justify-between items-center border-b pb-2">
+                <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-camera mr-1"></i> Kamera Realtime</span>
+                <button type="button" onclick="stopCamera()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Video Stream Kamera -->
+            <div class="w-full h-64 bg-black rounded-xl overflow-hidden relative flex items-center justify-center">
+                <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover"></video>
+            </div>
+
+            <!-- Canvas Tersembunyi untuk Capture Image -->
+            <canvas id="webcam-canvas" class="hidden"></canvas>
+
+            <!-- Tombol Jepret -->
+            <div class="flex gap-2 w-full">
+                <button type="button" onclick="stopCamera()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs">
+                    Batal
+                </button>
+                <button type="button" onclick="takeSnapshot()" class="flex-1 py-3 bg-[#024d35] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-circle-dot"></i> Ambil Foto
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let stream = null;
+
         function incrementQty() {
             const qtyInput = document.getElementById('qtyInput');
             qtyInput.value = parseInt(qtyInput.value || 0) + 1;
@@ -117,6 +326,96 @@
                 qtyInput.value = parseInt(qtyInput.value) - 1;
             }
         }
+
+        // Modal Controls
+        function openChoiceModal() {
+            document.getElementById('choice-modal').classList.remove('hidden');
+        }
+
+        function closeChoiceModal() {
+            document.getElementById('choice-modal').classList.add('hidden');
+        }
+
+        function triggerGallery() {
+            closeChoiceModal();
+            document.getElementById('input-galeri').click();
+        }
+
+        // Buka Kamera (Webcam Laptop / Kamera HP)
+        async function startCamera() {
+            closeChoiceModal();
+            const cameraModal = document.getElementById('camera-modal');
+            const video = document.getElementById('webcam-video');
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" }, 
+                    audio: false 
+                });
+                video.srcObject = stream;
+                cameraModal.classList.remove('hidden');
+            } catch (err) {
+                alert('Akses kamera ditolak atau tidak ditemukan pada perangkat ini.');
+                console.error(err);
+            }
+        }
+
+        // Tutup & Matikan Stream Kamera
+        function stopCamera() {
+            const cameraModal = document.getElementById('camera-modal');
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            cameraModal.classList.add('hidden');
+        }
+
+        // Ambil Foto dari Stream Video
+        function takeSnapshot() {
+            const video = document.getElementById('webcam-video');
+            const canvas = document.getElementById('webcam-canvas');
+            const imagePreview = document.getElementById('image-preview');
+            const defaultUI = document.getElementById('default-ui');
+            const fileInput = document.getElementById('input-galeri');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Konversi Canvas ke File & Masukkan ke Form Input File
+            canvas.toBlob((blob) => {
+                const file = new File([blob], "bukti_nota.jpg", { type: "image/jpeg" });
+                
+                // Gunakan DataTransfer untuk menyisipkan File ke Input HTML
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                // Tampilkan Preview Foto
+                imagePreview.src = URL.createObjectURL(blob);
+                imagePreview.classList.remove('hidden');
+                defaultUI.classList.add('hidden');
+
+                stopCamera();
+            }, 'image/jpeg');
+        }
+
+        // Preview saat pilih file dari Galeri
+        function handleFileSelect(input) {
+            const defaultUI = document.getElementById('default-ui');
+            const imagePreview = document.getElementById('image-preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    defaultUI.classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
+
 </body>
 </html>

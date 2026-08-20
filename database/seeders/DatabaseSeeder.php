@@ -17,25 +17,40 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'gudang@gmail.com'],
             [
-                'name' => 'Dimas Aditia Ananda', // Sesuaikan dengan nama pengguna
+                'name'     => 'Dimas Aditia Ananda',
+                'username' => 'gudang',
                 'password' => Hash::make('12345678'),
-                'role' => 'gudang',
+                'role'     => 'gudang',
             ]
         );
 
-        // 2. Akun Petugas Kasir (Opsional, agar kasir juga otomatis terbuat)
+        // 2. Akun Petugas Kasir
         User::updateOrCreate(
             ['email' => 'kasir@gmail.com'],
             [
-                'name' => 'Petugas Kasir',
+                'name'     => 'Petugas Kasir',
+                'username' => 'kasir',
                 'password' => Hash::make('12345678'),
-                'role' => 'kasir',
+                'role'     => 'kasir',
             ]
         );
 
-        // 3. Memanggil Seeder Produk
-        $this->call([
-            ProductSeeder::class,
-        ]);
+        // 3. Akun Kepala Toko
+        User::updateOrCreate(
+            ['email' => 'kepala@smkmart.com'],
+            [
+                'name'     => 'Kepala Toko',
+                'username' => 'kepalatoko',
+                'password' => Hash::make('password123'),
+                'role'     => 'kepala_toko',
+            ]
+        );
+
+        // 4. Memanggil Seeder Produk (Hanya panggil jika file ProductSeeder.php memang ada)
+        if (class_exists(ProductSeeder::class)) {
+            $this->call([
+                ProductSeeder::class,
+            ]);
+        }
     }
 }
