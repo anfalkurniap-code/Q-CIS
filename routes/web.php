@@ -183,19 +183,19 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
-Route::get('/laporan-stok', function () {
-    return view('LaporanStokAkhir');
-});
-
 Route::get('/HalamanProfile', function () {
     return view('HalamanProfile');
+});
+
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
 });
 
 // Transaksi Controller Routes
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
 Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
-Route::get('/pembayaran/berhasil', [TransactionController::class, 'pembayaran.berhasil']);
+Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
 
 
 // ==========================================
@@ -251,6 +251,10 @@ Route::get('/HalamanInformasiAkun', function () {
 });
 
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/Riwayattransaksi', function () {
+    return view('Riwayattransaksi');
+});
 
 Route::get('/HalamanKeamananAkun', function () {
     return view('HalamanKeamananAkun');
