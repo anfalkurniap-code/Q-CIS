@@ -79,10 +79,10 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
-// Callback Penanganan Data Dashboard Gudang (Dinamis dari Database)
+// Callback Penanganan Data Dashboard Gudang (Menggunakan kolom 'stock')
 $gudangDashboardData = function () {
     $totalSku = DB::table('products')->count();
-    $stokKritisCount = DB::table('products')->where('stock', '<=', 5)->count();
+    $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
 
     // Mengambil barang yang dimasukkan hari ini
     $barangHariIni = DB::table('products')
@@ -97,15 +97,15 @@ $gudangDashboardData = function () {
 Route::get('/HalamanDepanGudang', $gudangDashboardData)->name('dashboard.gudang');
 Route::get('/dashboard-gudang', $gudangDashboardData);
 
-// Route Kelola Gudang (Dinamis dari Database)
+// Route Kelola Gudang (Menggunakan kolom 'stock')
 Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
 
-    // Mengambil semua data produk dari database
-    $items = DB::table('products')->orderBy('id', 'desc')->get();
+    // Mengambil semua data produk dari database dan dipass sebagai $products
+    $products = DB::table('products')->orderBy('id', 'desc')->get();
 
-    return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'items'));
+    return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'products'));
 })->name('kelola.gudang');
 
 // Route Profil Gudang (Tampil & Update)
@@ -147,14 +147,15 @@ Route::put('/ubah-password-gudang', function (Request $request) {
     return redirect()->route('profil.gudang')->with('success', 'Kata sandi berhasil diperbarui!');
 })->name('password.gudang.update');
 
-// Route Input Barang (Gudang)
-Route::get('/input-barang', [ProductController::class, 'create'])->name('input.barang');
+// Route Input Barang (Dihubungkan ke ProductController & mendukung alias route)
+Route::get('/input-barang', [ProductController::class, 'create'])->name('products.create');
+Route::get('/input-barang-alt', [ProductController::class, 'create'])->name('input.barang');
 Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
 
-// Route Stok Kritis (Dinamis dari Database)
+// Route Stok Kritis (Menggunakan kolom 'stock')
 Route::get('/stok-kritis', function () {
     $itemsKritis = DB::table('products')
-        ->where('stock', '<=', 5)
+        ->where('stock', '<=', 10)
         ->orderBy('stock', 'asc')
         ->get();
 
@@ -202,7 +203,7 @@ Route::get('/pembayaran/berhasil', [TransactionController::class, 'pembayaran.be
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
     $lowStockItems = DB::table('products')
-        ->where('stock', '<=', 5)
+        ->where('stock', '<=', 10)
         ->get();
 
     return view('dashboardkepalatoko', [
