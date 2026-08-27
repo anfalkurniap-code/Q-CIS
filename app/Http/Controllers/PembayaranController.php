@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product; // <--- 1. WAJIB IMPORT MODEL PRODUCT
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -22,24 +22,18 @@ class PembayaranController extends Controller
 
         $cartItems = json_decode($request->input('cart_data'), true);
 
-        // =========================================================
-        // 2. LOGIKA UTAMA: POTONG STOK DI DATABASE MYSQL
-        // =========================================================
+        // Potong stok di database MySQL
         if (is_array($cartItems)) {
             foreach ($cartItems as $item) {
-                // Cari produk berdasarkan ID yang ada di keranjang
                 $product = Product::find($item['id']);
                 
                 if ($product) {
-                    // Kurangi kolom 'stok' di database sesuai qty yang dibeli
                     $product->decrement('stok', $item['qty']);
                 }
             }
         }
 
-        // =========================================================
-        // 3. SIMPAN SESSION UNTUK HALAMAN STRUK & RIWAYAT
-        // =========================================================
+        // Simpan Session untuk Struk & Riwayat
         Carbon::setLocale('id');
         $transaksiBaru = [
             'trx_id'         => 'TRX-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4)),
@@ -53,14 +47,26 @@ class PembayaranController extends Controller
             'kategori'       => 'PEMBAYARAN TUNAI',
         ];
 
-        // Simpan data transaksi saat ini ke session
         session($transaksiBaru);
 
-        // Tambahkan ke riwayat transaksi
         $riwayat = session()->get('riwayat_transaksi', []);
         array_unshift($riwayat, $transaksiBaru);
         session(['riwayat_transaksi' => $riwayat]);
 
         return redirect()->route('pembayaran.berhasil');
+    }
+
+    // Method untuk menampilkan halaman riwayat transaksi
+    public function riwayat()
+    {
+        $riwayat = session()->get('riwayat_transaksi', []);
+
+        return view('Riwayattransaksi', compact('riwayat'));
+    }
+
+    // Method untuk menampilkan struk / halaman berhasil
+    public function berhasil()
+    {
+        return view('berhasil');
     }
 }

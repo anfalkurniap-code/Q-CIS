@@ -283,6 +283,6 @@ Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name
 // Route Halaman Pembayaran Berhasil
 Route::get('/pembayaran/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
 
-Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
-
 Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
+
+Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');

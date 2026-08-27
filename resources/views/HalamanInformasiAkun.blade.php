@@ -167,38 +167,7 @@
             </div>
           </div>
         </section>
-
-        <!-- Security Buttons -->
-        <section class="space-y-2.5 pt-1">
-          <a href="#" class="w-full bg-white hover:bg-slate-50 p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between transition-colors group">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-rotate-left text-sm"></i>
-              </div>
-              <div>
-                <p class="text-xs font-bold text-slate-800">Ubah Kata Sandi</p>
-                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Terakhir diubah 3 bulan lalu</p>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-slate-500 transition-colors"></i>
-          </a>
-
-          <a href="#" class="w-full bg-white hover:bg-slate-50 p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between transition-colors group">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-mobile-screen-button text-sm"></i>
-              </div>
-              <div>
-                <p class="text-xs font-bold text-slate-800">Verifikasi 2-Langkah</p>
-                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Aktif • Amankan transaksi Anda</p>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-slate-500 transition-colors"></i>
-          </a>
-        </section>
-
-      </main>
-
+        
       <!-- Bottom Sticky Save Button -->
       <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 flex justify-center z-10">
         <div class="w-full max-w-md">
