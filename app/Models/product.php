@@ -13,11 +13,25 @@ class Product extends Model
 
     // Daftarkan semua kolom yang ada di database agar diizinkan untuk diisi
     protected $fillable = [
+        'product_code',
+        'barcode',
+        'product_name',
         'name',
+        'nama',
         'slug',
         'description',
-        'price',
+        'kategori',
+        'current_stock',
         'stock',
+        'stok',
+        'minimum_stock_threshold',
+        'purchase_price',
+        'selling_price',
+        'price',
+        'harga',
+        'supplier_id',
+        'receipt_image',
+        'img',
         'expired_date',
     ];
 }

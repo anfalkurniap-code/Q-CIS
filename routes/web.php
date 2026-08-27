@@ -18,6 +18,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfilGudangController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LoginKepalaTokoController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -250,7 +252,9 @@ Route::get('/HalamanInformasiAkun', function () {
     return view('HalamanInformasiAkun');
 });
 
-Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
 Route::get('/Riwayattransaksi', function () {
     return view('Riwayattransaksi');
@@ -266,3 +270,19 @@ Route::get('/BantuanKasir', function () {
 
 // Route Report Index
 Route::get('/ReportIndex', [ReportController::class, 'index']);
+
+// Tambahkan ->name('pembayaran.berhasil') di akhir route
+Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
+
+// Route Halaman Pembayaran
+Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+
+// Route Memproses Pembayaran (Form Action)
+Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+
+// Route Halaman Pembayaran Berhasil
+Route::get('/pembayaran/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
+
+Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
+
+Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
