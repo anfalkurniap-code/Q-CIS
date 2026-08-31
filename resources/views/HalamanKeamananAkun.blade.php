@@ -38,7 +38,7 @@
     <!-- Title Section -->
     <div class="pt-2">
       <h2 class="text-xl font-bold text-gray-900">Keamanan Akun</h2>
-      <p class="text-xs text-gray-500 mt-1">Kelola kata sandi, PIN, dan otentikasi biometrik Anda.</p>
+      <p class="text-xs text-gray-500 mt-1">Kelola kata sandi dan sesi login akun Anda.</p>
     </div>
 
     <!-- Card 1: Form Ubah Kata Sandi -->
@@ -87,56 +87,7 @@
       </button>
     </form>
 
-    <!-- Card 2: PIN Transaksi -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
-          <i class="fa-solid fa-border-all text-lg"></i>
-        </div>
-        <h3 class="font-semibold text-gray-800">PIN Transaksi</h3>
-      </div>
-
-      <p class="text-xs text-gray-500 leading-relaxed">
-        Gunakan 6 digit angka untuk memverifikasi belanja Anda.
-      </p>
-
-      <a href="#" class="w-full border border-emerald-700 text-emerald-800 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-between hover:bg-emerald-50 transition duration-200 block text-center">
-        <span class="text-sm">Ubah PIN Transaksi</span>
-        <i class="fa-solid fa-chevron-right text-xs"></i>
-      </a>
-    </div>
-
-    <!-- Card 3: Biometrik -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-3">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-gray-600">
-            <i class="fa-solid fa-fingerprint text-lg"></i>
-          </div>
-          <div>
-            <h3 class="font-semibold text-gray-800 text-sm">Biometrik</h3>
-            <p class="text-[10px] text-gray-400">Face ID / Fingerprint</p>
-          </div>
-        </div>
-        
-        <!-- Toggle Switch -->
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" name="biometric" class="sr-only peer" checked>
-          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-        </label>
-      </div>
-
-      <p class="text-xs text-gray-500">
-        Login lebih cepat tanpa memasukkan kata sandi.
-      </p>
-
-      <div class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 text-[11px] font-medium px-2.5 py-1 rounded-full border border-emerald-100">
-        <i class="fa-regular fa-circle-check"></i>
-        <span>Perangkat didukung</span>
-      </div>
-    </div>
-
-    <!-- Card 4: Sesi Aktif -->
+    <!-- Card 2: Sesi Aktif -->
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">

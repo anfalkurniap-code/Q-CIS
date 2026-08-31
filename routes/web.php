@@ -40,7 +40,6 @@ Route::get('/belajar', function () {
     return view('belajar');
 });
 
-
 // ==========================================
 // 2. AUTHENTICATION (LOGIN, LOGOUT, & PENDAFTARAN)
 // ==========================================
@@ -70,7 +69,6 @@ Route::get('/pendaftaran', function () {
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
 
-
 // ==========================================
 // 3. HALAMAN PETUGAS KASIR & GUDANG
 // ==========================================
@@ -79,12 +77,11 @@ Route::get('/HalamanDepanKasir', function () {
     return view('HalamanDepanKasir');
 })->name('dashboard.kasir');
 
-// Callback Penanganan Data Dashboard Gudang (Dinamis dari Database)
+// Callback Penanganan Data Dashboard Gudang
 $gudangDashboardData = function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 5)->count();
 
-    // Mengambil barang yang dimasukkan hari ini
     $barangHariIni = DB::table('products')
         ->whereDate('created_at', today())
         ->orderBy('id', 'desc')
@@ -97,28 +94,26 @@ $gudangDashboardData = function () {
 Route::get('/HalamanDepanGudang', $gudangDashboardData)->name('dashboard.gudang');
 Route::get('/dashboard-gudang', $gudangDashboardData);
 
-// Route Kelola Gudang (Dinamis dari Database)
+// Route Kelola Gudang
 Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
 
-    // Mengambil semua data produk dari database
     $items = DB::table('products')->orderBy('id', 'desc')->get();
 
     return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'items'));
 })->name('kelola.gudang');
 
-// Route Profil Gudang (Tampil & Update)
+// Route Profil Gudang
 Route::get('/profil-gudang', [ProfilGudangController::class, 'index'])->name('profil.gudang');
 Route::put('/profil-gudang', [ProfilGudangController::class, 'update'])->name('profil.gudang.update');
 
-// Route Ubah Password Gudang (Halaman & Proses Update Langsung)
+// Route Ubah Password Gudang
 Route::get('/ubah-password-gudang', function () {
     return view('UbahPaswordGudang');
 })->name('password.gudang.change');
 
 Route::put('/ubah-password-gudang', function (Request $request) {
-    // 1. Validasi Input Form
     $request->validate([
         'current_password' => ['required', 'current_password'],
         'password'         => ['required', 'confirmed', Password::min(8)],
@@ -130,7 +125,6 @@ Route::put('/ubah-password-gudang', function (Request $request) {
         'password.min'                      => 'Kata sandi baru minimal 8 karakter.',
     ]);
 
-    // 2. Update Password Pengguna di Database
     $user = Auth::user();
     
     if ($user) {
@@ -143,15 +137,14 @@ Route::put('/ubah-password-gudang', function (Request $request) {
             ->update(['password' => Hash::make($request->password)]);
     }
 
-    // 3. Kembali ke Halaman Profil Gudang dengan Notifikasi
     return redirect()->route('profil.gudang')->with('success', 'Kata sandi berhasil diperbarui!');
 })->name('password.gudang.update');
 
-// Route Input Barang (Gudang)
+// Route Input Barang
 Route::get('/input-barang', [ProductController::class, 'create'])->name('input.barang');
 Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
 
-// Route Stok Kritis (Dinamis dari Database)
+// Route Stok Kritis
 Route::get('/stok-kritis', function () {
     $itemsKritis = DB::table('products')
         ->where('stock', '<=', 5)
@@ -163,11 +156,9 @@ Route::get('/stok-kritis', function () {
     return view('stok-kritis', compact('itemsKritis', 'stokKritisCount'));
 })->name('stok.kritis');
 
-
 // ==========================================
 // 4. HALAMAN KATALOG / SHOP & TRANSAKSI
 // ==========================================
-// Halaman Shop (Dinamis dari Database)
 Route::get('/HalamanShop', function () {
     $products = DB::table('products')->orderBy('id', 'desc')->get();
 
@@ -195,7 +186,6 @@ Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog
 Route::get('/pembayaran', [TransactionController::class, 'pembayaran'])->name('pembayaran');
 Route::post('/pembayaran/proses', [TransactionController::class, 'proses'])->name('pembayaran.proses');
 Route::get('/pembayaran/berhasil', [TransactionController::class, 'berhasil'])->name('pembayaran.berhasil');
-
 
 // ==========================================
 // 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
@@ -265,3 +255,12 @@ Route::get('/BantuanKasir', function () {
 
 // Route Report Index
 Route::get('/ReportIndex', [ReportController::class, 'index']);
+
+// Pastikan file view adalah `Tentangaplikasi.blade.php` atau `tentangaplikasi.blade.php`
+Route::get('/Tentangaplikasi', function () {
+    return view('Tentangaplikasi');
+});
+
+Route::get('/Tampilanpendaftaran', function () {
+    return view('pendaftaran');
+});
