@@ -19,22 +19,13 @@
 
     <div class="w-full max-w-[390px] bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden p-6 flex flex-col gap-6">
         
-        <header class="flex justify-between items-center w-full">
+        <!-- Header (Icon Notifikasi & Profil Sudah Dihapus) -->
+        <header class="flex justify-start items-center w-full">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 bg-[#E8F5E9] border border-[#A5D6A7] rounded-md flex items-center justify-center">
                     <div class="w-2 h-2 bg-[#2E7D32] rounded-[2px]"></div>
                 </div>
                 <span class="text-base font-bold text-[#1A2E22]">Q-CIS</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <button class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                </button>
-                <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Profile" class="w-full h-full object-cover">
-                </div>
             </div>
         </header>
 

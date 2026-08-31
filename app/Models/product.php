@@ -11,27 +11,12 @@ class Product extends Model
 
     protected $table = 'products';
 
-    // Daftarkan semua kolom yang ada di database agar diizinkan untuk diisi
+    // Mass assignable attributes
     protected $fillable = [
-        'product_code',
-        'barcode',
-        'product_name',
         'name',
-        'nama',
-        'slug',
-        'description',
-        'kategori',
-        'current_stock',
-        'stock',
-        'stok',
-        'minimum_stock_threshold',
-        'purchase_price',
-        'selling_price',
+        'purchase_price', // WAJIB ADA agar harga beli tersimpan ke DB
         'price',
-        'harga',
-        'supplier_id',
-        'receipt_image',
-        'img',
+        'stock',
         'expired_date',
     ];
 }
