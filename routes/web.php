@@ -16,11 +16,12 @@ use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfilGudangController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\reportindexController;
 use App\Http\Controllers\LoginKepalaTokoController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\GudangController;
+use App\Http\Controllers\profilekepalatokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -269,5 +270,17 @@ Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
 });
 
-// Route Report Index
-Route::get('/ReportIndex', [ReportController::class, 'index']);
+// ROUTE LAPORAN
+Route::get('/report-index', [reportindexController::class, 'index'])->name('report.index');
+Route::get('/ReportIndex', [reportindexController::class, 'index']);
+
+// Profil Kepala Toko
+Route::get('/profilekepalatoko', [profilekepalatokoController::class, 'index'])->name('profile.kepalatoko.index');
+Route::post('/profilekepalatoko/update', [profilekepalatokoController::class, 'update'])->name('profile.kepalatoko.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
+    Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
+    Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
+    Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
+});
