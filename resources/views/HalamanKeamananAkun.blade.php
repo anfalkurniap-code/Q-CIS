@@ -38,7 +38,7 @@
     <!-- Title Section -->
     <div class="pt-2">
       <h2 class="text-xl font-bold text-gray-900">Keamanan Akun</h2>
-      <p class="text-xs text-gray-500 mt-1">Kelola kata sandi, PIN, dan otentikasi biometrik Anda.</p>
+      <p class="text-xs text-gray-500 mt-1">Kelola kata sandi dan sesi login akun Anda.</p>
     </div>
 
     <!-- Card 1: Form Ubah Kata Sandi -->
@@ -87,7 +87,7 @@
       </button>
     </form>
 
-    <!-- Card : Sesi Aktif -->
+    <!-- Card 2: Sesi Aktif -->
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
