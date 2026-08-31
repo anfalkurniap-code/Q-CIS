@@ -103,6 +103,23 @@
                         @error('product_name') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
                     </div>
 
+                    <!-- KATEGORI BARANG -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">KATEGORI BARANG</label>
+                        <div class="relative">
+                            <select name="category_id" required class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-700 px-3.5 py-3 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#024d35]">
+                                <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>Pilih Kategori</option>
+                                @foreach($categories ?? [] as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name ?? $category->nama_kategori ?? $category->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+                        @error('category_id') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
                     <!-- TANGGAL KADALUARSA -->
                     <div>
                         <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">TANGGAL KADALUARSA</label>
@@ -118,7 +135,7 @@
                         @error('expired_date') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Jumlah (QTY) - TELAH DIPERBAIKI NAME="STOCK" -->
+                    <!-- Jumlah (QTY) -->
                     <div>
                         <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">JUMLAH STOCK (QTY)</label>
                         <div class="flex items-center gap-2">

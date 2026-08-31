@@ -41,7 +41,7 @@ class GudangController extends Controller
         $totalSku = $products->count();
         $stokKritisCount = Product::where('stock', '<=', 5)->count();
 
-        return view('kelola.gudang', compact('products', 'totalSku', 'stokKritisCount'));
+        return view('kelolagudang', compact('products', 'totalSku', 'stokKritisCount'));
     }
 
     // 3. Halaman Stok Kritis
@@ -52,5 +52,15 @@ class GudangController extends Controller
         $stokKritisCount = $itemsKritis->count();
 
         return view('stokkritis', compact('itemsKritis', 'stokKritisCount'));
+    }
+
+    // 4. Halaman Riwayat Gudang
+    public function riwayat()
+    {
+        // Mengambil data produk/riwayat transaksi (diurutkan dari yang terbaru)
+        $riwayatProduk = Product::latest()->get();
+
+        // Mengirimkan variabel $riwayatProduk ke view Riwayatgudang
+        return view('Riwayatgudang', compact('riwayatProduk'));
     }
 }

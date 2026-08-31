@@ -16,10 +16,12 @@ use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfilGudangController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\reportindexController;
 use App\Http\Controllers\LoginKepalaTokoController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\GudangController;
+use App\Http\Controllers\profilekepalatokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +81,11 @@ Route::get('/Tampilanpendaftaran', function () {
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
 
+// Route Update & Hapus Produk
+Route::put('/products/{id}/update-price', [ProductController::class, 'updatePrice'])->name('products.updatePrice');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+
 // ==========================================
 // 3. HALAMAN PETUGAS KASIR & GUDANG
 // ==========================================
@@ -105,11 +112,20 @@ Route::get('/DashboardGudang', $gudangDashboardData)->name('dashboard.gudang');
 Route::get('/HalamanDepanGudang', $gudangDashboardData);
 Route::get('/dashboard-gudang', $gudangDashboardData);
 
-// Route Kelola Gudang
-Route::get('/kelolagudang', function () {
+// Route Kelola Gudang (Diperbarui dengan Join Kategori)
+Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
-    $products = DB::table('products')->orderBy('id', 'desc')->get();
+
+    // Melakukan LEFT JOIN ke tabel categories agar nama kategori terambil
+    $products = DB::table('products')
+        ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+        ->select(
+            'products.*',
+            'categories.name as category_name'
+        )
+        ->orderBy('products.id', 'desc')
+        ->get();
 
     return view('kelolagudang', compact('totalSku', 'stokKritisCount', 'products'));
 })->name('kelola.gudang');
@@ -117,13 +133,19 @@ Route::get('/kelola-gudang', function () {
     return redirect()->route('kelola.gudang');
 });
 
-// Route Profil Gudang
-Route::get('/ProfilGudang', [ProfilGudangController::class, 'index'])->name('profil.gudang');
-Route::get('/profil-gudang', [ProfilGudangController::class, 'index']);
+// Route Riwayat Transaksi Gudang
+Route::get('/Riwayatgudang', function () {
+    $riwayatProduk = DB::table('products')->orderBy('id', 'desc')->get();
+    $transactions = $riwayatProduk;
+    return view('Riwayatgudang', compact('riwayatProduk', 'transactions'));
+})->name('Riwayatgudang');
+
+// Route Profil Gudang (Tampil & Update)
+Route::get('/profil-gudang', [ProfilGudangController::class, 'index'])->name('profil.gudang');
 Route::put('/profil-gudang', [ProfilGudangController::class, 'update'])->name('profil.gudang.update');
 
 // Route Ubah Password Gudang
-Route::get('/UbahPaswordGudang', function () {
+Route::get('/ubah-password-gudang', function () {
     return view('UbahPaswordGudang');
 })->name('password.gudang.change');
 Route::get('/ubah-password-gudang', function () {
@@ -158,8 +180,8 @@ Route::put('/ubah-password-gudang', function (Request $request) {
 })->name('password.gudang.update');
 
 // Route Input Barang
-Route::get('/inputbarang', [ProductController::class, 'create'])->name('products.create');
-Route::get('/input-barang', [ProductController::class, 'create']);
+Route::get('/input-barang', [ProductController::class, 'create'])->name('products.create');
+Route::get('/input-barang-alt', [ProductController::class, 'create'])->name('input.barang');
 Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
 
 // Route Stok Kritis
@@ -182,7 +204,17 @@ Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
 
+Route::get('/laporan-stok', function () {
+    return view('LaporanStokAkhir');
+});
+
+// Transaksi & Katalog Routes
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
+
+// Route Pembayaran Menggunakan PembayaranController
+Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+Route::get('/pembayaran/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
 
 // Pembayaran & Form Pembayaran (Dua URL diarahkan ke view halamanpembayaran)
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
@@ -263,6 +295,8 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
+
 Route::get('/HalamanKeamananAkun', function () {
     return view('HalamanKeamananAkun');
 });
@@ -271,12 +305,17 @@ Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
 });
 
-Route::get('/Tentangaplikasi', function () {
-    return view('Tentangaplikasi');
-});
+// ROUTE LAPORAN
+Route::get('/report-index', [reportindexController::class, 'index'])->name('report.index');
+Route::get('/ReportIndex', [reportindexController::class, 'index']);
 
-// Route Laporan / Report Index
-Route::get('/ReportIndex', [ReportController::class, 'index']);
-Route::get('/LaporanStokAkhir', function () {
-    return view('LaporanStokAkhir');
+// Profil Kepala Toko
+Route::get('/profilekepalatoko', [profilekepalatokoController::class, 'index'])->name('profile.kepalatoko.index');
+Route::post('/profilekepalatoko/update', [profilekepalatokoController::class, 'update'])->name('profile.kepalatoko.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
+    Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
+    Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
+    Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
 });

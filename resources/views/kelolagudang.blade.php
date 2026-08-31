@@ -33,10 +33,11 @@
                     </div>
                     <span class="text-xl font-extrabold text-[#024d35] tracking-tight">Q-CIS</span>
                 </div>
-                <button type="button" class="relative text-slate-600 hover:text-[#024d35]">
-                    <i class="fa-regular fa-bell text-lg"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
+                <!-- Tombol Histori / Riwayat -->
+                <a href="{{ Route::has('Riwayatgudang') ? route('Riwayatgudang') : url('/Riwayatgudang') }}" class="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#024d35] bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-clock-rotate-left text-sm text-[#024d35]"></i>
+                    <span>Riwayat</span>
+                </a>
             </header>
 
             <!-- Main Content Container -->
@@ -56,7 +57,7 @@
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">TOTAL SKU</span>
                         <span class="text-2xl font-black text-slate-800">{{ $totalSku ?? $products->count() }}</span>
                     </div>
-                    <a href="{{ route('stok.kritis') }}" class="bg-red-50 p-3.5 rounded-2xl border border-red-100 shadow-sm block hover:bg-red-100/50 transition">
+                    <a href="{{ Route::has('stok.kritis') ? route('stok.kritis') : '#' }}" class="bg-red-50 p-3.5 rounded-2xl border border-red-100 shadow-sm block hover:bg-red-100/50 transition">
                         <span class="text-[9px] font-black text-red-500 uppercase tracking-wider block mb-1">STOK KRITIS</span>
                         <div class="flex items-center gap-1.5 text-red-600 font-black text-xl">
                             <i class="fa-solid fa-triangle-exclamation text-base"></i>
@@ -71,7 +72,7 @@
                     <input 
                         type="text" 
                         id="searchInput"
-                        placeholder="Cari ID atau Nama Barang..." 
+                        placeholder="Cari ID, Nama, atau Kategori..." 
                         class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-800 pl-9 pr-10 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
                     />
                     <button type="button" class="absolute right-3 text-slate-400 hover:text-slate-600">
@@ -84,27 +85,40 @@
                     @forelse($products as $product)
                         <div class="product-item bg-white rounded-2xl p-4 border {{ $product->stock <= 10 ? 'border-red-200' : 'border-slate-200/80' }} shadow-sm relative space-y-3">
                             
-                            <!-- Header Card: ID & Edit -->
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <span class="text-[9px] font-extrabold text-[#028b5e] uppercase tracking-wider block font-mono-custom">
+                            <!-- Header Card: ID, Kategori, & Nama Produk -->
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[9px] font-extrabold text-[#028b5e] uppercase tracking-wider font-mono-custom">
                                         ID-PROD#{{ $product->id }}
                                     </span>
-                                    <h3 class="product-name text-sm font-extrabold text-slate-800 leading-tight">
-                                        {{ $product->product_name ?? $product->name }}
-                                    </h3>
+                                    <!-- BADGE KATEGORI (Disesuaikan untuk berbagai nama kolom) -->
+                                    <span class="bg-emerald-50 text-[#024d35] text-[9px] font-bold px-2 py-0.5 rounded-md border border-emerald-100 uppercase">
+                                        <i class="fa-solid fa-tag text-[8px] mr-0.5"></i>
+                                        {{ $product->category->name ?? $product->category_name ?? $product->kategori ?? $product->category ?? 'Tanpa Kategori' }}
+                                    </span>
                                 </div>
-                                <button type="button" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs transition">
-                                    <i class="fa-solid fa-pen text-[10px]"></i>
-                                </button>
+                                <h3 class="product-name text-sm font-extrabold text-slate-800 leading-tight">
+                                    {{ $product->product_name ?? $product->name }}
+                                </h3>
                             </div>
 
-                            <!-- Detail Harga & Stok -->
-                            <div class="flex justify-between items-center text-xs pt-1 border-t border-slate-100">
+                            <!-- Detail Harga (Beli & Jual) serta Stok -->
+                            <div class="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-100">
+                                <!-- Harga Beli (Disesuaikan untuk berbagai nama kolom database) -->
+                                <div>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase block">Harga Beli</span>
+                                    <span class="font-bold text-slate-500">
+                                        Rp {{ number_format($product->purchase_price ?? $product->harga_beli ?? $product->harga_modal ?? $product->cost_price ?? 0, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                                <!-- Harga Jual -->
                                 <div>
                                     <span class="text-[9px] font-bold text-slate-400 uppercase block">Harga Jual</span>
-                                    <span class="font-bold text-slate-700">Rp {{ number_format($product->selling_price ?? $product->price ?? 0, 0, ',', '.') }}</span>
+                                    <span class="font-extrabold text-slate-800">
+                                        Rp {{ number_format($product->selling_price ?? $product->price ?? $product->harga_jual ?? 0, 0, ',', '.') }}
+                                    </span>
                                 </div>
+                                <!-- Stok -->
                                 <div class="text-right">
                                     <span class="text-[9px] font-bold text-slate-400 uppercase block">Stok</span>
                                     <span class="font-black {{ $product->stock <= 10 ? 'text-red-500' : 'text-emerald-700' }} text-sm">
@@ -122,13 +136,15 @@
                                 <span class="font-bold text-slate-800">
                                     @if(!empty($product->expired_date))
                                         {{ \Carbon\Carbon::parse($product->expired_date)->format('d M Y') }}
+                                    @elseif(!empty($product->tgl_kadaluarsa))
+                                        {{ \Carbon\Carbon::parse($product->tgl_kadaluarsa)->format('d M Y') }}
                                     @else
                                         <span class="text-slate-400 font-normal italic">Tidak Ada</span>
                                     @endif
                                 </span>
                             </div>
 
-                            <!-- Footer Card: Badge Status & Action Button -->
+                            <!-- Footer Card: Badge Status & Action Buttons -->
                             <div class="flex items-center justify-between pt-1">
                                 <div class="flex items-center gap-1.5">
                                     @if($product->stock <= 10)
@@ -138,9 +154,23 @@
                                         <i class="fa-solid fa-location-dot"></i> Gudang Utama
                                     </span>
                                 </div>
-                                <button type="button" class="bg-[#024d35] hover:bg-[#013827] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition shadow-sm">
-                                    <i class="fa-solid fa-box-open text-[10px]"></i> Update
-                                </button>
+                                
+                                <!-- Action Buttons (Update & Delete) -->
+                                <div class="flex items-center gap-1.5">
+                                    <!-- Tombol Update -->
+                                    <button type="button" 
+                                        onclick="openUpdateModal('{{ $product->id }}', '{{ addslashes($product->product_name ?? $product->name) }}', '{{ $product->selling_price ?? $product->price ?? $product->harga_jual ?? 0 }}')" 
+                                        class="bg-[#024d35] hover:bg-[#013827] text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition shadow-sm">
+                                        <i class="fa-solid fa-pen-to-square text-[10px]"></i> Update
+                                    </button>
+
+                                    <!-- Tombol Hapus -->
+                                    <button type="button"
+                                        onclick="openDeleteModal('{{ $product->id }}', '{{ addslashes($product->product_name ?? $product->name) }}')"
+                                        class="bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition shadow-sm">
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
 
                         </div>
@@ -155,12 +185,12 @@
             </main>
         </div>
 
-        <!-- Floating Add Button (Penyesuaian z-50 dan urutan klik) -->
-        <a href="{{ route('products.create') }}" class="fixed sm:absolute bottom-20 right-5 w-12 h-12 bg-[#00f0aa] text-[#024d35] rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition z-50">
+        <!-- Floating Add Button -->
+        <a href="{{ Route::has('products.create') ? route('products.create') : '#' }}" class="fixed sm:absolute bottom-20 right-5 w-12 h-12 bg-[#00f0aa] text-[#024d35] rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition z-50">
             <i class="fa-solid fa-plus text-xl"></i>
         </a>
 
-        <!-- Bottom Navigation Bar (Penyesuaian Route & z-40) -->
+        <!-- Bottom Navigation Bar -->
         <nav class="fixed sm:absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-40">
             <!-- 1. Dashboard -->
             <a href="{{ Route::has('dashboard.gudang') ? route('dashboard.gudang') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
@@ -169,13 +199,13 @@
             </a>
 
             <!-- 2. Kelola (Aktif) -->
-            <a href="{{ route('kelola.gudang') }}" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
+            <a href="{{ Route::has('kelola.gudang') ? route('kelola.gudang') : '#' }}" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
                 <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
                 <span>Kelola</span>
             </a>
 
             <!-- 3. Input Barang -->
-            <a href="{{ route('products.create') }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
+            <a href="{{ Route::has('products.create') ? route('products.create') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-square-plus text-base mb-0.5"></i>
                 <span>Input</span>
             </a>
@@ -195,8 +225,64 @@
 
     </div>
 
-    <!-- Live Search Script -->
+    <!-- MODAL POPUP UPDATE HARGA BARANG -->
+    <div id="updateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-2xl relative animate-in fade-in zoom-in duration-150">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-extrabold text-[#024d35]">Update Harga Jual</h3>
+                <button type="button" onclick="closeUpdateModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="updatePriceForm" action="" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Produk</label>
+                    <input type="text" id="modalProductName" class="w-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 py-2.5 px-3 rounded-xl cursor-not-allowed" readonly>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Harga Jual Baru (Rp)</label>
+                    <input type="number" name="price" id="modalPrice" min="0" required class="w-full border border-slate-300 focus:border-[#024d35] focus:ring-1 focus:ring-[#024d35] text-xs font-bold text-slate-800 py-2.5 px-3 rounded-xl outline-none" placeholder="Masukkan harga baru">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeUpdateModal()" class="px-3.5 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-[#024d35] hover:bg-[#013827] rounded-xl transition shadow-sm">Simpan Harga</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP KONFIRMASI HAPUS BARANG -->
+    <div id="deleteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-2xl relative text-center space-y-4">
+            <div class="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-800">Hapus Produk Ini?</h3>
+                <p class="text-xs text-slate-500 mt-1">
+                    Apakah Anda yakin ingin menghapus produk <span id="deleteProductName" class="font-bold text-slate-700"></span>? Data yang dihapus tidak bisa dikembalikan.
+                </p>
+            </div>
+
+            <form id="deleteForm" action="" method="POST" class="flex justify-center gap-2 pt-2">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">Batal</button>
+                <button type="submit" class="w-1/2 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition shadow-sm">Hapus</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Live Search & Modal Control -->
     <script>
+        // Live Search
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let items = document.querySelectorAll('#productList .product-item');
@@ -206,6 +292,46 @@
                 item.style.display = text.includes(filter) ? 'block' : 'none';
             });
         });
+
+        // Modal Update Handler
+        function openUpdateModal(id, name, currentPrice) {
+            const modal = document.getElementById('updateModal');
+            const form = document.getElementById('updatePriceForm');
+            const nameInput = document.getElementById('modalProductName');
+            const priceInput = document.getElementById('modalPrice');
+
+            form.action = "{{ url('/products') }}/" + id + "/update-price";
+            nameInput.value = name;
+            priceInput.value = currentPrice;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeUpdateModal() {
+            const modal = document.getElementById('updateModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Modal Delete Handler
+        function openDeleteModal(id, name) {
+            const modal = document.getElementById('deleteModal');
+            const form = document.getElementById('deleteForm');
+            const nameText = document.getElementById('deleteProductName');
+
+            form.action = "{{ url('/products') }}/" + id;
+            nameText.textContent = '"' + name + '"';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
     </script>
 </body>
 </html>

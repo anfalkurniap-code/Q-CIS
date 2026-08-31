@@ -69,17 +69,7 @@
                         <span>Diskon</span>
                         <span>-Rp {{ number_format(session('discount', $discount ?? 0), 0, ',', '.') }}</span>
                     </div>
-                    @if(session('cash_amount'))
-                    <div class="flex justify-between text-gray-600">
-                        <span>Uang Diterima</span>
-                        <span>Rp {{ number_format(session('cash_amount'), 0, ',', '.') }}</span>
-                    </div>
-                    <div class="flex justify-between text-emerald-600 font-medium">
-                        <span>Kembalian</span>
-                        <span>Rp {{ number_format(session('cash_amount') - session('total_price', 0), 0, ',', '.') }}</span>
-                    </div>
-                    @endif
-                </div>
+                </div> 77
 
                 <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between font-bold text-sm text-gray-800">
                     <span>Total Akhir</span>
