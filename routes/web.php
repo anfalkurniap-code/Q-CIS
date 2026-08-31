@@ -16,10 +16,14 @@ use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfilGudangController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\reportindexController;
 use App\Http\Controllers\LoginKepalaTokoController;
+<<<<<<< HEAD
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ShopController;
+=======
+use App\Http\Controllers\profilekepalatokoController;
+>>>>>>> 4ce1ea0 (halaman profile toko dan report)
 
 /*
 |--------------------------------------------------------------------------
@@ -268,6 +272,7 @@ Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
 });
 
+<<<<<<< HEAD
 // Route Report Index
 Route::get('/ReportIndex', [ReportController::class, 'index']);
 
@@ -286,3 +291,46 @@ Route::get('/pembayaran/berhasil', [PembayaranController::class, 'berhasil'])->n
 Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
 
 Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
+=======
+ // Route Home / Dashboard
+ Route::get('/dashboardkepalatoko', [DashboardKepalaTokoController::class, 'index'])->name('kepalatoko.home');
+
+ // Route Stock, Orders, Staff (arahkan ke method/view masing-masing)
+ Route::get('/kepalatoko/stock', [DashboardKepalaTokoController::class, 'stock'])->name('kepalatoko.stock');
+ Route::get('/kepalatoko/orders', [DashboardKepalaTokoController::class, 'orders'])->name('kepalatoko.orders');
+ Route::get('/kepalatoko/staff', [DashboardKepalaTokoController::class, 'staff'])->name('kepalatoko.staff');
+
+
+
+// ==========================================
+// 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
+// ==========================================
+Route::get('/HalamanInformasiAkun', function () {
+    return view('HalamanInformasiAkun');
+});
+
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/HalamanKeamananAkun', function () {
+    return view('HalamanKeamananAkun');
+});
+
+Route::get('/BantuanKasir', function () {
+    return view('BantuanKasir');
+});
+
+// ROUTE LAPORAN (Mendukung URL /report-index DAN /ReportIndex)
+Route::get('/report-index', [reportindexController::class, 'index'])->name('report.index');
+Route::get('/ReportIndex', [reportindexController::class, 'index']);
+
+// Profil Kepala Toko
+Route::get('/profilekepalatoko', [profilekepalatokoController::class, 'index'])->name('profile.index');
+Route::post('/profilekepalatoko/update', [profilekepalatokoController::class, 'update'])->name('profile.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboardkepalatoko', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
+    Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
+    Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
+    Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
+});
+>>>>>>> 4ce1ea0 (halaman profile toko dan report)
