@@ -1,205 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Ops - Dashboard Kepala Toko</title>
-    <!-- Tailwind CSS CDN (jika belum via Vite) -->
+    <title>Dashboard Analisis - Q-CIS SMK MART</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans pb-20">
+<body class="bg-slate-100 min-h-screen flex justify-center items-center p-0 md:p-4">
 
-    <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-3">
-            <button class="text-slate-600 hover:text-slate-900">
-                <i class="fa-solid fa-bars text-lg"></i>
-            </button>
-            <h1 class="text-lg font-bold text-slate-800">Store Ops</h1>
-        </div>
-        <div class="relative">
-            <button class="text-slate-600 hover:text-slate-900 p-1">
-                <i class="fa-regular fa-bell text-lg"></i>
-                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-        </div>
-    </header>
-
-    <main class="max-w-md mx-auto px-4 pt-5 space-y-4">
+    <!-- Container Frame HP -->
+    <div class="w-full max-w-sm bg-[#f8faf9] min-h-screen md:min-h-[750px] md:max-h-[850px] md:rounded-3xl shadow-xl border border-slate-200 relative flex flex-col justify-between overflow-hidden">
         
-        <!-- Header Text Section -->
-        <div>
-            <h2 class="text-xl font-bold text-slate-900">Operational Overview</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Real-time performance metrics for today, Oct 24th.</p>
-        </div>
-
-        <!-- Card 1: Today Sales -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-start">
-                <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TODAY'S SALES</span>
-                    <div class="text-2xl font-extrabold text-slate-900 mt-0.5">
-                        ${{ number_format($today_sales) }}
-                    </div>
-                </div>
-                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                    <i class="fa-solid fa-chart-line text-sm"></i>
-                </div>
+        <!-- Header Top -->
+        <div class="p-4 space-y-3">
+            <div class="flex items-center gap-2 text-[#064e3b] font-bold text-sm">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Q-CIS SMK MART</span>
             </div>
 
-            <!-- Mini Bar Chart Visual -->
-            <div class="flex items-end gap-1.5 h-10 mt-3 mb-2">
-                <div class="bg-emerald-100 w-full h-1/3 rounded-sm"></div>
-                <div class="bg-emerald-100 w-full h-1/2 rounded-sm"></div>
-                <div class="bg-emerald-200 w-full h-2/5 rounded-sm"></div>
-                <div class="bg-emerald-200 w-full h-1/3 rounded-sm"></div>
-                <div class="bg-emerald-400 w-full h-3/4 rounded-sm"></div>
-                <div class="bg-emerald-800 w-full h-full rounded-sm"></div>
+            <div>
+                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Dashboard Analisis</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Ringkasan performa penjualan dan transaksi hari ini.</p>
             </div>
 
-            <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
-                <i class="fa-solid fa-arrow-up text-[10px]"></i>
-                <span>+{{ $sales_growth }}% vs yesterday</span>
+            <!-- Tombol Filter & Unduh -->
+            <div class="flex items-center gap-2 pt-1">
+                <button class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 shadow-sm">
+                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Hari Ini</span>
+                </button>
+
+                <a href="#" class="flex items-center gap-1.5 px-3 py-1.5 bg-[#064e3b] rounded-lg text-xs font-semibold text-white shadow-sm hover:bg-[#04382a] transition">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>Unduh Laporan</span>
+                </a>
             </div>
         </div>
 
-        <!-- Card 2: Active Orders -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-start mb-2">
+        <!-- Scrollable Cards Body -->
+        <div class="px-4 pb-20 space-y-3 overflow-y-auto">
+            
+            <!-- Card 1: Uang Masuk -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
                 <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ACTIVE ORDERS</span>
-                    <div class="text-2xl font-extrabold text-slate-900 mt-0.5">{{ $active_orders }}</div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">UANG MASUK</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_masuk ?? 5120000, 0, ',', '.') }}</h2>
+                    <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+                        <span>🔄</span> Total hari ini
+                    </p>
                 </div>
-                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                    <i class="fa-solid fa-box text-sm"></i>
+                <div class="w-9 h-9 rounded-full bg-emerald-100/70 flex items-center justify-center text-emerald-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden flex my-2">
-                <div class="bg-emerald-800 h-full" style="width: 75%"></div>
-                <div class="bg-emerald-300 h-full" style="width: 25%"></div>
-            </div>
-
-            <div class="space-y-1 text-xs pt-1">
-                <div class="flex justify-between text-slate-600">
-                    <span>Processing</span>
-                    <span class="font-semibold text-slate-800">{{ $processing_orders }}</span>
-                </div>
-                <div class="flex justify-between text-slate-600">
-                    <span>Ready for Pickup</span>
-                    <span class="font-semibold text-slate-800">{{ $ready_pickup_orders }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3: Low Stock Items -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-start mb-3">
+            <!-- Card 2: Uang Keluar -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
                 <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">LOW STOCK ITEMS</span>
-                    <div class="text-2xl font-extrabold text-red-600 mt-0.5">{{ $low_stock_count }}</div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">UANG KELUAR</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_keluar ?? 850000, 0, ',', '.') }}</h2>
+                    <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+                        <span>🔄</span> Total hari ini
+                    </p>
                 </div>
-                <div class="w-8 h-8 rounded-lg bg-red-100 text-red-500 flex items-center justify-center">
-                    <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                <div class="w-9 h-9 rounded-full bg-rose-100/70 flex items-center justify-center text-rose-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                    </svg>
                 </div>
             </div>
 
-            <div class="divide-y divide-slate-100 text-xs">
-                @foreach($low_stock_items as $item)
-                <div class="py-2 flex justify-between items-center">
-                    <span class="text-slate-700 font-medium truncate max-w-[200px]">{{ $item['name'] }}</span>
-                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded {{ $item['status'] == 'CRITICAL' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600' }}">
-                        {{ $item['status'] }}
+            <!-- Card 3: Laba / Rugi -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">LABA / RUGI</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($laba_rugi ?? 4270000, 0, ',', '.') }}</h2>
+                    <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+                        <span>📈</span> Laba bersih hari ini
+                    </p>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-teal-100/70 flex items-center justify-center text-teal-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Card 4: Grafik Penjualan Harian -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-bold text-slate-900">Grafik Penjualan Harian</h3>
+                    <button class="text-slate-400 hover:text-slate-600">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Area Grafik Placeholder -->
+                <div class="w-full h-44 bg-slate-100 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center p-4 text-center">
+                    <svg class="w-8 h-8 text-slate-400 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5 19h14v2H3V3h2v16zm4-8h2v6H9v-6zm4-4h2v10h-2V7zm4-2h2v12h-2V5z"/>
+                    </svg>
+                    <span class="text-[11px] text-slate-500 font-medium">
+                        Area Grafik Penjualan (Integrasi Chart.js/bs)
                     </span>
                 </div>
-                @endforeach
             </div>
 
-            <a href="#" class="block text-right text-xs text-emerald-700 font-semibold mt-2 hover:underline">
-                View all 5 items &rsaquo;
+        </div>
+
+        <!-- Bottom Navbar -->
+        <div class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-around z-20">
+            <!-- Dashboard (Active) -->
+            <a href="#" class="flex flex-col items-center gap-1 text-[#064e3b]">
+                <div class="px-4 py-1.5 rounded-xl bg-[#064e3b] text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] font-bold">Dashboard</span>
+            </a>
+
+            <!-- Reports -->
+            <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
+                <div class="p-1.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] font-medium">Reports</span>
+            </a>
+
+            <!-- Profile -->
+            <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
+                <div class="p-1.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] font-medium">Profile</span>
             </a>
         </div>
 
-        <!-- Card 4: Sales Trend (Last 7 Days) -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xs font-bold text-slate-800">Sales Trend (Last 7 Days)</h3>
-                <div class="flex bg-slate-100 p-0.5 rounded-lg text-[10px] font-medium">
-                    <button class="px-2 py-1 bg-emerald-800 text-white rounded-md shadow-xs">Count Data</button>
-                    <button class="px-2 py-1 text-slate-600 hover:text-slate-900">Earnings</button>
-                </div>
-            </div>
-
-            <!-- Bar Chart Display -->
-            <div class="flex items-end justify-between gap-2 h-28 pt-4 pb-1 px-1 border-b border-slate-100">
-                @foreach($sales_trend as $day => $val)
-                <div class="flex-1 flex flex-col items-center h-full justify-end">
-                    <div class="w-full bg-emerald-600/70 hover:bg-emerald-700 rounded-t-md transition-all" style="height: {{ ($val / 800) * 100 }}%"></div>
-                </div>
-                @endforeach
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400 mt-2 px-1">
-                @foreach(array_keys($sales_trend) as $day)
-                    <span>{{ $day }}</span>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Card 5: Live Operations -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm relative">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-xs font-bold text-slate-800">Live Operations</h3>
-                <a href="#" class="text-[11px] text-emerald-700 font-semibold hover:underline">View All Logs</a>
-            </div>
-
-            <div class="space-y-3">
-                @foreach($live_operations as $log)
-                <div class="flex items-center justify-between text-xs py-1">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">
-                            {{ substr($log['user'], 0, 1) }}
-                        </div>
-                        <div>
-                            <p class="font-semibold text-slate-800 leading-tight">{{ $log['user'] }}</p>
-                            <p class="text-[10px] text-slate-500 truncate max-w-[150px]">{{ $log['action'] }}</p>
-                        </div>
-                    </div>
-                    <span class="px-2 py-0.5 text-[10px] font-medium rounded-full {{ $log['status_color'] }}">
-                        {{ $log['status'] }}
-                    </span>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Floating Action Button (FAB) -->
-    <button class="fixed bottom-16 right-5 w-12 h-12 bg-emerald-900 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-emerald-950 transition-all z-20">
-        <i class="fa-solid fa-plus text-lg"></i>
-    </button>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2 px-6 flex justify-between items-center z-30 text-slate-400 text-[10px]">
-        <a href="#" class="flex flex-col items-center text-emerald-800 font-bold">
-            <i class="fa-solid fa-chart-simple text-base mb-0.5"></i>
-            <span>Overview</span>
-        </a>
-        <a href="#" class="flex flex-col items-center hover:text-slate-700">
-            <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
-            <span>Orders</span>
-        </a>
-        <a href="#" class="flex flex-col items-center hover:text-slate-700">
-            <i class="fa-solid fa-warehouse text-base mb-0.5"></i>
-            <span>Inventory</span>
-        </a>
-        <a href="#" class="flex flex-col items-center hover:text-slate-700">
-            <i class="fa-solid fa-users text-base mb-0.5"></i>
-            <span>Staff</span>
-        </a>
-    </nav>
+    </div>
 
 </body>
 </html>

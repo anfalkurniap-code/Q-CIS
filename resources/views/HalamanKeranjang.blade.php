@@ -92,6 +92,7 @@
                         <div>
                             <h4 class="font-bold text-sm text-slate-800 leading-tight">${item.nama}</h4>
                             <p class="text-xs text-emerald-700 font-semibold mt-0.5">${formatRupiah(item.harga)}</p>
+                            ${item.stok !== undefined ? `<p class="text-[10px] text-gray-400">Maks. stok: ${item.stok}</p>` : ''}
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -129,10 +130,22 @@
         }
     }
 
+    // FUNGSI UBAH QTY DENGAN VALIDASI KETAT
     function ubahQty(index, delta) {
-        cart[index].qty += delta;
+        let item = cart[index];
 
-        if (cart[index].qty <= 0) {
+        // Pengecekan saat tombol Tambah (+) diklik
+        if (delta > 0) {
+            // Cek jika stok didefinisikan dan jumlah melebihi/sama dengan stok
+            if (item.stok !== undefined && item.qty >= Number(item.stok)) {
+                alert(`Maaf, stok ${item.nama} hanya tersisa ${item.stok} item!`);
+                return; // Berhentikan proses penambahan
+            }
+        }
+
+        item.qty += delta;
+
+        if (item.qty <= 0) {
             cart.splice(index, 1);
         }
 

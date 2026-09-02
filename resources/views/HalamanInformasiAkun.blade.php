@@ -25,16 +25,15 @@
   <!-- Mobile Container Wrapper -->
   <div class="w-full max-w-md bg-[#F8FAFC] min-h-screen pb-28 relative px-4 pt-4">
 
-    <!-- Form Pembungkus Utama -->
+    <!-- Form Pembungkus Utama (Membungkus Seluruh Halaman) -->
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
       @csrf
-      @method('PUT')
 
       <!-- Top Navigation / Back Button -->
       <div class="w-full bg-[#F8FAFC]">
         <!-- 1. Section Top Bar (Tombol Kembali + Garis Bawah) -->
-        <div class="px-6 py-3 border-b border-gray-200">
-            <a href="{{ url('/HalamanProfile') }}" class="inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-sm">
+        <div class="px-2 py-3 border-b border-gray-200">
+            <a href="/HalamanProfile" class="inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6"/>
                 </svg>
@@ -43,7 +42,7 @@
         </div>
 
         <!-- 2. Section Judul & Deskripsi -->
-        <div class="px-6 pt-6 pb-4">
+        <div class="px-2 pt-6 pb-4">
             <h1 class="text-2xl font-bold text-[#0F172A] tracking-tight mb-2">
                 Informasi Akun
             </h1>
@@ -55,7 +54,7 @@
 
       <main class="space-y-4">
         
-        <!-- Notifikasi Berhasil Disimpan (Jika ada session success) -->
+        <!-- Notifikasi Berhasil Disimpan -->
         @if (session('success'))
           <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl text-xs font-medium flex items-center gap-2.5 shadow-sm">
             <i class="fa-solid fa-circle-check text-base text-emerald-500"></i>
@@ -68,14 +67,14 @@
           <div class="relative mb-4">
             <!-- Container Foto Profil -->
             <div class="w-28 h-28 rounded-full border-4 border-slate-100 overflow-hidden bg-slate-200 flex items-center justify-center">
-              <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300' }}" alt="Avatar" class="w-full h-full object-cover" />
+              <img id="avatar-preview" src="{{ session('user_dummy.avatar', $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300') }}" alt="Avatar" class="w-full h-full object-cover" />
             </div>
             
             <!-- Tombol Edit Pensil Hijau Bulat -->
             <label for="avatar_input" class="absolute bottom-1 right-1 bg-[#10B981] hover:bg-emerald-600 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95">
               <i class="fa-solid fa-pen text-xs"></i>
             </label>
-            <input type="file" id="avatar_input" name="avatar" class="hidden" />
+            <input type="file" id="avatar_input" name="avatar" class="hidden" accept="image/*" onchange="previewAvatar(event)" />
           </div>
 
           <!-- Nama Lengkap Top Card -->
@@ -113,7 +112,7 @@
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Nama Lengkap</label>
               <div class="relative">
-                <input type="text" name="name" value="{{ session('user_dummy.name', old('name', $user->name ?? 'Budi Santoso')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" />
+                <input type="text" name="name" value="{{ session('user_dummy.name', old('name', $user->name ?? 'Budi Santoso')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
                 <i class="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -122,7 +121,7 @@
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Email Sekolah</label>
               <div class="relative">
-                <input type="email" name="email" value="{{ session('user_dummy.email', old('email', $user->email ?? 'budi.santoso@smk-qcis.sch.id')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" />
+                <input type="email" name="email" value="{{ session('user_dummy.email', old('email', $user->email ?? 'budi.santoso@smk-qcis.sch.id')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
                 <i class="fa-regular fa-envelope absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -136,16 +135,7 @@
               </div>
             </div>
 
-            <!-- NIS (Disabled/Readonly) -->
-            <div>
-              <label class="block text-[11px] font-medium text-slate-600 mb-1">NIS (Nomor Induk Siswa)</label>
-              <div class="relative">
-                <input type="text" value="{{ $user->nis ?? '20210492' }}" readonly class="w-full text-xs font-semibold text-slate-600 bg-[#EBF3FE] border border-blue-100 rounded-xl px-3 py-2.5 pr-8 cursor-not-allowed" />
-                <i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              </div>
-            </div>
-
-            <!-- Kelas Dropdown (Hanya X, XI, XII) -->
+            <!-- Kelas Dropdown -->
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Kelas</label>
               <div class="relative">
@@ -177,40 +167,7 @@
             </div>
           </div>
         </section>
-
-        <!-- Security Buttons -->
-        <section class="space-y-2.5 pt-1">
-          <!-- Ubah Kata Sandi -->
-          <a href="#" class="w-full bg-white hover:bg-slate-50 p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between transition-colors group">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-rotate-left text-sm"></i>
-              </div>
-              <div>
-                <p class="text-xs font-bold text-slate-800">Ubah Kata Sandi</p>
-                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Terakhir diubah 3 bulan lalu</p>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-slate-500 transition-colors"></i>
-          </a>
-
-          <!-- Verifikasi 2-Langkah -->
-          <a href="#" class="w-full bg-white hover:bg-slate-50 p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between transition-colors group">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-mobile-screen-button text-sm"></i>
-              </div>
-              <div>
-                <p class="text-xs font-bold text-slate-800">Verifikasi 2-Langkah</p>
-                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Aktif • Amankan transaksi Anda</p>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-slate-500 transition-colors"></i>
-          </a>
-        </section>
-
-      </main>
-
+        
       <!-- Bottom Sticky Save Button -->
       <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 flex justify-center z-10">
         <div class="w-full max-w-md">
@@ -221,9 +178,25 @@
         </div>
       </div>
 
-    </form>
+    </form> <!-- Penutup Form Utama -->
 
   </div>
+
+  <!-- JavaScript Preview Foto -->
+  <script>
+    function previewAvatar(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const preview = document.getElementById('avatar-preview');
+        if (preview) {
+          preview.src = reader.result;
+        }
+      };
+      if (event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+  </script>
 
 </body>
 </html>

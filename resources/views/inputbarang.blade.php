@@ -103,6 +103,38 @@
                         @error('product_name') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
                     </div>
 
+                    <!-- KATEGORI BARANG -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">KATEGORI BARANG</label>
+                        <div class="relative">
+                            <select name="category_id" required class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-700 px-3.5 py-3 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#024d35]">
+                                <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>Pilih Kategori</option>
+                                @foreach($categories ?? [] as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name ?? $category->nama_kategori ?? $category->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+                        @error('category_id') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- TANGGAL KADALUARSA -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">TANGGAL KADALUARSA</label>
+                        <div class="relative flex items-center">
+                            <input 
+                                type="date" 
+                                name="expired_date"
+                                value="{{ old('expired_date') }}"
+                                required
+                                class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-800 px-3.5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
+                            />
+                        </div>
+                        @error('expired_date') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
                     <!-- Jumlah (QTY) -->
                     <div>
                         <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">JUMLAH STOCK (QTY)</label>
@@ -112,9 +144,9 @@
                             </button>
                             <input 
                                 type="number" 
-                                name="current_stock"
+                                name="stock"
                                 id="qtyInput"
-                                value="{{ old('current_stock', 1) }}" 
+                                value="{{ old('stock', 1) }}" 
                                 min="1"
                                 required
                                 class="flex-1 bg-white border border-slate-200 text-center font-bold text-slate-800 text-base py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
@@ -123,7 +155,7 @@
                                 <i class="fa-solid fa-plus text-xs"></i>
                             </button>
                         </div>
-                        @error('current_stock') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                        @error('stock') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Supplier -->
@@ -181,20 +213,16 @@
                     <div>
                         <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">BUKTI NOTA / RESI</label>
                         
-                        <!-- Area Klik Pembuka Modal -->
                         <div onclick="openChoiceModal()" class="w-full border-2 border-dashed border-slate-200 bg-[#f1f5f9]/60 hover:bg-[#e2e8f0]/60 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition min-h-[120px] relative overflow-hidden">
                             
-                            <!-- UI Default -->
                             <div id="default-ui" class="flex flex-col items-center justify-center">
                                 <i class="fa-solid fa-camera-retro text-2xl text-slate-400 mb-1.5"></i>
                                 <span class="text-xs font-semibold text-slate-500">Ketuk untuk Ambil / Pilih Foto</span>
                             </div>
 
-                            <!-- Preview Foto Terpilih -->
                             <img id="image-preview" src="#" alt="Preview Foto" class="hidden w-full h-36 object-cover rounded-xl shadow-sm">
                         </div>
 
-                        <!-- Input File Utama (Dikirim ke Server) -->
                         <input type="file" id="input-galeri" name="receipt_image" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
 
                         @error('receipt_image') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
@@ -258,7 +286,6 @@
                 </button>
             </div>
 
-            <!-- Opsi 1: Kamera Realtime -->
             <button type="button" onclick="startCamera()" class="w-full flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-[#024d35] rounded-xl transition font-bold text-xs border border-slate-200/80">
                 <div class="w-9 h-9 bg-emerald-100 text-[#024d35] rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-camera text-base"></i>
@@ -269,7 +296,6 @@
                 </div>
             </button>
 
-            <!-- Opsi 2: File / Galeri -->
             <button type="button" onclick="triggerGallery()" class="w-full flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-[#024d35] rounded-xl transition font-bold text-xs border border-slate-200/80">
                 <div class="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-images text-base"></i>
@@ -292,15 +318,12 @@
                 </button>
             </div>
 
-            <!-- Video Stream Kamera -->
             <div class="w-full h-64 bg-black rounded-xl overflow-hidden relative flex items-center justify-center">
                 <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover"></video>
             </div>
 
-            <!-- Canvas Tersembunyi untuk Capture Image -->
             <canvas id="webcam-canvas" class="hidden"></canvas>
 
-            <!-- Tombol Jepret -->
             <div class="flex gap-2 w-full">
                 <button type="button" onclick="stopCamera()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs">
                     Batal
@@ -327,7 +350,6 @@
             }
         }
 
-        // Modal Controls
         function openChoiceModal() {
             document.getElementById('choice-modal').classList.remove('hidden');
         }
@@ -341,7 +363,6 @@
             document.getElementById('input-galeri').click();
         }
 
-        // Buka Kamera (Webcam Laptop / Kamera HP)
         async function startCamera() {
             closeChoiceModal();
             const cameraModal = document.getElementById('camera-modal');
@@ -360,7 +381,6 @@
             }
         }
 
-        // Tutup & Matikan Stream Kamera
         function stopCamera() {
             const cameraModal = document.getElementById('camera-modal');
             if (stream) {
@@ -369,7 +389,6 @@
             cameraModal.classList.add('hidden');
         }
 
-        // Ambil Foto dari Stream Video
         function takeSnapshot() {
             const video = document.getElementById('webcam-video');
             const canvas = document.getElementById('webcam-canvas');
@@ -382,16 +401,13 @@
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Konversi Canvas ke File & Masukkan ke Form Input File
             canvas.toBlob((blob) => {
                 const file = new File([blob], "bukti_nota.jpg", { type: "image/jpeg" });
                 
-                // Gunakan DataTransfer untuk menyisipkan File ke Input HTML
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 fileInput.files = dataTransfer.files;
 
-                // Tampilkan Preview Foto
                 imagePreview.src = URL.createObjectURL(blob);
                 imagePreview.classList.remove('hidden');
                 defaultUI.classList.add('hidden');
@@ -400,7 +416,6 @@
             }, 'image/jpeg');
         }
 
-        // Preview saat pilih file dari Galeri
         function handleFileSelect(input) {
             const defaultUI = document.getElementById('default-ui');
             const imagePreview = document.getElementById('image-preview');

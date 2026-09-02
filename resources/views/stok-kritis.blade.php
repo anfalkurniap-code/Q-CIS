@@ -33,12 +33,6 @@
                     </div>
                     <span class="text-xl font-extrabold text-[#024d35] tracking-tight">Q-CIS</span>
                 </div>
-                <button class="relative text-slate-600 hover:text-slate-900 transition">
-                    <i class="fa-regular fa-bell text-xl"></i>
-                    @if(isset($stokKritisCount) && $stokKritisCount > 0)
-                        <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
-                    @endif
-                </button>
             </header>
 
             <!-- Main Content Container -->
@@ -58,20 +52,7 @@
                     <p class="text-xs text-emerald-100/80 font-medium max-w-[200px]">Perlu tindakan segera hari ini.</p>
                 </div>
 
-                <!-- Filter & Chips Section -->
-                <div class="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar">
-                    <button class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-200/80 text-slate-700 rounded-lg text-xs font-bold whitespace-nowrap hover:bg-slate-300">
-                        <i class="fa-solid fa-sliders text-xs"></i>
-                        Filter
-                    </button>
-                    <button class="px-3.5 py-1.5 bg-[#00f0aa] text-[#024d35] font-extrabold rounded-lg text-xs whitespace-nowrap">
-                        Prioritas Tinggi
-                    </button>
-                    <button class="px-3.5 py-1.5 bg-slate-200/80 text-slate-600 font-semibold rounded-lg text-xs whitespace-nowrap hover:bg-slate-300">
-                        Gudang Utama
-                    </button>
-                </div>
-
+            
                 <!-- List Items Kritis Dinamis -->
                 <div class="space-y-3">
                     @forelse($itemsKritis ?? [] as $item)

@@ -29,12 +29,6 @@
                         <span id="badge-cart-top" class="absolute -top-1.5 -right-2 bg-slate-700 text-[10px] text-white w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm">0</span>
                     </a>
                   
-                    <!-- Lonceng Notifikasi dengan Badge Hijau -->
-                    <button class="relative p-1 text-emerald-800 hover:text-emerald-600 transition-colors">
-                        <i data-lucide="bell" class="w-6 h-6"></i>
-                        <span class="absolute top-0.5 right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
-                    </button>
-                  
                     <!-- Foto Profil Header -->
                     <a href="{{ url('/HalamanProfile') }}" class="block relative transition-transform active:scale-95" title="Ke Halaman Profil">
                         <img id="header-avatar" 
@@ -68,9 +62,12 @@
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
                 <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products) }}</b> Produk</span>
             </div>       
+            
             <div class="grid grid-cols-2 gap-4" id="product-grid">
+                
+                {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
                 @foreach($products as $item)          
-                <div data-category="{{ $item->kategori ?? $item->category ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
+                <div data-category="{{ $item->kategori ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
@@ -79,37 +76,50 @@
                     @endif
 
                     <div class="bg-gray-50 rounded-xl p-2 flex justify-center items-center mb-3 h-32">
-                        <img src="{{ $item->img ?? $item->image ?? $item->image_url ?? 'https://via.placeholder.com/150' }}" 
-                             alt="{{ $item->nama ?? $item->name ?? 'Produk' }}" 
+                        <img src="{{ $item->img ?? 'https://via.placeholder.com/150' }}" 
+                             alt="{{ $item->nama ?? 'Produk' }}" 
                              class="h-24 object-contain">
                     </div>
 
                     <div>
                         <h3 class="font-bold text-sm text-slate-800 line-clamp-1">
-                            {{ $item->nama ?? $item->name ?? 'Tanpa Nama' }}
+                            {{ $item->name ?? 'Tanpa Nama' }}
                         </h3>
-                        <p class="text-[10px] text-gray-400 mb-2">
-                            Stok: {{ $item->stok ?? $item->stock ?? 0 }}
+
+                        <!-- Warni merah jika stok habis -->
+                        <p class="text-[10px] {{ ($item->stok ?? 0) <= 0 ? 'text-red-500 font-bold' : 'text-gray-400' }} mb-2">
+                            Stok: {{ $item->stock ?? 0 }}
                         </p>
+
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-emerald-700 text-sm">
-                                Rp {{ number_format($item->harga ?? $item->price ?? 0, 0, ',', '.') }}
+                                Rp {{ $item->price ?? 0, 0, ',', '.' }}
                             </span>
+                            
+                            <!-- CEK STOK DATABASE DENGAN IF-ELSE -->
+                            @if(($item->stock ?? 0) > 0)
                             <button 
                                 onclick="tambahKeKeranjang(
-                                    '{{ $item->id ?? $loop->index }}', 
-                                    '{{ addslashes($item->nama ?? $item->name ?? 'Produk') }}', 
-                                    {{ $item->harga ?? $item->price ?? 0 }}, 
-                                    '{{ $item->img ?? $item->image ?? $item->image_url ?? '' }}'
+                                    {{ $item->id }}, 
+                                    '{{ addslashes($item->name) }}', 
+                                    {{ $item->price }}, 
+                                    '{{ $item->img ?? '' }}',
+                                    {{ $item->stock }}
                                 )"
-                                class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition"
+                                class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition cursor-pointer"
                             >
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                             </button>
+                        @else
+                            <button disabled class="bg-gray-200 text-gray-400 px-2 py-1 rounded-lg text-[10px] font-bold cursor-not-allowed">
+                                Habis
+                            </button>
+                        @endif
                         </div>
                     </div>
                 </div>
                 @endforeach
+
             </div>
         </div>
        
@@ -134,24 +144,32 @@
             </div>
           
             <!-- Bottom Navigation Bar -->
-            <div class="grid grid-cols-4 pt-3 pb-4 text-center text-xs font-semibold text-gray-400">
-                <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-                    <i data-lucide="home" class="w-5 h-5"></i>
+            <div class="grid grid-cols-4 items-center pt-2 pb-3 text-center text-xs font-semibold text-gray-400">
+                <!-- Home -->
+                <a href="{{ url('/HalamanDepanKasir') }}" 
+                   class="flex flex-col items-center justify-center {{ Request::is('HalamanDepanKasir*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
+                    <i data-lucide="home" class="w-5 h-5 stroke-[2.2]"></i>
                     <span>Home</span>
                 </a>
-                
-                <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] mx-2 py-1.5 rounded-xl font-bold text-xs gap-0.5">
-                    <i data-lucide="shopping-bag" class="w-5 h-5 stroke-[2.5]"></i>
+
+                <!-- Shop -->
+                <a href="{{ url('/HalamanShop') }}" 
+                   class="flex flex-col items-center justify-center {{ Request::is('HalamanShop*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 stroke-[2.2]"></i>
                     <span>Shop</span>
                 </a>
-                
-                <a href="#" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
+
+                <!-- Trans -->
+                <a href="{{ url('/Riwayattransaksi') }}" 
+                   class="flex flex-col items-center justify-center {{ Request::is('Riwayattransaksi*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
+                    <i data-lucide="receipt" class="w-5 h-5 stroke-[2.2]"></i>
                     <span>Trans</span>
                 </a>
-                
-                <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-                    <i data-lucide="user" class="w-5 h-5"></i>
+
+                <!-- Profile -->
+                <a href="{{ url('/HalamanProfile') }}" 
+                   class="flex flex-col items-center justify-center {{ Request::is('HalamanProfile*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
+                    <i data-lucide="user" class="w-5 h-5 stroke-[2.2]"></i>
                     <span>Profile</span>
                 </a>
             </div>
@@ -178,18 +196,29 @@
             if (totalHarga) totalHarga.innerText = 'Rp ' + totalBayar.toLocaleString('id-ID');
         }
 
-        function tambahKeKeranjang(id, nama, harga, img) {
+        // FUNGSI TAMBAH KE KERANJANG DENGAN PEMBATASAN STOK
+        function tambahKeKeranjang(id, nama, harga, img, stok) {
             let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
             let itemIndex = cart.findIndex(item => item.id == id);
 
+            let currentQtyInCart = itemIndex > -1 ? cart[itemIndex].qty : 0;
+
+            // Cek batas stok
+            if (stok !== undefined && currentQtyInCart >= stok) {
+                alert(`Maaf, stok ${nama} hanya tersisa ${stok} item!`);
+                return;
+            }
+
             if (itemIndex > -1) {
                 cart[itemIndex].qty += 1;
+                cart[itemIndex].stok = stok; 
             } else {
                 cart.push({
                     id: id,
                     nama: nama,
                     harga: harga,
                     img: img,
+                    stok: stok,
                     qty: 1
                 });
             }
@@ -197,7 +226,7 @@
             localStorage.setItem('cartItems', JSON.stringify(cart));
             updateCartUI();
         }
-
+        
         function filterProduk(kategori, element) {          
             const cards = document.querySelectorAll('.product-card');
             const targetKategori = kategori.toLowerCase().trim();

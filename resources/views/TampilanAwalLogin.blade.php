@@ -19,15 +19,22 @@
 
     <div class="w-full max-w-[390px] bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden p-6 flex flex-col gap-6">
         
+        <!-- Header -->
+<<<<<<< HEAD
+        <header class="flex justify-start items-center w-full">
+=======
         <header class="flex justify-between items-center w-full">
+>>>>>>> 6c76da402e9c8684764d122cf307d31e8185f763
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 bg-[#E8F5E9] border border-[#A5D6A7] rounded-md flex items-center justify-center">
                     <div class="w-2 h-2 bg-[#2E7D32] rounded-[2px]"></div>
                 </div>
                 <span class="text-base font-bold text-[#1A2E22]">Q-CIS</span>
             </div>
+<<<<<<< HEAD
+=======
             <div class="flex items-center gap-3">
-                <button class="text-gray-500 hover:text-gray-700">
+                <button type="button" class="text-gray-500 hover:text-gray-700 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
@@ -36,8 +43,10 @@
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Profile" class="w-full h-full object-cover">
                 </div>
             </div>
+>>>>>>> 6c76da402e9c8684764d122cf307d31e8185f763
         </header>
 
+        <!-- Welcome Section -->
         <section class="text-center my-2">
             <h1 class="text-[26px] font-extrabold text-[#1A2E22] leading-tight tracking-wide">
                 Selamat Datang di<br>Q-CIS
@@ -48,13 +57,10 @@
             </p>
         </section>
 
+        <!-- Main Cards -->
         <main class="flex flex-col gap-4">
 
-<<<<<<< Updated upstream
-            <!-- KASIR -->
-=======
             <!-- Card 1: Sistem Kasir -->
->>>>>>> Stashed changes
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#1D2D24] rounded-lg flex items-center justify-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -75,11 +81,7 @@
                 </a>
             </div>
 
-<<<<<<< Updated upstream
-            <!-- KEPALA TOKO -->
-=======
             <!-- Card 2: Kepala Toko -->
->>>>>>> Stashed changes
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#A7F3D0] rounded-lg flex items-center justify-center text-[#065F46]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -92,7 +94,7 @@
                         Dashboard analitik lengkap untuk memantau performa penjualan harian, laporan laba rugi, dan manajemen staf.
                     </p>
                 </div>
-                <a href="{{ url('/LoginKepalaToko') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
+                <a href="{{ route('login.kepalatoko') }}" class="w-full bg-[#F7F9FA] hover:bg-[#EEF1F3] transition-colors rounded-xl py-2.5 text-center text-[12px] font-bold text-[#2C3E50] flex items-center justify-center gap-1.5">
                     Masuk 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -100,11 +102,7 @@
                 </a>
             </div>
 
-<<<<<<< Updated upstream
-            <!-- GUDANG -->
-=======
             <!-- Card 3: Gudang -->
->>>>>>> Stashed changes
             <div class="border border-[#F0F0F0] rounded-2xl p-5 flex flex-col gap-4 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
                 <div class="w-10 h-10 bg-[#24332A] rounded-lg flex items-center justify-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">

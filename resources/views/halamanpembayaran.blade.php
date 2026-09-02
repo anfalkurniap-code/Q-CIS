@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran</title>
+    <title>Pembayaran Tunai</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
         body{background:#f2f2f2;}
         .container{width:380px;margin:20px auto;}
         
-        /* Tombol Kembali Style */
         .btn-back {
             display: inline-flex;
             align-items: center;
@@ -41,17 +40,6 @@
         .detail h4{font-size:14px;font-weight:500;}
         .detail p{font-size:12px;color:#777;margin-top:5px;}
         .price{font-weight:bold;font-size:15px;margin-right:12px;}
-        .payment{display:flex;gap:10px;}
-        .box{flex:1;height:80px;border:1px solid #ddd;border-radius:8px;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition: all 0.2s ease;}
-        .box.active{border:2px solid #18b04b;background-color: #f6fff9;}
-        .box i{font-size:24px;margin-bottom:8px;}
-        .content-section {display: none;}
-        .content-section.active {display: block;}
-        .qr{width:180px;height:180px;margin:20px auto;border-radius:10px;border:1px solid #ddd;display:flex;justify-content:center;align-items:center;}
-        .qr i{font-size:120px;}
-        .info{background:#eaf7ef;border:1px solid #d6ebdd;padding:12px;border-radius:8px;margin-top:15px;}
-        .info h3{color:#16a34a;font-size:18px;}
-        .info p{margin-top:5px;color:#666;font-size:13px;}
         .input-group {margin-bottom: 15px;}
         .input-group label {display: block;font-size: 13px;color: #555;margin-bottom: 6px;font-weight: bold;}
         .input-group input {width: 100%;padding: 12px;border: 1px solid #ccc;border-radius: 6px;font-size: 16px;outline: none;}
@@ -71,47 +59,27 @@
 
 <form id="paymentForm" action="{{ route('pembayaran.proses') }}" method="POST">
     @csrf
-    <!-- Input hidden untuk mengirim data ke Backend Laravel -->
+    <!-- Input Hidden Data Transaksi -->
     <input type="hidden" name="cart_data" id="cartDataInput">
-    <input type="hidden" name="payment_method" id="paymentMethodInput" value="qris">
+    <input type="hidden" name="payment_method" id="paymentMethodInput" value="cash">
+    <input type="hidden" name="subtotal" id="subtotalInput" value="0">
+    <input type="hidden" name="discount" id="discountInput" value="0">
     <input type="hidden" name="total_price" id="totalPriceInput" value="0">
 
     <div class="container">
 
-        <!-- TOMBOL KEMBALI -->
         <a href="javascript:history.back()" class="btn-back">
             <i class="fa-solid fa-arrow-left"></i> Kembali
         </a>
 
         <div class="card">
             <div class="title">RINCIAN PESANAN<span class="right" id="totalItemsText">0 Items</span></div>
-            
-            <!-- Tempat daftar barang akan di-render dinamis -->
             <div id="cartItemsContainer"></div>
         </div>
 
         <div class="card">
-            <div class="title">METODE PEMBAYARAN</div>
-            <div class="payment">
-                <div class="box active" id="btnQris" onclick="switchPayment('qris')">
-                    <i class="fa-solid fa-qrcode" style="color:#17a34a;"></i> QRIS
-                </div>
-                <div class="box" id="btnCash" onclick="switchPayment('cash')">
-                    <i class="fa-solid fa-wallet" style="color:#ff8b2d;"></i> Tunai
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3 style="margin-bottom:15px;">Instruksi Pembayaran</h3>
-            <div id="sectionQris" class="content-section active">
-                <div class="qr"><i class="fa-solid fa-qrcode"></i></div>
-                <div class="info">
-                    <h3>QRIS Aktif</h3>
-                    <p>Pindai kode di atas dengan m-banking atau e-wallet untuk membayar.</p>
-                </div>
-            </div>
-            <div id="sectionCash" class="content-section">
+            <h3 style="margin-bottom:15px;">Pembayaran Tunai</h3>
+            <div id="sectionCash">
                 <div class="input-group">
                     <label for="cashAmount">Jumlah Uang Diterima (Rp):</label>
                     <input type="number" id="cashAmount" name="cash_amount" placeholder="Masukkan nominal, misal: 20000" oninput="calculateChange()">
@@ -126,6 +94,7 @@
         <div class="card">
             <div class="title">RINGKASAN</div>
             <div class="summary"><span>Subtotal</span><span id="subtotalText">Rp 0</span></div>
+            <div class="summary"><span>Diskon Pelajar</span><span id="discountText" style="color:#16a34a; font-weight:bold;">Rp 0</span></div>
             <div class="total"><strong>Total</strong><h2 id="totalText">Rp 0</h2></div>
             <button type="button" class="btn-submit" onclick="processPayment()">
                 <i class="fa-solid fa-circle-check"></i> Selesaikan Pembayaran
@@ -136,39 +105,46 @@
 
 <script>
     let totalPrice = 0;
-    let currentMethod = 'qris';
     let cart = [];
+    const discountValue = 8000;
 
-    // 1. Memuat keranjang belanja dari LocalStorage saat halaman pertama kali dibuka
     document.addEventListener('DOMContentLoaded', function() {
-        const storedCart = localStorage.getItem('qcis_cart');
+        const storedCart = localStorage.getItem('cartItems');
         if (storedCart) {
-            cart = JSON.parse(storedCart);
+            try {
+                cart = JSON.parse(storedCart);
+            } catch (e) {
+                cart = [];
+            }
         }
         renderCart();
     });
 
-    // 2. Fungsi untuk menampilkan item barang dan menghitung total harga
     function renderCart() {
         const container = document.getElementById('cartItemsContainer');
         container.innerHTML = '';
-        totalPrice = 0;
+        let subtotal = 0;
         let totalCount = 0;
 
         if (cart.length === 0) {
             container.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kamu kosong.</p>';
         } else {
             cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                totalPrice += itemTotal;
-                totalCount += item.quantity;
+                // BUGFIX 1: Fallback jika properti data menggunakan name/price
+                const itemNama = item.nama || item.name || 'Produk';
+                const itemHarga = parseFloat(item.harga || item.price || 0);
+                const itemQty = parseInt(item.qty || 1);
+
+                const itemTotal = itemHarga * itemQty;
+                subtotal += itemTotal;
+                totalCount += itemQty;
 
                 const itemHTML = `
                     <div class="item">
-                        <img src="${item.image ? item.image : 'https://via.placeholder.com/45'}" alt="${item.name}" class="product-img">
+                        <img src="${item.img ? item.img : 'https://via.placeholder.com/45'}" alt="${itemNama}" class="product-img">
                         <div class="detail">
-                            <h4>${item.name}</h4>
-                            <p>Kuantitas : ${item.quantity}</p>
+                            <h4>${itemNama}</h4>
+                            <p>Kuantitas : ${itemQty}</p>
                         </div>
                         <div class="price">Rp ${itemTotal.toLocaleString('id-ID')}</div>
                     </div>
@@ -178,27 +154,26 @@
             });
         }
 
-        // Update tampilan harga & ringkasan
+        // BUGFIX 4: Penyesuaian diskon agar tidak melebihi subtotal
+        const finalDiscount = subtotal > 0 ? Math.min(subtotal, discountValue) : 0;
+        totalPrice = Math.max(0, subtotal - finalDiscount);
+
+        // Update tampilan UI
         document.getElementById('totalItemsText').innerText = `${totalCount} Items`;
-        document.getElementById('subtotalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        document.getElementById('subtotalText').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+        document.getElementById('discountText').innerText = subtotal > 0 ? `- Rp ${finalDiscount.toLocaleString('id-ID')}` : 'Rp 0';
         document.getElementById('totalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         
-        // Simpan nilai total harga ke input hidden
+        // Update input hidden untuk dikirim ke Laravel Backend
+        document.getElementById('subtotalInput').value = subtotal;
+        document.getElementById('discountInput').value = finalDiscount;
         document.getElementById('totalPriceInput').value = totalPrice;
         document.getElementById('cartDataInput').value = JSON.stringify(cart);
+
+        // Hitung ulang kembalian jika user sudah mengetik nominal duluan
+        calculateChange();
     }
 
-    // 3. Fungsi Ganti Metode Pembayaran
-    function switchPayment(method) {
-        currentMethod = method;
-        document.getElementById('paymentMethodInput').value = method;
-        document.getElementById('btnQris').classList.toggle('active', method === 'qris');
-        document.getElementById('btnCash').classList.toggle('active', method === 'cash');
-        document.getElementById('sectionQris').classList.toggle('active', method === 'qris');
-        document.getElementById('sectionCash').classList.toggle('active', method === 'cash');
-    }
-
-    // 4. Hitung Kembalian
     function calculateChange() {
         const cash = parseFloat(document.getElementById('cashAmount').value) || 0;
         const change = cash - totalPrice;
@@ -213,32 +188,26 @@
         }
     }
 
-    // 5. Eksekusi Pembayaran
     function processPayment() {
         if (cart.length === 0) {
             alert('Keranjang belanja kosong!');
             return;
         }
 
-        if (currentMethod === 'cash') {
-            const cashInput = parseFloat(document.getElementById('cashAmount').value) || 0;
-            if (cashInput < totalPrice) {
-                alert('Nominal uang pembayaran kurang dari total tagihan!');
-                return;
-            }
+        const cashInput = parseFloat(document.getElementById('cashAmount').value) || 0;
+        if (cashInput < totalPrice) {
+            alert('Nominal uang pembayaran kurang dari total tagihan!');
+            return;
         }
 
-        // Mencegah double click submit
         const btnSubmit = document.querySelector('.btn-submit');
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
-        // Hapus penyimpanan keranjang di browser setelah sukses checkout
-        localStorage.removeItem('qcis_cart');
-        
-        // Kirim Form ke Backend Controller
+        // BUGFIX 3: Bersihkan keranjang lalu segera kirimkan form
+        localStorage.removeItem('cartItems');
         document.getElementById('paymentForm').submit();
     }
 </script>
 </body>
-</html>p
+</html>

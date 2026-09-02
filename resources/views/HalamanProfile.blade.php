@@ -39,14 +39,9 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Lonceng Notifikasi dengan Badge Merah -->
-        <button class="relative p-1 text-emerald-600">
-          <i class="fa-regular fa-bell text-xl"></i>
-          <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-        </button>
-
-        <!-- Avatar Header Kanan -->
-        <img id="header-avatar" src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300' }}" alt="Header Avatar" class="w-9 h-9 rounded-full object-cover border border-gray-200">
+    
+        <!-- Avatar Header Kanan (Otomatis Sync dari Session) -->
+        <img id="header-avatar" src="{{ session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Header Avatar" class="w-9 h-9 rounded-full object-cover border border-gray-200">
       </div>
     </div>
 
@@ -55,34 +50,34 @@
       <!-- Card Profil Utama -->
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
         <div class="relative mb-3">
-          <img id="main-avatar" src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300' }}" alt="Avatar User" class="w-28 h-28 rounded-full object-cover border-4 border-slate-50 shadow-inner">
-
-          <!-- Tombol Edit Pensil Hijau -->
-          <button id="edit-btn" onclick="toggleEditNama()" title="Ubah Nama & Foto" class="absolute bottom-0 right-1 bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-full shadow-md transition-transform active:scale-95 flex items-center justify-center">
-            <i id="edit-icon" class="fa-solid fa-pen text-xs"></i>
-          </button>
+          <!-- Avatar Utama (Otomatis Sync dari Session) -->
+          <img id="main-avatar" src="{{ session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Avatar User" class="w-28 h-28 rounded-full object-cover border-4 border-slate-50 shadow-inner">
 
           <!-- Input Tersembunyi untuk Upload Foto Profil -->
           <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="previewImage(event)">
         </div>
 
-        <!-- Input Nama / Teks Nama (Dihubungkan ke Session Dummy) -->
+        <!-- Input Nama / Teks Nama (Mengambil dari Session Terbaru) -->
         <div class="w-full flex flex-col justify-center items-center">
           <h2 id="nama-user" class="text-xl font-bold text-slate-800 outline-none rounded-lg px-2 py-0.5 border border-transparent transition-all">
-            {{ session('user_dummy.name', $user->name ?? 'Budi Santoso') }}
+            {{ session('user_dummy.name', 'Budi Santoso') }}
           </h2>
           
-          <!-- Info Sub-Profil Tambahan (Email, Kelas, Jurusan) -->
+          <!-- Info Sub-Profil Tambahan (Email, No HP, Kelas, Jurusan) -->
           <p id="email-user" class="text-xs text-slate-400 mt-0.5">
-            {{ session('user_dummy.email', $user->email ?? 'budi.santoso@smk-qcis.sch.id') }}
+            {{ session('user_dummy.email', 'budi.santoso@smk-qcis.sch.id') }}
+          </p>
+
+          <p class="text-[11px] text-slate-400 font-medium mt-0.5">
+            {{ session('user_dummy.phone', '+62 812-3456-7890') }}
           </p>
 
           <div class="flex items-center gap-2 mt-2">
             <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-100">
-              Kelas {{ session('user_dummy.class', $user->class ?? 'XI') }}
+              Kelas {{ session('user_dummy.class', 'XI') }}
             </span>
             <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md">
-              {{ session('user_dummy.major', $user->major ?? 'Rekayasa Perangkat Lunak') }}
+              {{ session('user_dummy.major', 'Rekayasa Perangkat Lunak') }}
             </span>
           </div>
         </div>
@@ -99,20 +94,17 @@
           <!-- Informasi Akun -->
           <a href="{{ url('/HalamanInformasiAkun') }}" class="flex items-center justify-between p-4 bg-white hover:bg-slate-50 transition-colors border-b border-gray-100">
             <div class="flex items-center gap-3.5">
-              <!-- Circle Icon User -->
               <div class="w-11 h-11 rounded-full bg-[#DCFCE7] flex items-center justify-center text-[#16A34A] shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <!-- Teks -->
               <div class="flex flex-col">
                 <span class="font-bold text-slate-800 text-sm">Informasi Akun</span>
                 <span class="text-xs text-slate-400">Update profil dan data diri</span>
               </div>
             </div>
-            <!-- Panah Kanan -->
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m9 18 6-6-6-6" />
             </svg>
@@ -192,7 +184,7 @@
         <span class="text-[10px] font-semibold">Shop</span>
       </a>
 
-      <a href="#" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
+      <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
         <i class="fa-solid fa-receipt text-lg"></i>
         <span class="text-[10px] font-semibold">Trans</span>
       </a>
@@ -209,72 +201,50 @@
 
   </div>
 
-  <!-- Script JavaScript untuk Fungsi Edit Inline & Sinkronisasi Client Side -->
+  <!-- Script JavaScript (Sudah Bersih dari localStorage) -->
   <script>
-    // Cek apakah ada simpanan nama di localStorage browser jika session belum diproses
-    document.addEventListener("DOMContentLoaded", function() {
-      const savedName = localStorage.getItem('user_dummy_name');
-      if (savedName) {
-        document.getElementById('nama-user').innerText = savedName;
-      }
-    });
-
     function toggleEditNama() {
       const namaEl = document.getElementById('nama-user');
       const editBtn = document.getElementById('edit-btn');
       const editIcon = document.getElementById('edit-icon');
 
       if (namaEl.contentEditable === "true") {
-        // Selesai Mode Edit (Simpan Nama)
         namaEl.contentEditable = "false";
 
-        // Simpan ke localStorage agar tidak hilang saat refresh
-        localStorage.setItem('user_dummy_name', namaEl.innerText.trim());
-
-        // Hapus Style Highlight
         namaEl.classList.remove('bg-emerald-50', 'border-emerald-400', 'ring-2', 'ring-emerald-200');
         namaEl.classList.add('border-transparent');
 
-        // Ubah Icon Kembali ke Pensil
         editIcon.className = "fa-solid fa-pen text-xs";
         editBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
         editBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
 
-        // Tampilkan Notifikasi Toast
         showToast();
-
       } else {
-        // Masuk Mode Edit Nama
         namaEl.contentEditable = "true";
         namaEl.focus();
 
-        // Pilih Semua Teks Biar Gampang Diubah
         const range = document.createRange();
         range.selectNodeContents(namaEl);
         const sel = window.getSelection();
         sel.removeAllRanges();
         sel.addRange(range);
 
-        // Tambahkan Style Highlight Edit
         namaEl.classList.remove('border-transparent');
         namaEl.classList.add('bg-emerald-50', 'border-emerald-400', 'ring-2', 'ring-emerald-200');
 
-        // Ubah Icon Jadi Centang (Check)
         editIcon.className = "fa-solid fa-check text-xs";
         editBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
         editBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
       }
     }
 
-    // Tekan Enter untuk Simpan Nama
     document.getElementById('nama-user').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        e.preventDefault(); // Mencegah pindah baris
+        e.preventDefault();
         toggleEditNama();
       }
     });
 
-    // Fungsi Pratinjau Foto Profil Jika Di-upload
     function previewImage(event) {
       const reader = new FileReader();
       reader.onload = function() {
@@ -287,7 +257,6 @@
       }
     }
 
-    // Fungsi Menampilkan Notifikasi Berhasil
     function showToast() {
       const toast = document.getElementById('toast-success');
       toast.classList.remove('opacity-0', 'pointer-events-none');
