@@ -1,0 +1,34 @@
+[33ma9850dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: commit (cherry-pick): Resolved merge conflicts in routes/web.php
+[33mb43c7ff[m HEAD@{1}: reset: moving to HEAD
+[33mb43c7ff[m HEAD@{2}: checkout: moving from 68d2a7ee63d512244fd8063acb0d3d8dc4ae9d07 to main
+[33m68d2a7e[m HEAD@{3}: commit (merge): Resolved merge conflicts in routes/web.php
+[33m09019ff[m HEAD@{4}: commit: menambah fitur kategori
+[33ma8dda67[m HEAD@{5}: pull origin main --rebase (start): checkout a8dda674770b819886dd3693da2947275a45976a
+[33mb43c7ff[m HEAD@{6}: commit: membuat riwayat transaksi gudang
+[33m2518249[m HEAD@{7}: pull origin main: Merge made by the 'ort' strategy.
+[33mca14a63[m HEAD@{8}: commit: menambahkan fitur expired
+[33mca851a7[m HEAD@{9}: commit (merge): Selesaikan merge conflict di User model dan routes
+[33md8dec7e[m HEAD@{10}: commit: memfungsikan fitu ganti password
+[33mc5a48c9[m HEAD@{11}: pull origin main: Fast-forward
+[33mea6e457[m HEAD@{12}: commit: menghubungkan database
+[33ma1daf1a[m HEAD@{13}: pull origin main: Merge made by the 'ort' strategy.
+[33m245f36b[m HEAD@{14}: commit: memnghubungkan database
+[33m0834c25[m HEAD@{15}: pull origin main: Fast-forward
+[33m24357d6[m HEAD@{16}: commit (merge): membuat halaman ubah pasword dan kelola barang
+[33m4ce3611[m HEAD@{17}: commit: membuat profil petugas gudang
+[33m8bd1cdb[m HEAD@{18}: pull origin main: Fast-forward
+[33m69ecf4a[m HEAD@{19}: commit: Lengkapi kolom tabel products pada migration
+[33m90af374[m HEAD@{20}: commit: Update DatabaseSeeder untuk user gudang & kasir
+[33m4735697[m HEAD@{21}: pull origin main: Fast-forward
+[33m8bc110f[m HEAD@{22}: commit: benerin error login
+[33m56ba55c[m HEAD@{23}: pull origin main: Fast-forward
+[33m3662139[m HEAD@{24}: checkout: moving from main to main
+[33m3662139[m HEAD@{25}: checkout: moving from novan to main
+[33mf85a2c1[m[33m ([m[1;31morigin/zaki[m[33m, [m[1;31morigin/wahyu[m[33m, [m[1;31morigin/novan[m[33m, [m[1;31morigin/dimas[m[33m, [m[1;31morigin/anfal[m[33m, [m[1;32mnovan[m[33m, [m[1;32mdimas[m[33m)[m HEAD@{26}: checkout: moving from main to novan
+[33m3662139[m HEAD@{27}: checkout: moving from dimas to main
+[33mf85a2c1[m[33m ([m[1;31morigin/zaki[m[33m, [m[1;31morigin/wahyu[m[33m, [m[1;31morigin/novan[m[33m, [m[1;31morigin/dimas[m[33m, [m[1;31morigin/anfal[m[33m, [m[1;32mnovan[m[33m, [m[1;32mdimas[m[33m)[m HEAD@{28}: checkout: moving from main to dimas
+[33m3662139[m HEAD@{29}: pull origin main: Fast-forward
+[33m222d8ed[m HEAD@{30}: commit (merge): confik
+[33mdcedf76[m HEAD@{31}: commit: LoginGUdang
+[33m2ea3dd3[m HEAD@{32}: pull origin main: Fast-forward
+[33medca785[m HEAD@{33}: clone: from https://github.com/anfalkurniap-code/Q-CIS.git
