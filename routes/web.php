@@ -44,6 +44,9 @@ Route::get('/belajar', function () {
     return view('belajar');
 });
 
+Route::get('/welcome', function () {
+    return view('welcome');
+});
 
 // ==========================================
 // 2. AUTHENTICATION (LOGIN, LOGOUT, & PENDAFTARAN)
@@ -70,6 +73,10 @@ Route::post('/LoginKepalaToko', [LoginKepalaTokoController::class, 'login']);
 Route::get('/pendaftaran', function () {
     return view('pendaftaran');
 })->name('pendaftaran');
+
+Route::get('/Tampilanpendaftaran', function () {
+    return view('Tampilanpendaftaran');
+});
 
 // Route Logout
 Route::post('/logout', [AuthKasirController::class, 'logout'])->name('logout');
@@ -101,10 +108,11 @@ $gudangDashboardData = function () {
 };
 
 // Route Gudang Dashboard
-Route::get('/HalamanDepanGudang', $gudangDashboardData)->name('dashboard.gudang');
+Route::get('/DashboardGudang', $gudangDashboardData)->name('dashboard.gudang');
+Route::get('/HalamanDepanGudang', $gudangDashboardData);
 Route::get('/dashboard-gudang', $gudangDashboardData);
 
-// Route Kelola Gudang (Diperbarui dengan Join Kategori)
+// Route Kelola Gudang
 Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
@@ -182,9 +190,8 @@ Route::get('/stok-kritis', function () {
     return view('stok-kritis', compact('itemsKritis', 'stokKritisCount'));
 })->name('stok.kritis');
 
-
 // ==========================================
-// 4. HALAMAN KATALOG / SHOP & TRANSAKSI
+// 4. HALAMAN KATALOG, SHOP & PEMBAYARAN
 // ==========================================
 Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
 Route::get('/HalamanKeranjang', function () {
@@ -198,14 +205,21 @@ Route::get('/laporan-stok', function () {
 // Transaksi & Katalog Routes
 Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 
-// Route Pembayaran Menggunakan PembayaranController
+// Route Pembayaran
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+Route::get('/halamanpembayaran', [PembayaranController::class, 'index']);
 Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
 Route::get('/pembayaran/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
+Route::get('/berhasil', [PembayaranController::class, 'berhasil']);
 
+// Riwayat Transaksi & Detail
+Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
+Route::get('/transaksi', function () {
+    return view('transaksi');
+});
 
 // ==========================================
-// 5. ROUTE DASHBOARD KEPALA TOKO & PROFILE
+// 5. ROUTE KEPALA TOKO, MANAJEMEN & PROFILE
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
     $lowStockItems = DB::table('products')
@@ -244,7 +258,7 @@ Route::get('/dashboardkepalatoko', function () {
             ],
             [
                 'user'         => 'Joko',
-                'action'       => 'Update Harga Barang',
+                'action'       => 'Update Harga Harga Barang',
                 'status'       => 'Success',
                 'status_color' => 'bg-emerald-100 text-emerald-700'
             ],
@@ -252,15 +266,21 @@ Route::get('/dashboardkepalatoko', function () {
     ]);
 });
 
+Route::get('/ManajemenKaryawan', function () {
+    return view('ManajemenKaryawan');
+});
+
 Route::get('/HalamanInformasiAkun', function () {
     return view('HalamanInformasiAkun');
+});
+
+Route::get('/HalamanProfile', function () {
+    return view('HalamanProfile');
 });
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
 
 Route::get('/HalamanKeamananAkun', function () {
     return view('HalamanKeamananAkun');

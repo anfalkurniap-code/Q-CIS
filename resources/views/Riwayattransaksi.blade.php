@@ -27,12 +27,6 @@
                     <p class="text-xs text-gray-500 mt-0.5">Pantau pengeluaran dan saldo Anda bulan ini.</p>
                 </div>
 
-                <!-- Export Data Button -->
-                <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-xl flex items-center justify-center space-x-2 text-xs transition shadow-sm mb-5">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Ekspor Data</span>
-                </button>
-
                 <!-- Transaction List Card -->
                 <div class="bg-white rounded-2xl border border-gray-200/80 p-3 shadow-sm">
                     
@@ -46,10 +40,12 @@
                                     <i class="fa-solid fa-bag-shopping"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-gray-800 text-sm">
-                                        {{ $item['cart_data'][0]['nama'] ?? 'Pembayaran Mart' }}
-                                        @if(count($item['cart_data']) > 1)
-                                            <span class="text-xs text-gray-400 font-normal">(+{{ count($item['cart_data']) - 1 }} lainnya)</span>
+                                    <h3>
+                                        {{ $item->details->first()->product_name ?? 'Pembayaran Mart' }}
+                                        @if($item->details->count() > 1)
+                                            <span class="text-xs text-gray-400 font-normal">
+                                                (+{{ $item->details->count() - 1 }} lainnya)
+                                            </span>
                                         @endif
                                     </h3>
                                     <div class="flex items-center space-x-2 mt-0.5">

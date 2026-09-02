@@ -83,38 +83,38 @@
 
                     <div>
                         <h3 class="font-bold text-sm text-slate-800 line-clamp-1">
-                            {{ $item->nama ?? 'Tanpa Nama' }}
+                            {{ $item->name ?? 'Tanpa Nama' }}
                         </h3>
 
                         <!-- Warni merah jika stok habis -->
                         <p class="text-[10px] {{ ($item->stok ?? 0) <= 0 ? 'text-red-500 font-bold' : 'text-gray-400' }} mb-2">
-                            Stok: {{ $item->stok ?? 0 }}
+                            Stok: {{ $item->stock ?? 0 }}
                         </p>
 
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-emerald-700 text-sm">
-                                Rp {{ number_format($item->harga ?? 0, 0, ',', '.') }}
+                                Rp {{ $item->price ?? 0, 0, ',', '.' }}
                             </span>
                             
                             <!-- CEK STOK DATABASE DENGAN IF-ELSE -->
-                            @if(($item->stok ?? 0) > 0)
-                                <button 
-                                    onclick="tambahKeKeranjang(
-                                        '{{ $item->id }}', 
-                                        '{{ addslashes($item->nama) }}', 
-                                        {{ $item->harga }}, 
-                                        '{{ $item->img ?? '' }}',
-                                        {{ $item->stok }}
-                                    )"
-                                    class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition"
-                                >
-                                    <i data-lucide="plus" class="w-4 h-4"></i>
-                                </button>
-                            @else
-                                <button disabled class="bg-gray-200 text-gray-400 px-2 py-1 rounded-lg text-[10px] font-bold cursor-not-allowed">
-                                    Habis
-                                </button>
-                            @endif
+                            @if(($item->stock ?? 0) > 0)
+                            <button 
+                                onclick="tambahKeKeranjang(
+                                    {{ $item->id }}, 
+                                    '{{ addslashes($item->name) }}', 
+                                    {{ $item->price }}, 
+                                    '{{ $item->img ?? '' }}',
+                                    {{ $item->stock }}
+                                )"
+                                class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition cursor-pointer"
+                            >
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                            </button>
+                        @else
+                            <button disabled class="bg-gray-200 text-gray-400 px-2 py-1 rounded-lg text-[10px] font-bold cursor-not-allowed">
+                                Habis
+                            </button>
+                        @endif
                         </div>
                     </div>
                 </div>

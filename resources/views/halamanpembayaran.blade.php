@@ -111,7 +111,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         const storedCart = localStorage.getItem('cartItems');
         if (storedCart) {
-            cart = JSON.parse(storedCart);
+            try {
+                cart = JSON.parse(storedCart);
+            } catch (e) {
+                cart = [];
+            }
         }
         renderCart();
     });
@@ -126,16 +130,21 @@
             container.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kamu kosong.</p>';
         } else {
             cart.forEach((item, index) => {
-                const itemTotal = item.harga * item.qty;
+                // BUGFIX 1: Fallback jika properti data menggunakan name/price
+                const itemNama = item.nama || item.name || 'Produk';
+                const itemHarga = parseFloat(item.harga || item.price || 0);
+                const itemQty = parseInt(item.qty || 1);
+
+                const itemTotal = itemHarga * itemQty;
                 subtotal += itemTotal;
-                totalCount += item.qty;
+                totalCount += itemQty;
 
                 const itemHTML = `
                     <div class="item">
-                        <img src="${item.img ? item.img : 'https://via.placeholder.com/45'}" alt="${item.nama}" class="product-img">
+                        <img src="${item.img ? item.img : 'https://via.placeholder.com/45'}" alt="${itemNama}" class="product-img">
                         <div class="detail">
-                            <h4>${item.nama}</h4>
-                            <p>Kuantitas : ${item.qty}</p>
+                            <h4>${itemNama}</h4>
+                            <p>Kuantitas : ${itemQty}</p>
                         </div>
                         <div class="price">Rp ${itemTotal.toLocaleString('id-ID')}</div>
                     </div>
@@ -145,7 +154,8 @@
             });
         }
 
-        const finalDiscount = subtotal > 0 ? discountValue : 0;
+        // BUGFIX 4: Penyesuaian diskon agar tidak melebihi subtotal
+        const finalDiscount = subtotal > 0 ? Math.min(subtotal, discountValue) : 0;
         totalPrice = Math.max(0, subtotal - finalDiscount);
 
         // Update tampilan UI
@@ -159,6 +169,9 @@
         document.getElementById('discountInput').value = finalDiscount;
         document.getElementById('totalPriceInput').value = totalPrice;
         document.getElementById('cartDataInput').value = JSON.stringify(cart);
+
+        // Hitung ulang kembalian jika user sudah mengetik nominal duluan
+        calculateChange();
     }
 
     function calculateChange() {
@@ -191,6 +204,7 @@
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
+        // BUGFIX 3: Bersihkan keranjang lalu segera kirimkan form
         localStorage.removeItem('cartItems');
         document.getElementById('paymentForm').submit();
     }
