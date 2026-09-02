@@ -264,3 +264,7 @@ Route::get('/Tentangaplikasi', function () {
 Route::get('/Tampilanpendaftaran', function () {
     return view('pendaftaran');
 });
+
+Route::get('/Ringkasanpesanan', function () {
+    return view('Ringkasanpesanan');
+});
