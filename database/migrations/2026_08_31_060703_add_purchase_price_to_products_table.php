@@ -9,14 +9,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->decimal('purchase_price', 15, 2)->default(0)->after('stock');
+            // Pengecekan ini wajib ada agar tidak error Duplicate Column
+            if (!Schema::hasColumn('products', 'purchase_price')) {
+                $table->decimal('purchase_price', 15, 2)->default(0)->after('stock');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('purchase_price');
+            if (Schema::hasColumn('products', 'purchase_price')) {
+                $table->dropColumn('purchase_price');
+            }
         });
     }
 };

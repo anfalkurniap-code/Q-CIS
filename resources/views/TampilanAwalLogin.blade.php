@@ -19,21 +19,14 @@
 
     <div class="w-full max-w-[390px] bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden p-6 flex flex-col gap-6">
         
-<<<<<<< HEAD
-        <!-- Header (Icon Notifikasi & Profil Sudah Dihapus) -->
-        <header class="flex justify-start items-center w-full">
-=======
         <!-- Header -->
         <header class="flex justify-between items-center w-full">
->>>>>>> c4b43e5ea183037f0e42e099a86c981dda9f9c11
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 bg-[#E8F5E9] border border-[#A5D6A7] rounded-md flex items-center justify-center">
                     <div class="w-2 h-2 bg-[#2E7D32] rounded-[2px]"></div>
                 </div>
                 <span class="text-base font-bold text-[#1A2E22]">Q-CIS</span>
             </div>
-<<<<<<< HEAD
-=======
             <div class="flex items-center gap-3">
                 <button type="button" class="text-gray-500 hover:text-gray-700 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -44,7 +37,6 @@
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Profile" class="w-full h-full object-cover">
                 </div>
             </div>
->>>>>>> c4b43e5ea183037f0e42e099a86c981dda9f9c11
         </header>
 
         <!-- Welcome Section -->
