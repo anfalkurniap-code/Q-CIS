@@ -36,7 +36,7 @@
                         @forelse($riwayat as $item)
                         <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
                                     <i class="fa-solid fa-bag-shopping"></i>
                                 </div>
                                 <div>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-red-500 font-semibold text-sm">- Rp {{ number_format($item['total_price'], 0, ',', '.') }}</span>
+                            <span class="text-emerald-500 font-semibold text-sm">+ Rp {{ number_format($item['total_price'], 0, ',', '.') }}</span>
                         </div>
                         @empty
                         <div class="text-center py-6 text-xs text-gray-400">
