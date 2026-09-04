@@ -35,10 +35,6 @@
                         <span>Subtotal</span>
                         <span id="subtotal" class="font-bold text-gray-800">Rp 0</span>
                     </div>
-                    <div class="flex justify-between text-gray-600 font-medium">
-                        <span>Diskon Pelajar</span>
-                        <span id="discount" class="font-bold text-emerald-600">Rp 0</span>
-                    </div>
                 </div>
 
                 <div class="pt-3 border-t border-gray-200/60 flex justify-between items-center mb-5">
@@ -57,7 +53,6 @@
 
     <script>
     let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const discountValue = 8000; // Diskon Rp 8.000
 
     function formatRupiah(number) {
         return 'Rp ' + number.toLocaleString('id-ID');
@@ -116,30 +111,21 @@
     }
 
     function updateSummary(subtotal) {
-        const finalDiscount = subtotal > 0 ? discountValue : 0;
-        const grandTotal = Math.max(0, subtotal - finalDiscount);
-
         if (document.getElementById('subtotal')) {
             document.getElementById('subtotal').innerText = formatRupiah(subtotal);
         }
-        if (document.getElementById('discount')) {
-            document.getElementById('discount').innerText = subtotal > 0 ? '- ' + formatRupiah(finalDiscount) : 'Rp 0';
-        }
         if (document.getElementById('total-tagihan')) {
-            document.getElementById('total-tagihan').innerText = formatRupiah(grandTotal);
+            document.getElementById('total-tagihan').innerText = formatRupiah(subtotal);
         }
     }
 
-    // FUNGSI UBAH QTY DENGAN VALIDASI KETAT
     function ubahQty(index, delta) {
         let item = cart[index];
 
-        // Pengecekan saat tombol Tambah (+) diklik
         if (delta > 0) {
-            // Cek jika stok didefinisikan dan jumlah melebihi/sama dengan stok
             if (item.stok !== undefined && item.qty >= Number(item.stok)) {
                 alert(`Maaf, stok ${item.nama} hanya tersisa ${item.stok} item!`);
-                return; // Berhentikan proses penambahan
+                return;
             }
         }
 

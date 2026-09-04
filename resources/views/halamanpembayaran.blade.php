@@ -94,7 +94,6 @@
         <div class="card">
             <div class="title">RINGKASAN</div>
             <div class="summary"><span>Subtotal</span><span id="subtotalText">Rp 0</span></div>
-            <div class="summary"><span>Diskon Pelajar</span><span id="discountText" style="color:#16a34a; font-weight:bold;">Rp 0</span></div>
             <div class="total"><strong>Total</strong><h2 id="totalText">Rp 0</h2></div>
             <button type="button" class="btn-submit" onclick="processPayment()">
                 <i class="fa-solid fa-circle-check"></i> Selesaikan Pembayaran
@@ -106,7 +105,6 @@
 <script>
     let totalPrice = 0;
     let cart = [];
-    const discountValue = 8000;
 
     document.addEventListener('DOMContentLoaded', function() {
         const storedCart = localStorage.getItem('cartItems');
@@ -126,14 +124,13 @@
         let subtotal = 0;
         let totalCount = 0;
 
-        if (cart.length === 0) {
+        if (!cart || cart.length === 0) {
             container.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kamu kosong.</p>';
         } else {
             cart.forEach((item, index) => {
-                // BUGFIX 1: Fallback jika properti data menggunakan name/price
                 const itemNama = item.nama || item.name || 'Produk';
                 const itemHarga = parseFloat(item.harga || item.price || 0);
-                const itemQty = parseInt(item.qty || 1);
+                const itemQty = parseInt(item.qty || item.quantity || 1);
 
                 const itemTotal = itemHarga * itemQty;
                 subtotal += itemTotal;
@@ -154,23 +151,20 @@
             });
         }
 
-        // BUGFIX 4: Penyesuaian diskon agar tidak melebihi subtotal
-        const finalDiscount = subtotal > 0 ? Math.min(subtotal, discountValue) : 0;
-        totalPrice = Math.max(0, subtotal - finalDiscount);
+        // Total harga sekarang sama dengan subtotal
+        totalPrice = subtotal;
 
-        // Update tampilan UI
+        // Update UI
         document.getElementById('totalItemsText').innerText = `${totalCount} Items`;
         document.getElementById('subtotalText').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
-        document.getElementById('discountText').innerText = subtotal > 0 ? `- Rp ${finalDiscount.toLocaleString('id-ID')}` : 'Rp 0';
         document.getElementById('totalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         
-        // Update input hidden untuk dikirim ke Laravel Backend
+        // Update input hidden untuk Laravel
         document.getElementById('subtotalInput').value = subtotal;
-        document.getElementById('discountInput').value = finalDiscount;
+        document.getElementById('discountInput').value = 0;
         document.getElementById('totalPriceInput').value = totalPrice;
         document.getElementById('cartDataInput').value = JSON.stringify(cart);
 
-        // Hitung ulang kembalian jika user sudah mengetik nominal duluan
         calculateChange();
     }
 
@@ -189,12 +183,20 @@
     }
 
     function processPayment() {
-        if (cart.length === 0) {
+        if (!cart || cart.length === 0) {
             alert('Keranjang belanja kosong!');
             return;
         }
 
-        const cashInput = parseFloat(document.getElementById('cashAmount').value) || 0;
+        const cashRaw = document.getElementById('cashAmount').value.trim();
+        const cashInput = parseFloat(cashRaw) || 0;
+
+        if (cashRaw === '' || isNaN(cashInput)) {
+            alert('Silakan masukkan jumlah uang yang diterima!');
+            document.getElementById('cashAmount').focus();
+            return;
+        }
+
         if (cashInput < totalPrice) {
             alert('Nominal uang pembayaran kurang dari total tagihan!');
             return;
@@ -204,8 +206,10 @@
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
-        // BUGFIX 3: Bersihkan keranjang lalu segera kirimkan form
-        localStorage.removeItem('cartItems');
+        setTimeout(() => {
+            localStorage.removeItem('cartItems');
+        }, 100);
+
         document.getElementById('paymentForm').submit();
     }
 </script>
