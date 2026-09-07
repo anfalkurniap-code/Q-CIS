@@ -54,7 +54,7 @@
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
                 <div>
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">UANG MASUK</span>
-                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_masuk ?? 5120000, 0, ',', '.') }}</h2>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_masuk ?? 0, 0, ',', '.') }}</h2>
                     <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
                         <span>🔄</span> Total hari ini
                     </p>
@@ -70,7 +70,7 @@
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
                 <div>
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">UANG KELUAR</span>
-                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_keluar ?? 850000, 0, ',', '.') }}</h2>
+                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($uang_keluar ?? 0, 0, ',', '.') }}</h2>
                     <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
                         <span>🔄</span> Total hari ini
                     </p>
@@ -86,12 +86,15 @@
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
                 <div>
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">LABA / RUGI</span>
-                    <h2 class="text-xl font-bold text-slate-900 mt-1">Rp {{ number_format($laba_rugi ?? 4270000, 0, ',', '.') }}</h2>
+                    <h2 class="text-xl font-bold {{ ($laba_rugi ?? 0) < 0 ? 'text-rose-600' : 'text-slate-900' }} mt-1">
+                        Rp {{ number_format($laba_rugi ?? 0, 0, ',', '.') }}
+                    </h2>
                     <p class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
-                        <span>📈</span> Laba bersih hari ini
+                        <span>{{ ($laba_rugi ?? 0) >= 0 ? '📈' : '📉' }}</span> 
+                        {{ ($laba_rugi ?? 0) >= 0 ? 'Laba bersih hari ini' : 'Rugi hari ini' }}
                     </p>
                 </div>
-                <div class="w-9 h-9 rounded-full bg-teal-100/70 flex items-center justify-center text-teal-800">
+                <div class="w-9 h-9 rounded-full {{ ($laba_rugi ?? 0) >= 0 ? 'bg-teal-100/70 text-teal-800' : 'bg-rose-100/70 text-rose-700' }} flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
@@ -125,7 +128,7 @@
         <!-- Bottom Navbar -->
         <div class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-around z-20">
             <!-- Dashboard (Active) -->
-            <a href="#" class="flex flex-col items-center gap-1 text-[#064e3b]">
+            <a href="{{ route('dashboard.kepalatoko') }}" class="flex flex-col items-center gap-1 text-[#064e3b]">
                 <div class="px-4 py-1.5 rounded-xl bg-[#064e3b] text-white">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
@@ -135,7 +138,7 @@
             </a>
 
             <!-- Reports -->
-            <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
+            <a href="{{ route('report.kepalatoko') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
                 <div class="p-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -145,7 +148,7 @@
             </a>
 
             <!-- Profile -->
-            <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
+            <a href="{{ route('profile.index') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
                 <div class="p-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>

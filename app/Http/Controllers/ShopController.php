@@ -8,14 +8,23 @@ use Illuminate\Http\Request;
 class ShopController extends Controller
 {
     /**
-     * Menampilkan daftar produk asli dari database ke halaman Shop
+     * Menampilkan daftar produk asli dari database ke halaman Shop / Kasir
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua data produk yang ada di database
-        $products = Product::all();
+        // Query hanya produk yang sudah disetujui (approved) dan stok > 0
+        $query = Product::where('status', 'approved')
+                        ->where('stock', '>', 0);
 
-        // Kirim variabel $products ke view 'shop'
+        // Fitur pencarian barang jika Kasir mencari nama produk
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Ambil data produk terbaru
+        $products = $query->latest()->get();
+
+        // Kirim variabel $products ke view 'HalamanShop'
         return view('HalamanShop', compact('products'));
     }
 }

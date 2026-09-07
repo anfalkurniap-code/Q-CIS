@@ -13,15 +13,16 @@ class Product extends Model
 
     // Atribut yang dapat diisi secara massal (Mass Assignable)
     protected $fillable = [
-        'barcode',
-        'name',
-        'slug',
-        'description',
-        'category_id',    // WAJIB ADA agar ID kategori tersimpan ke DB
-        'purchase_price', // WAJIB ADA agar harga beli tersimpan ke DB
-        'price',
-        'stock',
-        'expired_date', 
+    'category_id',
+    'name',
+    'slug',
+    'description',
+    'price',
+    'stock',
+    'purchase_price',
+    'expired_date',
+    'status', 
+
     ];
 
     /**
