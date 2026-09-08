@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Carbon\Carbon;
 
 use App\Http\Controllers\AuthKasirController;
 use App\Http\Controllers\AuthGudangController;
@@ -187,28 +188,53 @@ Route::get('/transaksi', function () {
 // 6. ROUTE KEPALA TOKO, MANAJEMEN & PROFILE
 // ==========================================
 Route::get('/dashboardkepalatoko', function () {
+    $today = Carbon::today();
+
+    // 1. Uang Masuk: Total transaksi penjualan hari ini (tabel transactions)
+    $uang_masuk = DB::table('transactions')
+        ->whereDate('created_at', $today)
+        ->sum('total_price') ?? 0;
+
+    // 2. Uang Keluar: Total biaya pengadaan stok barang hari ini (tabel products: purchase_price * stock)
+    $uang_keluar = DB::table('products')
+        ->whereDate('created_at', $today)
+        ->selectRaw('SUM(purchase_price * stock) as total_keluar')
+        ->value('total_keluar') ?? 0;
+
+    // 3. Laba / Rugi: Selisih Uang Masuk dikurangi Uang Keluar
+    $laba_rugi = $uang_masuk - $uang_keluar;
+
+    // 4. Data produk dengan stok kritis (kurang dari atau sama dengan 5)
     $lowStockItems = DB::table('products')
         ->where('status', 'approved')
         ->where('stock', '<=', 5)
         ->get();
 
+    // 5. Tren Penjualan Dinamis 7 Hari Terakhir dari Database
+    $sales_trend = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $date = Carbon::today()->subDays($i);
+        $dayName = $date->format('D'); // Format: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+
+        $totalPenjualanHarian = DB::table('transactions')
+            ->whereDate('created_at', $date)
+            ->sum('total_price') ?? 0;
+
+        $sales_trend[$dayName] = (float) $totalPenjualanHarian;
+    }
+
     return view('dashboardkepalatoko', [
-        'today_sales'         => 1450000,
+        'uang_masuk'          => $uang_masuk,
+        'uang_keluar'         => $uang_keluar,
+        'laba_rugi'           => $laba_rugi,
+        'today_sales'         => $uang_masuk,
         'sales_growth'        => 12,
-        'active_orders'       => 24,
+        'active_orders'       => DB::table('transactions')->whereDate('created_at', $today)->count(),
         'processing_orders'   => 18,
         'ready_pickup_orders' => 6,
         'low_stock_count'     => $lowStockItems->count(),
         'low_stock_items'     => $lowStockItems,
-        'sales_trend'         => [
-            'Mon' => 450,
-            'Tue' => 620,
-            'Wed' => 510,
-            'Thu' => 730,
-            'Fri' => 680,
-            'Sat' => 790,
-            'Sun' => 600,
-        ],
+        'sales_trend'         => $sales_trend,
         'live_operations'     => [
             [
                 'user'         => 'Budi',

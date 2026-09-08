@@ -17,7 +17,7 @@ class PembayaranController extends Controller
         return view('halamanpembayaran');
     }
 
-    // 2. Menampilkan Halaman Riwayat Transaksi (Diambil dari Database)
+    // 2. Menampilkan Halaman Riwayat Transaksi
     public function riwayat()
     {
         $riwayat = Transaction::with('details')->orderBy('created_at', 'desc')->get();
@@ -25,7 +25,7 @@ class PembayaranController extends Controller
         return view('Riwayattransaksi', compact('riwayat'));
     }
 
-    // 3. Memproses dan Menyimpan Transaksi dari Form ke Database & Session Struk
+    // 3. Memproses dan Menyimpan Transaksi
     public function proses(Request $request)
     {
         // Validasi data input dari form pembayaran
@@ -44,67 +44,97 @@ class PembayaranController extends Controller
             return redirect()->back()->with('error', 'Keranjang belanja kosong atau format salah!');
         }
 
-        // Jalankan Database Transaction (Simpan DB & Potong Stok secara Atomic)
-        $transaksi = DB::transaction(function () use ($request, $cartItems) {
-            // A. Simpan ke tabel 'transactions'
-            $trx = Transaction::create([
-                'user_id'          => auth()->id() ?? null,
-                'invoice_number'   => 'TRX-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4)),
-                'total_price'      => (float) $request->input('total_price'),
-                'payment_method'   => $request->input('payment_method'),
-                'transaction_type' => 'PURCHASE',
-            ]);
-
-            // B. Simpan item ke 'transaction_details' & potong stok di database
-            foreach ($cartItems as $item) {
-                // Simpan Detail
-                TransactionDetail::create([
-                    'transaction_id' => $trx->id,
-                    'product_id'     => $item['id'] ?? null,
-                    'product_name'   => $item['nama'] ?? $item['name'],
-                    'quantity'       => $item['qty'] ?? $item['jumlah'],
-                    'price'          => $item['harga'] ?? $item['price'],
-                    'subtotal'       => ($item['harga'] ?? $item['price']) * ($item['qty'] ?? $item['jumlah']),
+        try {
+            // Jalankan Database Transaction
+            $transaksi = DB::transaction(function () use ($request, $cartItems) {
+                
+                // A. Simpan ke tabel 'transactions'
+                $trx = Transaction::create([
+                    'user_id'          => auth()->id() ?? null,
+                    'invoice_number'   => 'TRX-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4)),
+                    'total_price'      => (float) $request->input('total_price'),
+                    'payment_method'   => $request->input('payment_method'),
+                    'transaction_type' => 'PURCHASE',
                 ]);
 
-                // Potong Stok Produk
-                $product = Product::find($item['id']);
-                if ($product) {
-                    // Mendukung kolom 'stock' atau 'stok'
-                    if (isset($product->stock)) {
-                        $product->decrement('stock', $item['qty'] ?? $item['jumlah']);
-                    } else {
-                        $product->decrement('stok', $item['qty'] ?? $item['jumlah']);
+                // B. Simpan item ke 'transaction_details' & potong stok di database
+                foreach ($cartItems as $item) {
+                    $productId = $item['id'] ?? null;
+                    $qty       = (int) ($item['qty'] ?? $item['jumlah'] ?? 0);
+                    $nama      = $item['nama'] ?? $item['name'] ?? 'Produk Unregistered';
+                    $harga     = (float) ($item['harga'] ?? $item['price'] ?? 0);
+
+                    // Pastikan Product ada
+                    if ($productId) {
+                        $product = Product::find($productId);
+
+                        if (!$product) {
+                            throw new \Exception("Produk dengan ID {$productId} tidak ditemukan!");
+                        }
+
+                        // Cek kolom stok mana yang digunakan (stock atau stok)
+                        $stokKolom = isset($product->stock) ? 'stock' : 'stok';
+                        $stokSaatIni = $product->$stokKolom;
+
+                        // Validasi kecukupan stok
+                        if ($stokSaatIni < $qty) {
+                            throw new \Exception("Stok untuk produk '{$nama}' tidak mencukupi! (Sisa: {$stokSaatIni})");
+                        }
+
+                        // Potong Stok
+                        $product->decrement($stokKolom, $qty);
                     }
+
+                    // Simpan Detail Transaksi
+                    TransactionDetail::create([
+                        'transaction_id' => $trx->id,
+                        'product_id'     => $productId,
+                        'product_name'   => $nama,
+                        'quantity'       => $qty,
+                        'price'          => $harga,
+                        'subtotal'       => $harga * $qty,
+                    ]);
                 }
-            }
 
-            return $trx;
-        });
+                return $trx;
+            });
 
-        // C. Simpan Session untuk Halaman Struk Pembayaran (berhasil.blade.php)
-        Carbon::setLocale('id');
-        $transaksiBaru = [
-            'trx_id'         => $transaksi->invoice_number,
-            'cart_data'      => $cartItems,
-            'payment_method' => $request->input('payment_method'),
-            'subtotal'       => (float) $request->input('subtotal'),
-            'discount'       => (float) $request->input('discount'),
-            'total_price'    => (float) $request->input('total_price'),
-            'cash_amount'    => (float) $request->input('cash_amount'),
-            'waktu'          => Carbon::now()->translatedFormat('d M Y, H:i'),
-            'kategori'       => 'PEMBAYARAN TUNAI',
-        ];
+            // C. Simpan Session Rapi untuk Halaman Struk
+            Carbon::setLocale('id');
+            $transaksiBaru = [
+                'trx_id'         => $transaksi->invoice_number,
+                'cart_data'      => $cartItems,
+                'payment_method' => $request->input('payment_method'),
+                'subtotal'       => (float) $request->input('subtotal'),
+                'discount'       => (float) $request->input('discount'),
+                'total_price'    => (float) $request->input('total_price'),
+                'cash_amount'    => (float) $request->input('cash_amount'),
+                'waktu'          => Carbon::now()->translatedFormat('d M Y, H:i'),
+                'kategori'       => 'PEMBAYARAN TUNAI',
+            ];
 
-        session($transaksiBaru);
-        session()->forget('cart'); // Bersihkan cart jika ada
+            // Masukkan ke session 'last_transaction' agar aman dan tidak bentrok
+            session(['last_transaction' => $transaksiBaru]);
+            session()->forget('cart');
 
-        return redirect()->route('pembayaran.berhasil')->with('success', 'Transaksi berhasil disimpan!');
+            return redirect()->route('pembayaran.berhasil')->with('success', 'Transaksi berhasil disimpan!');
+
+        } catch (\Exception $e) {
+            // Jika ada error/stok kurang, transaksi dibatalkan (rollback) otomatis
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     // 4. Method untuk Menampilkan Halaman Struk / Berhasil
     public function berhasil()
     {
-        return view('berhasil');
+        // Ambil data transaksi terakhir dari session
+        $transaksi = session('last_transaction');
+
+        if (!$transaksi) {
+            return redirect()->route('pembayaran.index')->with('error', 'Tidak ada data transaksi.');
+        }
+
+        return view('berhasil', compact('transaksi'));
     }
 }

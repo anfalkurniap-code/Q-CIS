@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Analisis - Q-CIS SMK MART</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Library Chart.js untuk grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -101,25 +103,15 @@
                 </div>
             </div>
 
-            <!-- Card 4: Grafik Penjualan Harian -->
+            <!-- Card 4: Grafik Penjualan Harian (Diagram Batang) -->
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-sm font-bold text-slate-900">Grafik Penjualan Harian</h3>
-                    <button class="text-slate-400 hover:text-slate-600">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                        </svg>
-                    </button>
                 </div>
 
-                <!-- Area Grafik Placeholder -->
-                <div class="w-full h-44 bg-slate-100 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center p-4 text-center">
-                    <svg class="w-8 h-8 text-slate-400 mb-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M5 19h14v2H3V3h2v16zm4-8h2v6H9v-6zm4-4h2v10h-2V7zm4-2h2v12h-2V5z"/>
-                    </svg>
-                    <span class="text-[11px] text-slate-500 font-medium">
-                        Area Grafik Penjualan (Integrasi Chart.js/bs)
-                    </span>
+                <!-- Canvas Chart.js Dinamis -->
+                <div class="w-full h-44">
+                    <canvas id="salesChart"></canvas>
                 </div>
             </div>
 
@@ -160,5 +152,60 @@
 
     </div>
 
+    <!-- Script Chart.js (Diagram Batang Dinamis) -->
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesData = @json($sales_trend ?? []);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(salesData),
+                datasets: [{
+                    label: 'Penjualan',
+                    data: Object.values(salesData),
+                    backgroundColor: '#064e3b',
+                    hoverBackgroundColor: '#04382a',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barThickness: 16
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Penjualan: Rp ' + new Intl.NumberFormat('id-ID').format(context.raw);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 10, weight: '600' },
+                            color: '#64748b'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: { size: 10 },
+                            color: '#64748b',
+                            callback: function(value) {
+                                return 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(value);
+                            }
+                        },
+                        grid: { color: '#f1f5f9' }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

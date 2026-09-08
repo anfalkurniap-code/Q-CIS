@@ -16,7 +16,6 @@
     </style>
 </head>
 <body class="flex justify-center items-center min-h-screen p-4">
-
     <div class="w-full max-w-[390px] bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden p-6 flex flex-col gap-6">
         
         <!-- Header -->
@@ -28,6 +27,7 @@
                 <span class="text-base font-bold text-[#1A2E22]">Q-CIS</span>
             </div>
         </header>
+        </header> 
 
         <!-- Welcome Section -->
         <section class="text-center my-2">

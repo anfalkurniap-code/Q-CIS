@@ -51,17 +51,25 @@
                     </div>
                 @endif
 
+                @php
+                    // Hitung produk berstok <= 10 langsung dari koleksi $products
+                    $stokKritisHitung = $products->where('stock', '<=', 10)->count();
+                @endphp
+
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">TOTAL SKU</span>
-                        <span class="text-2xl font-black text-slate-800">{{ $totalSku ?? $products->count() }}</span>
+                        <span class="text-2xl font-black text-slate-800">{{ $products->count() }}</span>
                     </div>
-                    <a href="{{ Route::has('stok.kritis') ? route('stok.kritis') : '#' }}" class="bg-red-50 p-3.5 rounded-2xl border border-red-100 shadow-sm block hover:bg-red-100/50 transition">
-                        <span class="text-[9px] font-black text-red-500 uppercase tracking-wider block mb-1">STOK KRITIS</span>
-                        <div class="flex items-center gap-1.5 text-red-600 font-black text-xl">
-                            <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                            <span>{{ $stokKritisCount ?? $products->where('stock', '<=', 10)->count() }}</span>
+                    
+                    <!-- Card Stok Kritis: Hanya berwarna merah jika jumlah stok kritis > 0 -->
+                    <a href="{{ Route::has('stok.kritis') ? route('stok.kritis') : '#' }}" 
+                       class="{{ $stokKritisHitung > 0 ? 'bg-red-50 border-red-100 hover:bg-red-100/50' : 'bg-white border-slate-200/80 hover:bg-slate-50' }} p-3.5 rounded-2xl border shadow-sm block transition">
+                        <span class="text-[9px] font-black {{ $stokKritisHitung > 0 ? 'text-red-500' : 'text-slate-400' }} uppercase tracking-wider block mb-1">STOK KRITIS</span>
+                        <div class="flex items-center gap-1.5 {{ $stokKritisHitung > 0 ? 'text-red-600' : 'text-slate-800' }} font-black text-xl">
+                            <i class="fa-solid fa-triangle-exclamation text-base {{ $stokKritisHitung > 0 ? 'text-red-500' : 'text-slate-400' }}"></i>
+                            <span>{{ $stokKritisHitung }}</span>
                         </div>
                     </a>
                 </div>
@@ -83,7 +91,13 @@
                 <!-- Product Cards List -->
                 <div class="space-y-3" id="productList">
                     @forelse($products as $product)
-                        <div class="product-item bg-white rounded-2xl p-4 border {{ $product->stock <= 10 ? 'border-red-200' : 'border-slate-200/80' }} shadow-sm relative space-y-3">
+                        @php
+                            // Mengecek apakah stok <= 10 untuk menentukan status kritis
+                            $isKritis = $product->stock <= 10;
+                        @endphp
+                        
+                        <!-- Card Produk: Hanya berwarna/bergaris merah jika stok <= 10 -->
+                        <div class="product-item bg-white rounded-2xl p-4 border {{ $isKritis ? 'border-red-200 bg-red-50/10' : 'border-slate-200/80' }} shadow-sm relative space-y-3">
                             
                             <!-- Header Card: ID, Kategori, & Nama Produk -->
                             <div class="space-y-1">
@@ -91,43 +105,43 @@
                                     <span class="text-[9px] font-extrabold text-[#028b5e] uppercase tracking-wider font-mono-custom">
                                         ID-PROD#{{ $product->id }}
                                     </span>
-                                    <!-- BADGE KATEGORI (Disesuaikan untuk berbagai nama kolom) -->
+                                    <!-- BADGE KATEGORI -->
                                     <span class="bg-emerald-50 text-[#024d35] text-[9px] font-bold px-2 py-0.5 rounded-md border border-emerald-100 uppercase">
                                         <i class="fa-solid fa-tag text-[8px] mr-0.5"></i>
-                                        {{ $product->category->name ?? $product->category_name ?? $product->kategori ?? $product->category ?? 'Tanpa Kategori' }}
+                                        {{ $product->category->name ?? $product->category_name ?? 'Tanpa Kategori' }}
                                     </span>
                                 </div>
                                 <h3 class="product-name text-sm font-extrabold text-slate-800 leading-tight">
-                                    {{ $product->product_name ?? $product->name }}
+                                    {{ $product->name }}
                                 </h3>
                             </div>
 
                             <!-- Detail Harga (Beli & Jual) serta Stok -->
                             <div class="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-100">
-                                <!-- Harga Beli (Disesuaikan untuk berbagai nama kolom database) -->
+                                <!-- Harga Beli (purchase_price) -->
                                 <div>
                                     <span class="text-[9px] font-bold text-slate-400 uppercase block">Harga Beli</span>
                                     <span class="font-bold text-slate-500">
-                                        Rp {{ number_format($product->purchase_price ?? $product->harga_beli ?? $product->harga_modal ?? $product->cost_price ?? 0, 0, ',', '.') }}
+                                        Rp {{ number_format($product->purchase_price, 0, ',', '.') }}
                                     </span>
                                 </div>
-                                <!-- Harga Jual -->
+                                <!-- Harga Jual (price) -->
                                 <div>
                                     <span class="text-[9px] font-bold text-slate-400 uppercase block">Harga Jual</span>
                                     <span class="font-extrabold text-slate-800">
-                                        Rp {{ number_format($product->selling_price ?? $product->price ?? $product->harga_jual ?? 0, 0, ',', '.') }}
+                                        Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
                                 </div>
-                                <!-- Stok -->
+                                <!-- Stok (stock) -->
                                 <div class="text-right">
                                     <span class="text-[9px] font-bold text-slate-400 uppercase block">Stok</span>
-                                    <span class="font-black {{ $product->stock <= 10 ? 'text-red-500' : 'text-emerald-700' }} text-sm">
+                                    <span class="font-black {{ $isKritis ? 'text-red-500' : 'text-emerald-700' }} text-sm">
                                         {{ $product->stock }} <span class="text-[10px] font-normal text-slate-500">Pcs</span>
                                     </span>
                                 </div>
                             </div>
 
-                            <!-- TANGGAL KADALUARSA -->
+                            <!-- TANGGAL KADALUARSA (expired_date) -->
                             <div class="flex items-center justify-between text-[11px] bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">
                                 <div class="flex items-center gap-1.5 text-slate-500 font-semibold">
                                     <i class="fa-regular fa-calendar-xmark text-red-500 text-xs"></i>
@@ -136,8 +150,6 @@
                                 <span class="font-bold text-slate-800">
                                     @if(!empty($product->expired_date))
                                         {{ \Carbon\Carbon::parse($product->expired_date)->format('d M Y') }}
-                                    @elseif(!empty($product->tgl_kadaluarsa))
-                                        {{ \Carbon\Carbon::parse($product->tgl_kadaluarsa)->format('d M Y') }}
                                     @else
                                         <span class="text-slate-400 font-normal italic">Tidak Ada</span>
                                     @endif
@@ -147,7 +159,8 @@
                             <!-- Footer Card: Badge Status & Action Buttons -->
                             <div class="flex items-center justify-between pt-1">
                                 <div class="flex items-center gap-1.5">
-                                    @if($product->stock <= 10)
+                                    <!-- Badge KRITIS hanya jika stok <= 10 -->
+                                    @if($isKritis)
                                         <span class="bg-red-100 text-red-600 text-[9px] font-black px-2 py-0.5 rounded-md uppercase">KRITIS</span>
                                     @endif
                                     <span class="text-[10px] font-bold text-slate-400 flex items-center gap-1">
@@ -159,14 +172,14 @@
                                 <div class="flex items-center gap-1.5">
                                     <!-- Tombol Update -->
                                     <button type="button" 
-                                        onclick="openUpdateModal('{{ $product->id }}', '{{ addslashes($product->product_name ?? $product->name) }}', '{{ $product->selling_price ?? $product->price ?? $product->harga_jual ?? 0 }}')" 
+                                        onclick="openUpdateModal('{{ $product->id }}', '{{ addslashes($product->name) }}', '{{ $product->purchase_price }}', '{{ $product->price }}')" 
                                         class="bg-[#024d35] hover:bg-[#013827] text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition shadow-sm">
                                         <i class="fa-solid fa-pen-to-square text-[10px]"></i> Update
                                     </button>
 
                                     <!-- Tombol Hapus -->
                                     <button type="button"
-                                        onclick="openDeleteModal('{{ $product->id }}', '{{ addslashes($product->product_name ?? $product->name) }}')"
+                                        onclick="openDeleteModal('{{ $product->id }}', '{{ addslashes($product->name) }}')"
                                         class="bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition shadow-sm">
                                         <i class="fa-solid fa-trash-can text-[10px]"></i> Hapus
                                     </button>
@@ -192,31 +205,26 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed sm:absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-40">
-            <!-- 1. Dashboard -->
             <a href="{{ Route::has('dashboard.gudang') ? route('dashboard.gudang') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-solid fa-border-all text-base mb-0.5"></i>
                 <span>Dashboard</span>
             </a>
 
-            <!-- 2. Kelola (Aktif) -->
             <a href="{{ Route::has('kelola.gudang') ? route('kelola.gudang') : '#' }}" class="flex flex-col items-center justify-center bg-[#00f0aa] text-[#024d35] px-4 py-1.5 rounded-xl font-bold text-[10px]">
                 <i class="fa-solid fa-box-archive text-base mb-0.5"></i>
                 <span>Kelola</span>
             </a>
 
-            <!-- 3. Input Barang -->
             <a href="{{ Route::has('products.create') ? route('products.create') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-square-plus text-base mb-0.5"></i>
                 <span>Input</span>
             </a>
 
-            <!-- 4. Stok Kritis -->
             <a href="{{ Route::has('stok.kritis') ? route('stok.kritis') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-solid fa-triangle-exclamation text-base mb-0.5"></i>
                 <span>Kritis</span>
             </a>
 
-            <!-- 5. Profile Gudang -->
             <a href="{{ Route::has('profil.gudang') ? route('profil.gudang') : '#' }}" class="flex flex-col items-center justify-center text-slate-500 hover:text-[#024d35] py-1 text-[10px] font-bold transition">
                 <i class="fa-regular fa-user text-base mb-0.5"></i>
                 <span>Profile</span>
@@ -229,7 +237,7 @@
     <div id="updateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-2xl relative animate-in fade-in zoom-in duration-150">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                <h3 class="text-sm font-extrabold text-[#024d35]">Update Harga Jual</h3>
+                <h3 class="text-sm font-extrabold text-[#024d35]">Update Harga Barang</h3>
                 <button type="button" onclick="closeUpdateModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
@@ -244,9 +252,15 @@
                     <input type="text" id="modalProductName" class="w-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 py-2.5 px-3 rounded-xl cursor-not-allowed" readonly>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Harga Jual Baru (Rp)</label>
-                    <input type="number" name="price" id="modalPrice" min="0" required class="w-full border border-slate-300 focus:border-[#024d35] focus:ring-1 focus:ring-[#024d35] text-xs font-bold text-slate-800 py-2.5 px-3 rounded-xl outline-none" placeholder="Masukkan harga baru">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Harga Beli (Rp)</label>
+                        <input type="number" name="purchase_price" id="modalPurchasePrice" min="0" required class="w-full border border-slate-300 focus:border-[#024d35] focus:ring-1 focus:ring-[#024d35] text-xs font-bold text-slate-800 py-2.5 px-3 rounded-xl outline-none" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Harga Jual (Rp)</label>
+                        <input type="number" name="price" id="modalPrice" min="0" required class="w-full border border-slate-300 focus:border-[#024d35] focus:ring-1 focus:ring-[#024d35] text-xs font-bold text-slate-800 py-2.5 px-3 rounded-xl outline-none" placeholder="0">
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2">
@@ -294,15 +308,17 @@
         });
 
         // Modal Update Handler
-        function openUpdateModal(id, name, currentPrice) {
+        function openUpdateModal(id, name, buyPrice, sellPrice) {
             const modal = document.getElementById('updateModal');
             const form = document.getElementById('updatePriceForm');
             const nameInput = document.getElementById('modalProductName');
-            const priceInput = document.getElementById('modalPrice');
+            const buyPriceInput = document.getElementById('modalPurchasePrice');
+            const sellPriceInput = document.getElementById('modalPrice');
 
             form.action = "{{ url('/products') }}/" + id + "/update-price";
             nameInput.value = name;
-            priceInput.value = currentPrice;
+            buyPriceInput.value = buyPrice;
+            sellPriceInput.value = sellPrice;
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -317,7 +333,8 @@
         // Modal Delete Handler
         function openDeleteModal(id, name) {
             const modal = document.getElementById('deleteModal');
-            const form = document.getElementById('deleteForm');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
             const nameText = document.getElementById('deleteProductName');
 
             form.action = "{{ url('/products') }}/" + id;

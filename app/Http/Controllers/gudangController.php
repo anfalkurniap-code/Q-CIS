@@ -13,32 +13,39 @@ class GudangController extends Controller
     // 1. Halaman Dashboard Gudang
     public function dashboard()
     {
-        // Hanya menghitung produk yang sudah disetujui (approved)
-        $products = Product::where('status', 'approved')->get();
+        // Mengambil semua produk yang sudah approved
+        $products = Product::where('status', 'approved')->latest()->get();
         
-        // Total SKU / Jenis Barang yang sudah disetujui
+        // Total SKU yang sudah approved
         $totalSku = $products->count();
 
-        // Barang stok kritis (stok <= 5 dan sudah approved)
+        // Barang stok kritis (stok <= 10 dan status approved)
         $stokKritisItems = Product::where('status', 'approved')
-            ->where('stock', '<=', 5)
+            ->where('stock', '<=', 10)
             ->get();
+            
         $stokKritisCount = $stokKritisItems->count();
 
-        // Barang Masuk Hari Ini (hanya yang sudah approved)
-        $barangMasukHariIni = Product::where('status', 'approved')
+        // Barang Masuk Hari Ini (Diurutkan dari yang terbaru)
+        // Disamakan nama variabelnya menjadi $barangHariIni agar sesuai dengan tampilan Blade
+        $barangHariIni = Product::where('status', 'approved')
             ->whereDate('created_at', Carbon::today())
+            ->latest()
             ->get();
-        $totalBarangMasukHariIni = $barangMasukHariIni->count();
 
-        // 💡 UBAH DI SINI: Sesuaikan dengan nama file .blade.php kamu di folder resources/views/
-        // Jika nama filenya dashboardgudang.blade.php, gunakan 'dashboardgudang'
+        // Fallback: Jika belum ada barang masuk hari ini, tampilkan 5 produk approved terbaru
+        if ($barangHariIni->isEmpty()) {
+            $barangHariIni = $products->take(5);
+        }
+
+        $totalBarangMasukHariIni = $barangHariIni->count();
+
         return view('Dashboardgudang', compact(
             'products',
             'totalSku', 
             'stokKritisCount', 
             'stokKritisItems', 
-            'barangMasukHariIni',
+            'barangHariIni',
             'totalBarangMasukHariIni'
         ));
     }
@@ -46,18 +53,16 @@ class GudangController extends Controller
     // 2. Halaman Kelola Gudang
     public function kelola(Request $request)
     {
-        // Fitur pencarian barang jika ada input search
         $query = Product::where('status', 'approved');
 
         if ($request->has('search') && $request->search != '') {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        // Hanya tampilkan produk yang sudah diapprove Kepala Toko
         $products = $query->latest()->get();
         
         $totalSku = Product::where('status', 'approved')->count();
-        $stokKritisCount = Product::where('status', 'approved')->where('stock', '<=', 5)->count();
+        $stokKritisCount = Product::where('status', 'approved')->where('stock', '<=', 10)->count();
 
         return view('kelolagudang', compact('products', 'totalSku', 'stokKritisCount'));
     }
@@ -65,10 +70,11 @@ class GudangController extends Controller
     // 3. Halaman Stok Kritis
     public function kritis()
     {
-        // Mengambil produk yang disetujui dengan stok <= 5
         $itemsKritis = Product::where('status', 'approved')
-            ->where('stock', '<=', 5)
+            ->where('stock', '<=', 10)
+            ->latest()
             ->get();
+            
         $stokKritisCount = $itemsKritis->count();
 
         return view('stokkritis', compact('itemsKritis', 'stokKritisCount'));
@@ -77,16 +83,14 @@ class GudangController extends Controller
     // 4. Halaman Riwayat Gudang
     public function riwayat()
     {
-        // Riwayat menampilkan semua produk beserta status persetujuannya (pending/approved/rejected)
         $riwayatProduk = Product::latest()->get();
 
         return view('Riwayatgudang', compact('riwayatProduk'));
     }
 
-    // 5. Simpan Barang Baru (Penginputan oleh Staf Gudang)
+    // 5. Simpan Barang Baru
     public function store(Request $request)
     {
-        // Validasi input form dari Gudang
         $request->validate([
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
@@ -97,7 +101,6 @@ class GudangController extends Controller
             'description'    => 'nullable|string',
         ]);
 
-        // Simpan data dengan status default 'pending'
         Product::create([
             'category_id'    => $request->category_id,
             'name'           => $request->name,
@@ -107,7 +110,7 @@ class GudangController extends Controller
             'purchase_price' => $request->purchase_price,
             'stock'          => $request->stock,
             'expired_date'   => $request->expired_date,
-            'status'         => 'pending', // Menunggu persetujuan Kepala Toko
+            'status'         => 'pending',
         ]);
 
         return redirect()->route('kelola.gudang')->with('success', 'Pengajuan barang berhasil dikirim! Menunggu persetujuan Kepala Toko.');
