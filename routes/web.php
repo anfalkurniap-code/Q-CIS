@@ -2,11 +2,6 @@
 
 use App\Http\Controllers\AuthGudangController;
 use App\Http\Controllers\AuthKasirController;
-<<<<<<< Updated upstream
-use App\Http\Controllers\GudangController;
-use App\Http\Controllers\LoginKepalaTokoController;
-use App\Http\Controllers\ProductController;
-=======
 use App\Http\Controllers\dashboardkepalatokoController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginKepalaTokoController;
@@ -14,16 +9,11 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
->>>>>>> Stashed changes
 use App\Http\Controllers\profilekepalatokoController;
 use App\Http\Controllers\ProfilGudangController;
 use App\Http\Controllers\ReportkepalatokoController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TransactionController;
-<<<<<<< Updated upstream
-use App\Models\Product;
-use Illuminate\Support\Facades\Route;
-=======
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +21,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
->>>>>>> Stashed changes
 
 /*
 |--------------------------------------------------------------------------
@@ -147,20 +136,10 @@ Route::patch('/report/reject/{id}', [ReportkepalatokoController::class, 'reject'
 Route::post('/report/approve/{id}', [ReportkepalatokoController::class, 'approve']);
 Route::post('/report/reject/{id}', [ReportkepalatokoController::class, 'reject']);
 
-<<<<<<< Updated upstream
-Route::get('/manajemen-karyawan', function () {
-    return view('ManajemenKaryawan');
-})->name('manajemen.karyawan');
-
-// ------------------------------------------
-// B. AREA KASIR & SHOP
-// ------------------------------------------
-=======
 // ==========================================
 // 4. HALAMAN PETUGAS GUDANG (GUDANGCONTROLLER & PROFIL)
 // ==========================================
 // Dashboard Kasir
->>>>>>> Stashed changes
 Route::get('/HalamanDepanKasir', function () {
     $featuredProducts = Product::where('status', 'approved')
         ->where('stock', '>', 0)
@@ -174,11 +153,6 @@ Route::get('/HalamanDepanKasir', function () {
 Route::get('/shop', [ShopController::class, 'index'])->name('halaman.shop');
 Route::get('/HalamanShop', [ShopController::class, 'index']);
 
-<<<<<<< Updated upstream
-Route::get('/keranjang', function () {
-    return view('HalamanKeranjang');
-})->name('keranjang');
-=======
 // Kelola Gudang & Stok Kritis
 Route::get('/kelola-gudang', [GudangController::class, 'kelola'])->name('kelola.gudang');
 Route::get('/stok-kritis', [GudangController::class, 'kritis'])->name('stok.kritis');
@@ -229,7 +203,6 @@ Route::post('/input-barang', [ProductController::class, 'store'])->name('product
 // 5. KATALOG, SHOP & PEMBAYARAN
 // ==========================================
 Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
->>>>>>> Stashed changes
 Route::get('/HalamanKeranjang', function () {
     return view('HalamanKeranjang');
 });
