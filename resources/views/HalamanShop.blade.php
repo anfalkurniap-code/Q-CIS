@@ -48,9 +48,11 @@
             <!-- Filter Kategori -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-sm font-medium" id="category-filters">
                 <button onclick="filterProduk('all', this)" class="category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap">Semua</button>
-                <button onclick="filterProduk('Minuman', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">Minuman</button>
-                <button onclick="filterProduk('Makanan Ringan', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">Makanan Ringan</button>
-                <button onclick="filterProduk('Alat Tulis', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">Alat Tulis</button>
+                @foreach($categories ?? [] as $cat)
+                    <button onclick="filterProduk('{{ $cat->name }}', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">
+                        {{ $cat->name }}
+                    </button>
+                @endforeach
             </div>
         </div>
 
@@ -60,14 +62,14 @@
         <div class="px-5 py-4 flex-1">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
-                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products) }}</b> Produk</span>
+                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products ?? []) }}</b> Produk</span>
             </div>       
             
             <div class="grid grid-cols-2 gap-4" id="product-grid">
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
-                @foreach($products as $item)          
-                <div data-category="{{ $item->kategori ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
+                @forelse($products ?? [] as $item)          
+                <div data-category="{{ strtolower($item->category->name ?? $item->kategori ?? 'umum') }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
@@ -75,25 +77,33 @@
                     </span>
                     @endif
 
-                    <div class="bg-gray-50 rounded-xl p-2 flex justify-center items-center mb-3 h-32">
-                        <img src="{{ $item->img ?? 'https://via.placeholder.com/150' }}" 
-                             alt="{{ $item->nama ?? 'Produk' }}" 
-                             class="h-24 object-contain">
+                    <div class="bg-gray-50 rounded-xl p-2 flex justify-center items-center mb-3 h-32 overflow-hidden">
+                        @if(!empty($item->image))
+                            <img src="{{ Storage::url($item->image) }}" 
+                                 alt="{{ $item->name ?? 'Produk' }}" 
+                                 class="h-28 max-w-full object-cover rounded-lg">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                        @endif
                     </div>
 
                     <div>
-                        <h3 class="font-bold text-sm text-slate-800 line-clamp-1">
+                        <h3 class="font-bold text-sm text-slate-800 line-clamp-1" title="{{ $item->name }}">
                             {{ $item->name ?? 'Tanpa Nama' }}
                         </h3>
 
-                        <!-- Warni merah jika stok habis -->
-                        <p class="text-[10px] {{ ($item->stok ?? 0) <= 0 ? 'text-red-500 font-bold' : 'text-gray-400' }} mb-2">
+                        <!-- Warna merah jika stok habis -->
+                        <p class="text-[10px] {{ ($item->stock ?? 0) <= 0 ? 'text-red-500 font-bold' : 'text-gray-400' }} mb-2">
                             Stok: {{ $item->stock ?? 0 }}
                         </p>
 
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-emerald-700 text-sm">
-                                Rp {{ $item->price ?? 0, 0, ',', '.' }}
+                                Rp {{ number_format($item->price ?? 0, 0, ',', '.') }}
                             </span>
                             
                             <!-- CEK STOK DATABASE DENGAN IF-ELSE -->
@@ -103,22 +113,28 @@
                                     {{ $item->id }}, 
                                     '{{ addslashes($item->name) }}', 
                                     {{ $item->price }}, 
-                                    '{{ $item->img ?? '' }}',
+                                    '{{ $item->img }}',
                                     {{ $item->stock }}
                                 )"
-                                class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition cursor-pointer"
+                                class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition cursor-pointer active:scale-95"
+                                title="Tambah ke keranjang"
                             >
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                             </button>
-                        @else
+                            @else
                             <button disabled class="bg-gray-200 text-gray-400 px-2 py-1 rounded-lg text-[10px] font-bold cursor-not-allowed">
                                 Habis
                             </button>
-                        @endif
+                            @endif
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-2 text-center py-12 text-slate-400">
+                    <i data-lucide="package-open" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                    <p class="text-xs font-semibold">Belum ada produk yang tersedia di katalog</p>
+                </div>
+                @endforelse
 
             </div>
         </div>

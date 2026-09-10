@@ -52,6 +52,17 @@
                 @endif
 
                 @php
+                    $pendingCount = \App\Models\BarangMasuk::where('status', 'pending')->count();
+                @endphp
+                @if($pendingCount > 0)
+                    <div class="bg-amber-50 border border-amber-300 text-amber-800 text-xs px-3 py-2 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-amber-500"></i>
+                        <span><strong>{{ $pendingCount }} barang</strong> menunggu persetujuan Kepala Toko.</span>
+                    </div>
+                @endif
+
+                @php
+                    $products = $products ?? (class_exists('App\Models\Product') ? \App\Models\Product::where('status', 'approved')->latest()->get() : collect());
                     // Hitung produk berstok <= 10 langsung dari koleksi $products
                     $stokKritisHitung = $products->where('stock', '<=', 10)->count();
                 @endphp
@@ -333,8 +344,7 @@
         // Modal Delete Handler
         function openDeleteModal(id, name) {
             const modal = document.getElementById('deleteModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            const form = document.getElementById('deleteForm');
             const nameText = document.getElementById('deleteProductName');
 
             form.action = "{{ url('/products') }}/" + id;

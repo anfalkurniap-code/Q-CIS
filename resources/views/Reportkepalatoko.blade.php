@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Transaksi & Inventaris - Q-CIS SMK MART</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @php use Illuminate\Support\Facades\Storage; @endphp
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -33,8 +34,8 @@
 
             <!-- Title & Subtitle -->
             <div>
-                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Laporan Transaksi & Inventaris</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Daftar persetujuan barang masuk dan riwayat transaksi.</p>
+                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Persetujuan Barang Masuk</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Setujui atau tolak barang yang diajukan petugas gudang.</p>
             </div>
 
             <!-- Flash Alert Success / Error -->
@@ -80,58 +81,67 @@
             </div>
         </div>
 
-        <!-- Scrollable Item List (Langsung Menempel di Bawah Tab) -->
+        <!-- Scrollable Item List -->
         <div class="px-4 pt-3 pb-24 space-y-3 overflow-y-auto flex-1">
             
-            @forelse($barangMasuk as $item)
-                <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-100 flex items-start justify-between">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 shrink-0 mt-0.5">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                            </svg>
+            @forelse($barangMasuk ?? [] as $item)
+                <div class="bg-white rounded-2xl shadow-sm border {{ ($item->status ?? 'pending') == 'pending' ? 'border-amber-200' : (($item->status ?? '') == 'approved' ? 'border-emerald-200' : 'border-rose-200') }} overflow-hidden">
+                    
+                    {{-- Foto Produk (jika ada) --}}
+                    @if(!empty($item->image))
+                        <div class="w-full h-28 bg-slate-100 overflow-hidden">
+                            <img src="{{ Storage::url($item->image) }}" alt="{{ $item->nama_barang }}" class="w-full h-full object-cover">
                         </div>
-                        <div>
-                            <h3 class="text-xs font-bold text-slate-900 leading-snug">{{ $item->name ?? $item->nama_barang }}</h3>
-                            <div class="flex items-center gap-2 text-[11px] text-slate-500 mt-1">
-                                <span><strong class="text-slate-800">{{ $item->stock ?? $item->jumlah }}</strong> Pcs</span>
-                                <span>• Rp{{ number_format($item->price ?? 0, 0, ',', '.') }}</span>
+                    @endif
+
+                    <div class="p-3 flex items-start justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            {{-- Badge Status --}}
+                            @if(($item->status ?? 'pending') == 'pending')
+                                <span class="inline-block text-[9px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md mb-1">⏳ Menunggu</span>
+                            @elseif($item->status == 'approved')
+                                <span class="inline-block text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md mb-1">✓ Disetujui</span>
+                            @else
+                                <span class="inline-block text-[9px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md mb-1">✕ Ditolak</span>
+                            @endif
+
+                            {{-- Nama Barang --}}
+                            <h3 class="text-xs font-bold text-slate-900 leading-snug truncate">{{ $item->nama_barang }}</h3>
+
+                            {{-- Detail Info --}}
+                            <div class="mt-1 space-y-0.5">
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                                    <span class="font-bold text-slate-700">{{ number_format($item->jumlah ?? 0) }} Pcs</span>
+                                    <span>•</span>
+                                    <span>Jual: <strong class="text-slate-800">Rp{{ number_format($item->harga ?? 0, 0, ',', '.') }}</strong></span>
+                                </div>
+                                @if(!empty($item->purchase_price))
+                                    <p class="text-[10px] text-slate-400">Beli: Rp{{ number_format($item->purchase_price, 0, ',', '.') }}</p>
+                                @endif
+                                @if(!empty($item->barcode))
+                                    <p class="text-[10px] text-slate-400 font-mono">Barcode: {{ $item->barcode }}</p>
+                                @endif
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="flex flex-col items-end gap-1.5 shrink-0">
-                        <!-- Waktu Input -->
-                        <div class="flex items-center gap-1 text-[10px] text-slate-400">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>{{ \Carbon\Carbon::parse($item->created_at)->format('H:i • d M') }}</span>
+                            {{-- Waktu Input --}}
+                            <p class="text-[10px] text-slate-400 mt-1">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y • H:i') }}</p>
                         </div>
 
-                        <!-- Status & Tombol Persetujuan -->
-                        @if(($item->status ?? 'pending') == 'approved')
-                            <span class="text-[9px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
-                                Disetujui
-                            </span>
-                        @elseif(($item->status ?? 'pending') == 'rejected')
-                            <span class="text-[9px] font-semibold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-md">
-                                Ditolak
-                            </span>
-                        @else
-                            <div class="flex items-center gap-1 mt-1">
+                        {{-- Tombol Aksi --}}
+                        @if(($item->status ?? 'pending') == 'pending')
+                            <div class="flex flex-col gap-1.5 shrink-0">
                                 <form action="{{ route('report.approve', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded-md transition shadow-sm">
-                                        Setujui
+                                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                                        ✓ Setujui
                                     </button>
                                 </form>
                                 <form action="{{ route('report.reject', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded-md transition shadow-sm">
-                                        Tolak
+                                    <button type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                                        ✕ Tolak
                                     </button>
                                 </form>
                             </div>
@@ -139,17 +149,15 @@
                     </div>
                 </div>
             @empty
-                <!-- Tampilan Jika Data Kosong -->
                 <div class="text-center py-10">
-                    <p class="text-xs text-slate-400">Tidak ada data transaksi ditemukan.</p>
+                    <p class="text-xs text-slate-400">Belum ada pengajuan barang masuk.</p>
                 </div>
             @endforelse
 
         </div>
 
-        <!-- Bottom Navigation Bar (Melayang di Bawah) -->
+        <!-- Bottom Navigation Bar -->
         <div class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-around z-20">
-            <!-- Dashboard -->
             <a href="{{ route('dashboard.kepalatoko') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
                 <div class="p-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +167,6 @@
                 <span class="text-[10px] font-medium">Dashboard</span>
             </a>
 
-            <!-- Reports (Aktif) -->
             <a href="{{ route('report.kepalatoko') }}" class="flex flex-col items-center gap-1 text-[#064e3b]">
                 <div class="px-4 py-1.5 rounded-xl bg-[#064e3b] text-white">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +176,6 @@
                 <span class="text-[10px] font-bold">Reports</span>
             </a>
 
-            <!-- Profile -->
             <a href="{{ route('profile.kepalatoko.index') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
                 <div class="p-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,7 +14,7 @@ class GudangController extends Controller
     {
         // Mengambil semua produk yang sudah approved
         $products = Product::where('status', 'approved')->latest()->get();
-        
+
         // Total SKU yang sudah approved
         $totalSku = $products->count();
 
@@ -23,7 +22,7 @@ class GudangController extends Controller
         $stokKritisItems = Product::where('status', 'approved')
             ->where('stock', '<=', 10)
             ->get();
-            
+
         $stokKritisCount = $stokKritisItems->count();
 
         // Barang Masuk Hari Ini (Diurutkan dari yang terbaru)
@@ -42,9 +41,9 @@ class GudangController extends Controller
 
         return view('Dashboardgudang', compact(
             'products',
-            'totalSku', 
-            'stokKritisCount', 
-            'stokKritisItems', 
+            'totalSku',
+            'stokKritisCount',
+            'stokKritisItems',
             'barangHariIni',
             'totalBarangMasukHariIni'
         ));
@@ -56,11 +55,11 @@ class GudangController extends Controller
         $query = Product::where('status', 'approved');
 
         if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $products = $query->latest()->get();
-        
+
         $totalSku = Product::where('status', 'approved')->count();
         $stokKritisCount = Product::where('status', 'approved')->where('stock', '<=', 10)->count();
 
@@ -74,10 +73,10 @@ class GudangController extends Controller
             ->where('stock', '<=', 10)
             ->latest()
             ->get();
-            
+
         $stokKritisCount = $itemsKritis->count();
 
-        return view('stokkritis', compact('itemsKritis', 'stokKritisCount'));
+        return view('stok-kritis', compact('itemsKritis', 'stokKritisCount'));
     }
 
     // 4. Halaman Riwayat Gudang
@@ -92,25 +91,25 @@ class GudangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'category_id'    => 'required|exists:categories,id',
-            'price'          => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric',
             'purchase_price' => 'required|numeric',
-            'stock'          => 'required|integer',
-            'expired_date'   => 'nullable|date',
-            'description'    => 'nullable|string',
+            'stock' => 'required|integer',
+            'expired_date' => 'nullable|date',
+            'description' => 'nullable|string',
         ]);
 
         Product::create([
-            'category_id'    => $request->category_id,
-            'name'           => $request->name,
-            'slug'           => Str::slug($request->name),
-            'description'    => $request->description,
-            'price'          => $request->price,
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'price' => $request->price,
             'purchase_price' => $request->purchase_price,
-            'stock'          => $request->stock,
-            'expired_date'   => $request->expired_date,
-            'status'         => 'pending',
+            'stock' => $request->stock,
+            'expired_date' => $request->expired_date,
+            'status' => 'pending',
         ]);
 
         return redirect()->route('kelola.gudang')->with('success', 'Pengajuan barang berhasil dikirim! Menunggu persetujuan Kepala Toko.');

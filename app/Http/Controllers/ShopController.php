@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product; // Memanggil Model Product
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -13,18 +14,20 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         // Query hanya produk yang sudah disetujui (approved) dan stok > 0
-        $query = Product::where('status', 'approved')
-                        ->where('stock', '>', 0);
+        $query = Product::with('category')
+            ->where('status', 'approved')
+            ->where('stock', '>', 0);
 
         // Fitur pencarian barang jika Kasir mencari nama produk
         if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         // Ambil data produk terbaru
         $products = $query->latest()->get();
+        $categories = Category::all();
 
-        // Kirim variabel $products ke view 'HalamanShop'
-        return view('HalamanShop', compact('products'));
+        // Kirim variabel $products dan $categories ke view 'HalamanShop'
+        return view('HalamanShop', compact('products', 'categories'));
     }
 }
