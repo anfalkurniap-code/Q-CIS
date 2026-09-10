@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Q-CIS SMK - Katalog Produk</title>   
     <script src="https://cdn.tailwindcss.com"></script>   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -13,22 +14,22 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen font-sans">
    
-    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative">
-               
+    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative pb-20">
+             
         <!-- ================= TOP HEADER BAR ================= -->
         <div class="px-5 pt-5 pb-3">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2.5">
                     <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS SMK</h1>
                 </div>
-                                
-                <div class="flex items-center gap-3">                   
+                            
+                <div class="flex items-center gap-3">   
                     <!-- Link Keranjang Top Bar -->
                     <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors hover:text-emerald-600">
                         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
                         <span id="badge-cart-top" class="absolute -top-1.5 -right-2 bg-slate-700 text-[10px] text-white w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm">0</span>
                     </a>
-                  
+                 
                     <!-- Foto Profil Header -->
                     <a href="{{ url('/HalamanProfile') }}" class="block relative transition-transform active:scale-95" title="Ke Halaman Profil">
                         <img id="header-avatar" 
@@ -62,14 +63,14 @@
         <div class="px-5 py-4 flex-1">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
-                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products ?? []) }}</b> Produk</span>
-            </div>       
+                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products) }}</b> Produk</span>
+            </div>      
             
             <div class="grid grid-cols-2 gap-4" id="product-grid">
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
-                @forelse($products ?? [] as $item)          
-                <div data-category="{{ strtolower($item->category->name ?? $item->kategori ?? 'umum') }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
+                @foreach($products as $item)         
+                <div data-category="{{ $item->kategori ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
@@ -140,17 +141,17 @@
         </div>
        
         <!-- ================= BOTTOM BAR & NAVIGATION ================= -->
-        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
-                  
+        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
+                
             <!-- Total Harga & Tombol Checkout -->
             <div class="bg-blue-50/70 px-5 py-3 flex justify-between items-center border-b border-gray-100 rounded-t-2xl">
                 <div class="flex items-center gap-3">
                     <div class="relative bg-white p-2 rounded-xl shadow-sm border border-gray-100">
-                        <i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-800"></i>                      
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-800"></i>                     
                         <span id="badge-cart" class="absolute -top-1.5 -right-1.5 bg-slate-600 text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                     </div>
                     <div>
-                        <p class="text-[10px] text-gray-400 font-bold tracking-wider">TOTAL</p>                      
+                        <p class="text-[10px] text-gray-400 font-bold tracking-wider">TOTAL</p>                     
                         <p id="total-harga" class="font-bold text-emerald-800 text-lg">Rp 0</p>
                     </div>
                 </div>
@@ -158,36 +159,32 @@
                     Checkout <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </a>
             </div>
-          
+         
             <!-- Bottom Navigation Bar -->
-            <div class="grid grid-cols-4 items-center pt-2 pb-3 text-center text-xs font-semibold text-gray-400">
-                <!-- Home -->
-                <a href="{{ url('/HalamanDepanKasir') }}" 
-                   class="flex flex-col items-center justify-center {{ Request::is('HalamanDepanKasir*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
-                    <i data-lucide="home" class="w-5 h-5 stroke-[2.2]"></i>
-                    <span>Home</span>
-                </a>
+            <div class="bg-white border-t border-slate-100 px-6 py-2.5 flex justify-between items-center">
 
-                <!-- Shop -->
-                <a href="{{ url('/HalamanShop') }}" 
-                   class="flex flex-col items-center justify-center {{ Request::is('HalamanShop*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
-                    <i data-lucide="shopping-bag" class="w-5 h-5 stroke-[2.2]"></i>
-                    <span>Shop</span>
-                </a>
+              <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center {{ Request::is('HalamanDepanKasir*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-semibold">Home</span>
+              </a>
 
-                <!-- Trans -->
-                <a href="{{ url('/Riwayattransaksi') }}" 
-                   class="flex flex-col items-center justify-center {{ Request::is('Riwayattransaksi*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
-                    <i data-lucide="receipt" class="w-5 h-5 stroke-[2.2]"></i>
-                    <span>Trans</span>
-                </a>
+              <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center {{ Request::is('HalamanShop*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+                <i class="fa-solid fa-bag-shopping text-lg"></i>
+                <span class="text-[10px] font-semibold">Shop</span>
+              </a>
 
-                <!-- Profile -->
-                <a href="{{ url('/HalamanProfile') }}" 
-                   class="flex flex-col items-center justify-center {{ Request::is('HalamanProfile*') ? 'bg-[#008751] text-white mx-1 py-2.5 rounded-2xl font-semibold text-[11px] gap-1 shadow-sm' : 'text-slate-600 hover:text-slate-800 text-[11px] font-medium gap-1' }}">
-                    <i data-lucide="user" class="w-5 h-5 stroke-[2.2]"></i>
-                    <span>Profile</span>
-                </a>
+              <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center {{ Request::is('Riwayattransaksi*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+                <i class="fa-solid fa-receipt text-lg"></i>
+                <span class="text-[10px] font-semibold">Trans</span>
+              </a>
+
+              <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center {{ Request::is('HalamanProfile*') ? 'text-emerald-600' : 'text-slate-400' }} gap-0.5">
+                <div class="{{ Request::is('HalamanProfile*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+                  <i class="fa-solid fa-user {{ Request::is('HalamanProfile*') ? 'text-sm' : 'text-lg' }}"></i>
+                </div>
+                <span class="text-[10px] {{ Request::is('HalamanProfile*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
+              </a>
+
             </div>
         </div>
 
@@ -243,20 +240,20 @@
             updateCartUI();
         }
         
-        function filterProduk(kategori, element) {          
+        function filterProduk(kategori, element) {         
             const cards = document.querySelectorAll('.product-card');
             const targetKategori = kategori.toLowerCase().trim();
             
             cards.forEach(card => {
                 const cardCategory = (card.getAttribute('data-category') || '').toLowerCase().trim();
-                      
+                    
                 if (targetKategori === 'all' || targetKategori === 'semua' || cardCategory === targetKategori) {
                     card.style.setProperty('display', 'flex', 'important');
                 } else {
                     card.style.setProperty('display', 'none', 'important');
                 }
             });
-              
+             
             const buttons = document.querySelectorAll('#category-filters button');
             buttons.forEach(btn => {
                 btn.className = "category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap";

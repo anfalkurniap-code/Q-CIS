@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
-class ProfileController extends Controller
+class profilkepalagudangController extends Controller
 {
     /**
      * Menampilkan halaman profil
@@ -16,7 +16,7 @@ class ProfileController extends Controller
     public function index()
     {
         // Mengambil data user yang sedang login
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         return view('profile', compact('user'));
     }
@@ -33,7 +33,7 @@ class ProfileController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'password' => 'nullable|string|min:6',
-            'cropped_image_data' => 'nullable|string'
+            'cropped_image_data' => 'nullable|string',
         ]);
 
         // 1. Update Username / ID Kepala Toko
@@ -62,7 +62,7 @@ class ProfileController extends Controller
                     }
 
                     // Simpan foto baru ke folder storage/app/public/profiles
-                    $fileName = 'profiles/user_' . $user->id . '_' . time() . '.' . $type;
+                    $fileName = 'profiles/user_'.$user->id.'_'.time().'.'.$type;
                     Storage::disk('public')->put($fileName, $imageData);
 
                     $user->profile_pic = $fileName;

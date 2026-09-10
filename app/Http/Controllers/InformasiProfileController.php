@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProfileController extends Controller
+class InformasiProfileController extends Controller
 {
     /**
      * Menampilkan halaman profil
@@ -13,6 +13,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = auth()->user();
+
         return view('profile', compact('user')); // Ganti 'profile' dengan nama file Blade kamu jika berbeda
     }
 
@@ -25,10 +26,10 @@ class ProfileController extends Controller
 
         // 1. Validasi Input
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone'  => 'nullable|string|max:20',
-            'class'  => 'nullable|string|max:50',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'phone' => 'nullable|string|max:20',
+            'class' => 'nullable|string|max:50',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
         ]);
 
@@ -45,7 +46,7 @@ class ProfileController extends Controller
         }
 
         // 3. Update Data Text
-        $user->name  = $request->name;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->class = $request->class;

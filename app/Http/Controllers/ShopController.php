@@ -14,8 +14,7 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         // Query hanya produk yang sudah disetujui (approved) dan stok > 0
-        $query = Product::with('category')
-            ->where('status', 'approved')
+        $query = Product::where('status', 'approved')
             ->where('stock', '>', 0);
 
         // Fitur pencarian barang jika Kasir mencari nama produk
@@ -25,7 +24,7 @@ class ShopController extends Controller
 
         // Ambil data produk terbaru
         $products = $query->latest()->get();
-        $categories = Category::all();
+        // dd($products);
 
         // Kirim variabel $products dan $categories ke view 'HalamanShop'
         return view('HalamanShop', compact('products', 'categories'));
