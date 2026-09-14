@@ -93,11 +93,6 @@
                 <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Air Mineral 600ml</h4>
               </div>
             </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-blue-600 block mb-0.5">Minuman</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate"></h4>
-            </div>
-          </div>
 
             <!-- Product 2 -->
             <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="makanan">
@@ -112,41 +107,36 @@
                 <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Roti Coklat Lumer</h4>
               </div>
             </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-amber-600 block mb-0.5">Aneka Makanan</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate"></h4>
-            </div>
-          </div>
 
-          <!-- Product 3 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="alat tulis">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
-                <rect x="5" y="5" width="10" height="50" fill="#4A5568"/>
-                <line x1="20" y1="15" x2="38" y2="15" stroke="#9CA3AF" stroke-width="2"/>
-                <line x1="20" y1="25" x2="38" y2="25" stroke="#9CA3AF" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate"></h4>
-            </div>
-          </div>
-
-          <!-- Product 4 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="seragam">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 shadow-sm">
-                <i class="fa-solid fa-shirt text-2xl"></i>
+            <!-- Product 3 -->
+            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="alat tulis">
+              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
+                <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
+                  <rect x="5" y="5" width="10" height="50" fill="#4A5568"/>
+                  <line x1="20" y1="15" x2="38" y2="15" stroke="#9CA3AF" stroke-width="2"/>
+                  <line x1="20" y1="25" x2="38" y2="25" stroke="#9CA3AF" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="p-3">
+                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
+                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Buku Tulis</h4>
               </div>
             </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Seragam</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate"></h4>
-            </div>
-          </div>
 
+            <!-- Product 4 -->
+            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="seragam">
+              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
+                <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 shadow-sm">
+                  <i class="fa-solid fa-shirt text-2xl"></i>
+                </div>
+              </div>
+              <div class="p-3">
+                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Seragam</span>
+                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Seragam Sekolah</h4>
+              </div>
+            </div>
+          @endif
         </div>
       </section>
     </main>

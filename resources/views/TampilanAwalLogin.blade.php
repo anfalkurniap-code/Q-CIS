@@ -28,7 +28,6 @@
             </div>
         </header>
         </header> 
-
         <!-- Welcome Section -->
         <section class="text-center my-2">
             <h1 class="text-[26px] font-extrabold text-[#1A2E22] leading-tight tracking-wide">

@@ -157,9 +157,10 @@
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <div class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-around z-20">
-            <a href="{{ route('dashboard.kepalatoko') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
-                <div class="p-1.5">
+        <div class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 px-3 py-2 flex items-center justify-around z-20">
+            <!-- 1. Dashboard -->
+            <a href="{{ route('dashboard.kepalatoko') }}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-[#064e3b] transition">
+                <div class="p-1">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                     </svg>
@@ -167,8 +168,19 @@
                 <span class="text-[10px] font-medium">Dashboard</span>
             </a>
 
-            <a href="{{ route('report.kepalatoko') }}" class="flex flex-col items-center gap-1 text-[#064e3b]">
-                <div class="px-4 py-1.5 rounded-xl bg-[#064e3b] text-white">
+            <!-- 2. Stok Barang -->
+            <a href="{{ route('stok.kepalatoko') }}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-[#064e3b] transition">
+                <div class="p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] font-medium">Stok Barang</span>
+            </a>
+
+            <!-- 3. Reports (Aktif) -->
+            <a href="{{ route('report.kepalatoko') }}" class="flex flex-col items-center gap-0.5 text-[#064e3b]">
+                <div class="px-3 py-1 rounded-xl bg-[#064e3b] text-white">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
@@ -176,8 +188,9 @@
                 <span class="text-[10px] font-bold">Reports</span>
             </a>
 
-            <a href="{{ route('profile.kepalatoko.index') }}" class="flex flex-col items-center gap-1 text-slate-400 hover:text-[#064e3b] transition">
-                <div class="p-1.5">
+            <!-- 4. Profile -->
+            <a href="{{ route('profile.kepalatoko.index') }}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-[#064e3b] transition">
+                <div class="p-1">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>

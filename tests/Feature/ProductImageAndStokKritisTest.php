@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ReportkepalatokoController;
+use App\Models\BarangMasuk;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,7 +45,14 @@ test('bisa menginput produk dengan gambar dan langsung tersimpan ke database ser
 
     $response->assertRedirect(route('kelola.gudang'));
 
-    // Verifikasi tersimpan di database
+    // Verifikasi tersimpan di barang_masuks (pending)
+    $barangMasuk = BarangMasuk::where('nama_barang', 'Teh Botol Sosro Kotak')->first();
+    expect($barangMasuk)->not->toBeNull();
+
+    // Approve oleh Kepala Toko agar masuk ke products
+    (new ReportkepalatokoController)->approve($barangMasuk->id);
+
+    // Verifikasi tersimpan di database products
     $product = Product::where('name', 'Teh Botol Sosro Kotak')->first();
     expect($product)->not->toBeNull();
     expect($product->status)->toBe('approved');
@@ -55,12 +64,11 @@ test('bisa menginput produk dengan gambar dan langsung tersimpan ke database ser
     Storage::disk('public')->assertExists($product->image);
 
     // Verifikasi accessor gambar terhubung
-    expect($product->img)->toContain('storage/' . $product->image);
-    expect($product->image_url)->toContain('storage/' . $product->image);
+    expect($product->img)->toContain('storage/'.$product->image);
+    expect($product->image_url)->toContain('storage/'.$product->image);
 
     // Verifikasi tampil di halaman kasir
     $kasirResponse = $this->get('/shop');
     $kasirResponse->assertStatus(200);
     $kasirResponse->assertSee('Teh Botol Sosro Kotak');
 });
-

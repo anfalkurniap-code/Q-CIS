@@ -24,7 +24,9 @@ class ShopController extends Controller
 
         // Ambil data produk terbaru
         $products = $query->latest()->get();
-        // dd($products);
+
+        // Ambil semua data kategori dari database
+        $categories = Category::all();
 
         // Kirim variabel $products dan $categories ke view 'HalamanShop'
         return view('HalamanShop', compact('products', 'categories'));

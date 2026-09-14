@@ -69,7 +69,7 @@
             <div class="grid grid-cols-2 gap-4" id="product-grid">
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
-                @foreach($products as $item)         
+                @forelse($products as $item)        
                 <div data-category="{{ $item->kategori ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     
                     @if(!empty($item->badge))
@@ -147,11 +147,11 @@
             <div class="bg-blue-50/70 px-5 py-3 flex justify-between items-center border-b border-gray-100 rounded-t-2xl">
                 <div class="flex items-center gap-3">
                     <div class="relative bg-white p-2 rounded-xl shadow-sm border border-gray-100">
-                        <i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-800"></i>                     
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-800"></i>                    
                         <span id="badge-cart" class="absolute -top-1.5 -right-1.5 bg-slate-600 text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                     </div>
                     <div>
-                        <p class="text-[10px] text-gray-400 font-bold tracking-wider">TOTAL</p>                     
+                        <p class="text-[10px] text-gray-400 font-bold tracking-wider">TOTAL</p>                    
                         <p id="total-harga" class="font-bold text-emerald-800 text-lg">Rp 0</p>
                     </div>
                 </div>

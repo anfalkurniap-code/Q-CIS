@@ -15,6 +15,15 @@ return new class extends Migration
             if (! Schema::hasColumn('products', 'barcode')) {
                 $table->string('barcode')->nullable()->after('id');
             }
+            if (! Schema::hasColumn('products', 'name')) {
+                $table->string('name')->nullable();
+            }
+            if (! Schema::hasColumn('products', 'stock')) {
+                $table->integer('stock')->default(0);
+            }
+            if (! Schema::hasColumn('products', 'price')) {
+                $table->integer('price')->default(0);
+            }
             if (! Schema::hasColumn('products', 'image')) {
                 $table->string('image')->nullable()->after('description');
             }
