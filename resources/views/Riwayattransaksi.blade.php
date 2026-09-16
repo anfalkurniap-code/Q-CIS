@@ -31,40 +31,40 @@
                 <div class="bg-white rounded-2xl border border-gray-200/80 p-3 shadow-sm">
                     
                     <div id="transaction-list">
-                        
-                        {{-- MENAMPILKAN DATA TRANSAKSI DARI SESSION --}}
                         @forelse($riwayat as $item)
-                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
-                                    <i class="fa-solid fa-bag-shopping"></i>
-                                </div>
-                                <div>
-                                    <h3>
-                                        {{ $item->details->first()->product_name ?? 'Pembayaran Mart' }}
-                                        @if($item->details->count() > 1)
-                                            <span class="text-xs text-gray-400 font-normal">
-                                                (+{{ $item->details->count() - 1 }} lainnya)
+                            <a href="{{ Route::has('transaksi.detail') ? route('transaksi.detail', $item->id) : '#' }}" class="flex items-center justify-between py-3 px-1 border-b border-gray-100 hover:bg-gray-50 transition rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
+                                        <i class="fa-solid fa-bag-shopping"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 text-sm">
+                                            {{ $item->details->first()->product_name ?? 'Pembayaran Mart' }}
+                                            @if($item->details->count() > 1)
+                                                <span class="text-xs text-gray-400 font-normal">
+                                                    (+{{ $item->details->count() - 1 }} lainnya)
+                                                </span>
+                                            @endif
+                                        </h3>
+                                        <div class="flex items-center space-x-2 mt-0.5">
+                                            <span class="text-[10px] text-gray-400">{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }} WIB</span>
+                                            <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">
+                                                {{ $item->payment_method ?? 'TUNAI' }}
                                             </span>
-                                        @endif
-                                    </h3>
-                                    <div class="flex items-center space-x-2 mt-0.5">
-                                        <span class="text-[10px] text-gray-400">{{ $item['waktu'] }}</span>
-                                        <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">
-                                            {{ $item['kategori'] ?? 'KONSUMSI' }}
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <span class="text-emerald-500 font-semibold text-sm">+ Rp {{ number_format($item['total_price'], 0, ',', '.') }}</span>
-                        </div>
+                                <span class="text-emerald-500 font-semibold text-sm">
+                                    - Rp {{ number_format($item->total_price, 0, ',', '.') }}
+                                </span>
+                            </a>
                         @empty
-                        <div class="text-center py-6 text-xs text-gray-400">
-                            Belum ada riwayat transaksi.
-                        </div>
+                            <div class="text-center py-6 text-xs text-gray-400">
+                                Belum ada riwayat transaksi.
+                            </div>
                         @endforelse
 
-                        <!-- Dummy Top-Up Saldo untuk Pelengkap -->
+                        <!-- Dummy Top-Up Saldo Pelengkap -->
                         <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
@@ -89,17 +89,17 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 max-w-sm w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-10">
-            <a href="{{ route('dashboard.kasir') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
+            <a href="{{ Route::has('dashboard.kasir') ? route('dashboard.kasir') : '#' }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
                 <i class="fa-solid fa-house text-base mb-1"></i>
                 <span>Home</span>
             </a>
             
-            <a href="{{ route('halaman.shop') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
+            <a href="{{ Route::has('halaman.shop') ? route('halaman.shop') : '#' }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
                 <i class="fa-solid fa-bag-shopping text-base mb-1"></i>
                 <span>Shop</span>
             </a>
             
-            <a href="{{ route('riwayat.transaksi') }}" class="flex flex-col items-center text-white text-xs">
+            <a href="{{ Route::has('riwayat.transaksi') ? route('riwayat.transaksi') : '#' }}" class="flex flex-col items-center text-white text-xs">
                 <div class="bg-emerald-600 px-4 py-2 rounded-xl flex flex-col items-center">
                     <i class="fa-solid fa-receipt text-base mb-0.5"></i>
                     <span class="font-medium text-[11px]">Trans</span>

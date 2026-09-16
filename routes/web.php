@@ -22,6 +22,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\profilekepalatokoController;
+use App\Http\Controllers\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,7 +118,6 @@ Route::get('/kelola-gudang', function () {
     $totalSku = DB::table('products')->count();
     $stokKritisCount = DB::table('products')->where('stock', '<=', 10)->count();
 
-    // Melakukan LEFT JOIN ke tabel categories agar nama kategori terambil
     $products = DB::table('products')
         ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
         ->select(
@@ -298,18 +298,16 @@ Route::get('/ReportIndex', [reportindexController::class, 'index']);
 Route::get('/profilekepalatoko', [profilekepalatokoController::class, 'index'])->name('profile.kepalatoko.index');
 Route::post('/profilekepalatoko/update', [profilekepalatokoController::class, 'update'])->name('profile.kepalatoko.update');
 
-<<<<<<< HEAD
-Route::get('/Tampilanpendaftaran', function () {
-    return view('pendaftaran');
-});
-
-Route::get('/Ringkasanpesanan', function () {
-    return view('Ringkasanpesanan');
-=======
 Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
     Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
     Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
     Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
->>>>>>> 1df02efdd186a6b486a5c299f6d0bda9845bb146
 });
+
+Route::get('/Ringkasanpesanan', function () {
+    return view('Ringkasanpesanan');
+});
+
+Route::get('/riwayat-transaksi', [TransaksiController::class, 'index'])->name('riwayat.transaksi');
+Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.detail');

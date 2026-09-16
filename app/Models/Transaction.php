@@ -19,13 +19,9 @@ class Transaction extends Model
         'transaction_type',
     ];
 
+    // Relasi ke TransactionDetail
     public function details()
     {
-        return $this->hasMany(TransactionDetail::class, 'transaction_id');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(TransactionDetail::class);
     }
 }

@@ -5,40 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ringkasan Pesanan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-    }
+    body { font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
   <div class="w-full max-w-sm bg-white rounded-2xl p-6 border-2 border-dashed border-gray-300 shadow-sm text-gray-700">
+    
+    <!-- Tombol Kembali -->
+    <div class="mb-4">
+      <a href="{{ route('riwayat.transaksi') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Riwayat
+      </a>
+    </div>
+
     <!-- Judul -->
     <h2 class="text-xl font-extrabold text-[#0F172A] mb-5">Ringkasan Pesanan</h2>
 
-    <!-- Daftar Produk -->
+    <!-- Daftar Produk (Dinamis dari Database) -->
     <div class="space-y-4 text-sm">
+      @foreach($transaksi->details as $detail)
       <div class="flex justify-between items-start gap-2">
-        <span class="text-gray-600 leading-snug">Buku Tulis Sidu 58 Lembar (5x)</span>
-        <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp 22.500</span>
+        <span class="text-gray-600 leading-snug">{{ $detail->product_name }} ({{ $detail->qty }}x)</span>
+        <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</span>
       </div>
-
-      <div class="flex justify-between items-start gap-2">
-        <span class="text-gray-600 leading-snug">Pulpen Standard AE7 Hitam (3x)</span>
-        <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp 6.000</span>
-      </div>
-
-      <div class="flex justify-between items-start gap-2">
-        <span class="text-gray-600 leading-snug">Seragam Sekolah Pramuka L (1x)</span>
-        <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp 110.000</span>
-      </div>
-
-      <div class="flex justify-between items-start gap-2">
-        <span class="text-gray-600 leading-snug">Roti Coklat Sari Roti (1x)</span>
-        <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp 7.000</span>
-      </div>
+      @endforeach
     </div>
 
     <hr class="my-5 border-gray-200">
@@ -47,18 +41,22 @@
     <div class="space-y-2.5 text-sm">
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Subtotal</span>
-        <span class="font-medium text-[#0F172A]">Rp 145.500</span>
+        <span class="font-medium text-[#0F172A]">Rp {{ number_format($transaksi->subtotal ?? $transaksi->total_price, 0, ',', '.') }}</span>
       </div>
 
+      @if(!empty($transaksi->diskon))
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Diskon (10%)</span>
-        <span class="font-medium text-red-600">-Rp 14.550</span>
+        <span class="text-gray-600">Diskon</span>
+        <span class="font-medium text-red-600">-Rp {{ number_format($transaksi->diskon, 0, ',', '.') }}</span>
       </div>
+      @endif
 
+      @if(!empty($transaksi->pajak))
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Pajak (11%)</span>
-        <span class="font-medium text-[#0F172A]">Rp 14.405</span>
+        <span class="text-gray-600">Pajak</span>
+        <span class="font-medium text-[#0F172A]">Rp {{ number_format($transaksi->pajak, 0, ',', '.') }}</span>
       </div>
+      @endif
     </div>
 
     <hr class="my-5 border-gray-200">
@@ -66,7 +64,7 @@
     <!-- Total Akhir -->
     <div class="flex justify-between items-center mb-5">
       <span class="font-bold text-[#0F172A] text-lg">Total Akhir</span>
-      <span class="font-extrabold text-[#007A37] text-2xl">Rp 145.355</span>
+      <span class="font-extrabold text-[#007A37] text-2xl">Rp {{ number_format($transaksi->total_price, 0, ',', '.') }}</span>
     </div>
 
     <hr class="my-5 border-gray-200">
@@ -75,12 +73,12 @@
     <div class="space-y-2 text-xs">
       <div class="flex justify-between items-center">
         <span class="text-gray-500">ID Transaksi</span>
-        <span class="font-semibold text-gray-700">TRX-98237492</span>
+        <span class="font-semibold text-gray-700">{{ $transaksi->code ?? 'TRX-'.$transaksi->id }}</span>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-gray-500">Waktu Transaksi</span>
-        <span class="font-semibold text-gray-700">24 Mei 2024, 14:20 WIB</span>
+        <span class="font-semibold text-gray-700">{{ $transaksi->created_at->format('d M Y, H:i') }} WIB</span>
       </div>
     </div>
   </div>
