@@ -156,19 +156,26 @@ class ProductController extends Controller
     public function updatePrice(Request $request, $id)
     {
         $request->validate([
+            'purchase_price' => 'nullable|numeric|min:0',
             'price' => 'required|numeric|min:0',
         ], [
-            'price.required' => 'Harga baru wajib diisi.',
-            'price.numeric' => 'Harga harus berupa angka.',
-            'price.min' => 'Harga tidak boleh kurang dari 0.',
+            'price.required' => 'Harga jual wajib diisi.',
+            'price.numeric' => 'Harga jual harus berupa angka.',
+            'price.min' => 'Harga jual tidak boleh kurang dari 0.',
+            'purchase_price.numeric' => 'Harga beli harus berupa angka.',
+            'purchase_price.min' => 'Harga beli tidak boleh kurang dari 0.',
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update([
-            'price' => $request->price,
-        ]);
 
-        return redirect()->back()->with('success', 'Harga jual berhasil diperbarui!');
+        $updateData = ['price' => $request->price];
+        if ($request->has('purchase_price') && $request->purchase_price !== null) {
+            $updateData['purchase_price'] = $request->purchase_price;
+        }
+
+        $product->update($updateData);
+
+        return redirect()->back()->with('success', 'Harga berhasil diperbarui!');
     }
 
     /**

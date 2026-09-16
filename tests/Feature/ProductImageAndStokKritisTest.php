@@ -72,3 +72,42 @@ test('bisa menginput produk dengan gambar dan langsung tersimpan ke database ser
     $kasirResponse->assertStatus(200);
     $kasirResponse->assertSee('Teh Botol Sosro Kotak');
 });
+
+test('bisa menghapus barang di kelola gudang', function () {
+    $category = Category::firstOrCreate(['name' => 'Makanan']);
+    $product = Product::create([
+        'name' => 'Kripik Singkong',
+        'category_id' => $category->id,
+        'price' => 10000,
+        'purchase_price' => 7000,
+        'stock' => 15,
+        'status' => 'approved',
+    ]);
+
+    $response = $this->delete("/products/{$product->id}");
+
+    $response->assertRedirect();
+    $this->assertDatabaseMissing('products', ['id' => $product->id]);
+});
+
+test('bisa mengupdate harga barang di kelola gudang', function () {
+    $category = Category::firstOrCreate(['name' => 'Makanan']);
+    $product = Product::create([
+        'name' => 'Kripik Bawang',
+        'category_id' => $category->id,
+        'price' => 8000,
+        'purchase_price' => 5000,
+        'stock' => 20,
+        'status' => 'approved',
+    ]);
+
+    $response = $this->put("/products/{$product->id}/update-price", [
+        'purchase_price' => 6000,
+        'price' => 9500,
+    ]);
+
+    $response->assertRedirect();
+    $product->refresh();
+    expect($product->price)->toEqual(9500);
+    expect($product->purchase_price)->toEqual(6000);
+});

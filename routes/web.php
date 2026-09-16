@@ -196,6 +196,12 @@ Route::get('/input-barang', [ProductController::class, 'create'])->name('product
 Route::get('/input-barang-alt', [ProductController::class, 'create'])->name('input.barang');
 Route::post('/input-barang', [ProductController::class, 'store'])->name('products.store');
 
+// CRUD & Manajamen Produk (Hapus, Update Harga, Edit, Update)
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::put('/products/{id}/update-price', [ProductController::class, 'updatePrice'])->name('products.updatePrice');
+Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+
 // ==========================================
 // 5. KATALOG, SHOP & PEMBAYARAN
 // ==========================================
