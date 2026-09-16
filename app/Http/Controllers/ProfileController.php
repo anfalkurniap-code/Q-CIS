@@ -43,21 +43,16 @@ class ProfileController extends Controller
 
         // 1. Validasi Input
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.($user?->id ?? 0),
-            'phone' => 'nullable|string|max:20',
-            'class' => 'nullable|string|max:50',
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|max:255|unique:users,email,'.($user?->id ?? 0),
+            'phone'  => 'nullable|string|max:20',
+            'class'  => 'nullable|string|max:50',
+            'major'  => 'nullable|string|max:100',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Simpan ke session untuk dummy data jika user belum tersimpan di DB
-        session([
-            'user_dummy.name' => $request->name,
-            'user_dummy.email' => $request->email,
-            'user_dummy.phone' => $request->phone,
-            'user_dummy.class' => $request->class,
-            'user_dummy.major' => $request->input('major', 'Rekayasa Perangkat Lunak'),
-        ]);
+        // Default value jika input jurusan kosong
+        $majorValue = $request->input('major', 'Rekayasa Perangkat Lunak');
 
         // 2. Olah Upload Foto (Avatar) jika ada
         if ($request->hasFile('avatar')) {
@@ -76,11 +71,22 @@ class ProfileController extends Controller
 
         // 3. Update Database jika user login
         if ($user) {
-            $user->name = $request->name;
+            $user->name  = $request->name;
             $user->email = $request->email;
             $user->phone = $request->phone;
+            $user->class = $request->class;
+            $user->major = $majorValue;
             $user->save();
         }
+
+        // 4. Update Session untuk Sinkronisasi Tampilan
+        session([
+            'user_dummy.name'  => $request->name,
+            'user_dummy.email' => $request->email,
+            'user_dummy.phone' => $request->phone,
+            'user_dummy.class' => $request->class,
+            'user_dummy.major' => $majorValue,
+        ]);
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
     }

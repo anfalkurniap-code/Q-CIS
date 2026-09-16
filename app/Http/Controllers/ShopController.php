@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
     /**
-     * Menampilkan daftar produk asli dari database ke halaman Shop / Kasir
+     * Menampilkan daftar produk ke halaman Shop / Kasir
      */
     public function index(Request $request)
     {
-        // Query hanya produk yang sudah disetujui (approved) dan stok > 0
+        // Query produk dari database
         $query = Product::where('status', 'approved')
             ->where('stock', '>', 0);
 
-        // Fitur pencarian barang jika Kasir mencari nama produk
+        // Fitur pencarian barang
         if ($request->has('search') && $request->search != '') {
             $query->where('name', 'like', '%'.$request->search.'%');
         }
@@ -25,10 +24,15 @@ class ShopController extends Controller
         // Ambil data produk terbaru
         $products = $query->latest()->get();
 
-        // Ambil semua data kategori dari database
-        $categories = Category::all();
+        // KATEGORI STATIS (Agar tidak error Query/Database Exception)
+        $categories = collect([
+            (object)['id' => 1, 'name' => 'Minuman', 'slug' => 'minuman'],
+            (object)['id' => 2, 'name' => 'Makanan', 'slug' => 'makanan'],
+            (object)['id' => 3, 'name' => 'Alat Tulis', 'slug' => 'alat-tulis'],
+            (object)['id' => 4, 'name' => 'Seragam', 'slug' => 'seragam'],
+        ]);
 
-        // Kirim variabel $products dan $categories ke view 'HalamanShop'
+        // Kirim ke view
         return view('HalamanShop', compact('products', 'categories'));
     }
 }

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
+use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,13 +137,13 @@ Route::post('/report/reject/{id}', [ReportkepalatokoController::class, 'reject']
 // ==========================================
 // Dashboard Kasir
 Route::get('/HalamanDepanKasir', function () {
-    $featuredProducts = Product::where('status', 'approved')
+    $featuredProduct = Product::where('status', 'approved')
         ->where('stock', '>', 0)
         ->latest()
         ->take(6)
         ->get();
 
-    return view('HalamanDepanKasir', compact('featuredProducts'));
+    return view('HalamanDepanKasir', compact('featuredProduct'));
 })->name('dashboard.kasir');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('halaman.shop');
@@ -276,3 +277,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
     Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
 });
+
+Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/loginKasir', function () {
+    return view('loginKasir'); 
+})->name('login');
+
+// Route Proses Logout
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect()->route('login');
+})->name('logout');
+
+Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+Route::get('/BantuanKasir', [BantuanController::class, 'index']);

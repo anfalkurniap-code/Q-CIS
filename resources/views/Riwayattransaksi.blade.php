@@ -33,31 +33,35 @@
                     
                     <div id="transaction-list">
                         
-                        {{-- MENAMPILKAN DATA TRANSAKSI DARI SESSION --}}
-                        @forelse($riwayat as $item)
+                        {{-- MENAMPILKAN DATA TRANSAKSI DARI DATABASE --}}
+                        @forelse($riwayat ?? [] as $item)
                         <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
                                     <i class="fa-solid fa-bag-shopping"></i>
                                 </div>
                                 <div>
-                                    <h3>
-                                        {{ $item->details->first()->product_name ?? 'Pembayaran Mart' }}
-                                        @if($item->details->count() > 1)
+                                    <h3 class="font-semibold text-gray-800 text-sm">
+                                        {{-- Menggunakan optional chaining (?->) agar aman jika details null --}}
+                                        {{ $item->details?->first()?->product_name ?? 'Pembayaran Mart' }}
+                                        
+                                        @if(($item->details?->count() ?? 0) > 1)
                                             <span class="text-xs text-gray-400 font-normal">
                                                 (+{{ $item->details->count() - 1 }} lainnya)
                                             </span>
                                         @endif
                                     </h3>
                                     <div class="flex items-center space-x-2 mt-0.5">
-                                        <span class="text-[10px] text-gray-400">{{ $item['waktu'] }}</span>
+                                        <span class="text-[10px] text-gray-400">
+                                            {{ isset($item->created_at) ? $item->created_at->format('d M Y') : ($item->waktu ?? '-') }}
+                                        </span>
                                         <span class="text-[8px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded tracking-wider uppercase">
-                                            {{ $item['kategori'] ?? 'KONSUMSI' }}
+                                            {{ $item->kategori ?? 'KONSUMSI' }}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-emerald-500 font-semibold text-sm">+ Rp {{ number_format($item['total_price'], 0, ',', '.') }}</span>
+                            <span class="text-emerald-500 font-semibold text-sm">+ Rp {{ number_format($item->total_price ?? 0, 0, ',', '.') }}</span>
                         </div>
                         @empty
                         <div class="text-center py-6 text-xs text-gray-400">
@@ -65,8 +69,8 @@
                         </div>
                         @endforelse
 
-                        <!-- Dummy Top-Up Saldo untuk Pelengkap -->
-                        <div class="flex items-center justify-between py-3 px-1 border-b border-gray-100">
+                        <!-- Dummy Top-Up Saldo Pelengkap -->
+                        <div class="flex items-center justify-between py-3 px-1">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
                                     <i class="fa-solid fa-wallet"></i>
