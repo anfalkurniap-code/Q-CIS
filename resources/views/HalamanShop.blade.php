@@ -50,7 +50,7 @@
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-sm font-medium" id="category-filters">
                 <button onclick="filterProduk('all', this)" class="category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap">Semua</button>
                 @foreach($categories ?? [] as $cat)
-                    <button onclick="filterProduk('{{ $cat->name }}', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">
+                    <button onclick="filterProduk('{{ addslashes($cat->name) }}', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">
                         {{ $cat->name }}
                     </button>
                 @endforeach
@@ -63,17 +63,17 @@
         <div class="px-5 py-4 flex-1">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
-                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products) }}</b> Produk</span>
+                <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products ?? []) }}</b> Produk</span>
             </div>      
             
             <div class="grid grid-cols-2 gap-4" id="product-grid">
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
-                @forelse($products as $item)        
-                <div data-category="{{ $item->kategori ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
+                @forelse($products as $item)         
+                <div data-category="{{ $item->kategori ?? ($item->category->name ?? 'semua') }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
                     
                     @if(!empty($item->badge))
-                    <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md">
+                    <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md z-10">
                         {{ $item->badge }}
                     </span>
                     @endif
@@ -113,8 +113,8 @@
                                 onclick="tambahKeKeranjang(
                                     {{ $item->id }}, 
                                     '{{ addslashes($item->name) }}', 
-                                    {{ $item->price }}, 
-                                    '{{ $item->img }}',
+                                    {{ $item->price ?? 0 }}, 
+                                    '{{ !empty($item->image) ? Storage::url($item->image) : '' }}',
                                     {{ $item->stock }}
                                 )"
                                 class="bg-emerald-800 text-white p-1.5 rounded-lg hover:bg-emerald-700 transition cursor-pointer active:scale-95"

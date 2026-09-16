@@ -66,7 +66,7 @@
             @foreach($featuredProducts as $fp)
             <a href="{{ url('/HalamanShop') }}" class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative hover:shadow-md transition group" data-category="{{ strtolower($fp->category->name ?? 'umum') }}">
               <div class="bg-gray-50 h-36 flex items-center justify-center p-2 overflow-hidden">
-                <img src="{{ $fp->img }}" alt="{{ $fp->name }}" class="h-28 max-w-full object-contain group-hover:scale-105 transition duration-300">
+                <img src="{{ asset($fp->img) }}" alt="{{ $fp->name }}" class="h-28 max-w-full object-contain group-hover:scale-105 transition duration-300">
               </div>
               <div class="p-3">
                 <span class="product-category text-[10px] font-bold uppercase tracking-wider text-emerald-600 block mb-0.5">{{ $fp->category->name ?? 'Umum' }}</span>
@@ -79,62 +79,9 @@
             </a>
             @endforeach
           @else
-            <!-- Product 1 -->
-            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative" data-category="minuman">
-              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-                <svg class="w-12 h-24" viewBox="0 0 50 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="15" y="10" width="20" height="8" rx="2" fill="#2563EB"/>
-                  <path d="M10 30C10 23.3726 15.3726 18 22 18H28C34.6274 18 40 23.3726 40 30V90C40 92.2091 38.2091 94 36 94H14C11.7909 94 10 92.2091 10 90V30Z" fill="#93C5FD" fill-opacity="0.6" stroke="#2563EB" stroke-width="2"/>
-                  <rect x="10" y="45" width="30" height="15" fill="#3B82F6"/>
-                </svg>
-              </div>
-              <div class="p-3">
-                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-blue-600 block mb-0.5">Minuman</span>
-                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Air Mineral 600ml</h4>
-              </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="makanan">
-              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-                <svg class="w-16 h-16" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="15" width="50" height="40" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="2"/>
-                  <path d="M5 25L30 5L55 25" stroke="#D97706" stroke-width="2" fill="#FEF3C7"/>
-                </svg>
-              </div>
-              <div class="p-3">
-                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-amber-600 block mb-0.5">Makanan</span>
-                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Roti Coklat Lumer</h4>
-              </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="alat tulis">
-              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-                <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
-                  <rect x="5" y="5" width="10" height="50" fill="#4A5568"/>
-                  <line x1="20" y1="15" x2="38" y2="15" stroke="#9CA3AF" stroke-width="2"/>
-                  <line x1="20" y1="25" x2="38" y2="25" stroke="#9CA3AF" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="p-3">
-                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Buku Tulis</h4>
-              </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="seragam">
-              <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-                <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 shadow-sm">
-                  <i class="fa-solid fa-shirt text-2xl"></i>
-                </div>
-              </div>
-              <div class="p-3">
-                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Seragam</span>
-                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Seragam Sekolah</h4>
-              </div>
+            <!-- Fallback Jika Tidak Ada Data Produk -->
+            <div class="col-span-2 text-center py-6 text-gray-500 text-xs">
+              Belum ada produk unggulan.
             </div>
           @endif
         </div>
@@ -224,7 +171,6 @@
       });
     }
 
-    // Filter Produk berdasarkan Kategori
     function filterCategory(categoryName) {
       const productItems = document.querySelectorAll('.product-item');
       
