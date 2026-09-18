@@ -70,8 +70,7 @@
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
                 @forelse($products as $item)         
-                <div data-category="{{ $item->kategori ?? ($item->category->name ?? 'semua') }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
-                    
+                <div data-category="{{ $item->category_id ?? 'semua' }}" class="product-card bg-white border border-...">
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md z-10">
                         {{ $item->badge }}
