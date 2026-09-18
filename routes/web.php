@@ -279,27 +279,12 @@ Route::get('/BantuanKasir', function () {
 Route::get('/report-index', [ReportkepalatokoController::class, 'index'])->name('report.index');
 Route::get('/ReportIndex', [ReportkepalatokoController::class, 'index']);
 
+
 // ROUTE DIPROTEKSI AUTHENTICATION
+=======
 Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
     Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
     Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
     Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
 });
-
-Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-Route::get('/loginKasir', function () {
-    return view('loginKasir'); 
-})->name('login');
-
-// Route Proses Logout
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect()->route('login');
-})->name('logout');
-
-Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
