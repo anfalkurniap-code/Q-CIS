@@ -14,7 +14,6 @@ use App\Http\Controllers\ProfilGudangController;
 use App\Http\Controllers\ReportkepalatokoController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TransactionController;
-use App\Models\Product; // <--- Import Model Product ditambahkan di sini
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,9 +32,13 @@ use Illuminate\Validation\Rules\Password;
 // ==========================================
 Route::get('/', function () {
     return view('TampilanAwalLogin');
-})->name('tampilan.awal');
+})->name('Tampilan.Awal');
 
-Route::get('/tampilan-awal', function () {
+Route::get('/Tampilan-Awal', function () {
+    return view('TampilanAwalLogin');
+});
+
+Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');
 });
 
@@ -247,12 +250,17 @@ Route::get('/HalamanInformasiAkun', function () {
 });
 
 // Profil Kasir
+// Route utama untuk profile
 Route::get('/profile', function () {
-    return view('HalamanProfile');
-})->name('profile.index');
+    $user = Auth::user();
+    return view('HalamanProfile', compact('user'));
+})->name('profile.index')->middleware('auth');
+
+// Route alias / pendukung jika masih ada link yang mengarah ke /HalamanProfile
 Route::get('/HalamanProfile', function () {
-    return view('HalamanProfile');
-});
+    $user = Auth::user();
+    return view('HalamanProfile', compact('user'));
+})->middleware('auth');
 
 Route::get('/informasi-akun', function () {
     return view('HalamanInformasiAkun');
@@ -262,9 +270,9 @@ Route::get('/informasi-akun', function () {
 Route::get('/HalamanKeamananAkun', [PasswordController::class, 'index'])->name('keamanan.index');
 Route::match(['post', 'put'], '/HalamanKeamananAkun', [PasswordController::class, 'update'])->name('keamanan.update');
 
-Route::get('/bantuan-kasir', function () {
+Route::get('/BantuanKasir', function () {
     return view('BantuanKasir');
-})->name('bantuan.kasir');
+})->name('Bantuan.Kasir');
 
 // ROUTE LAPORAN INDEX
 Route::get('/report-index', [ReportkepalatokoController::class, 'index'])->name('report.index');
@@ -281,6 +289,16 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-Route::get('/BantuanKasir', function () {
-    return view('BantuanKasir');
-});
+Route::get('/loginKasir', function () {
+    return view('loginKasir'); 
+})->name('login');
+
+// Route Proses Logout
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect()->route('login');
+})->name('logout');
+
+Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
