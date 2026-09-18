@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginKepalaTokoController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\profilekepalatokoController;
 use App\Http\Controllers\ProfilGudangController;
 use App\Http\Controllers\ReportkepalatokoController;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
-use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -281,17 +281,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-Route::get('/loginKasir', function () {
-    return view('loginKasir'); 
-})->name('login');
-
-// Route Proses Logout
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect()->route('login');
-})->name('logout');
-
-Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
-Route::get('/BantuanKasir', [BantuanController::class, 'index']);
+Route::get('/BantuanKasir', function () {
+    return view('BantuanKasir');
+});

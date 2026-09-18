@@ -34,8 +34,12 @@
 
             <!-- Title & Subtitle -->
             <div>
-                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Persetujuan Barang Masuk</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Setujui atau tolak barang yang diajukan petugas gudang.</p>
+                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    {{ ($activeTab ?? request('tab', 'masuk')) == 'keluar' ? 'Laporan Barang Keluar' : 'Persetujuan Barang Masuk' }}
+                </h1>
+                <p class="text-xs text-slate-500 mt-0.5">
+                    {{ ($activeTab ?? request('tab', 'masuk')) == 'keluar' ? 'Riwayat transaksi & penjualan barang oleh kasir.' : 'Setujui atau tolak barang yang diajukan petugas gudang.' }}
+                </p>
             </div>
 
             <!-- Flash Alert Success / Error -->
@@ -61,7 +65,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </div>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama barang..." class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-emerald-700 shadow-sm" onchange="this.form.submit()">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ request('tab') == 'keluar' ? 'Cari no. transaksi / barang...' : 'Cari nama barang...' }}" class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-emerald-700 shadow-sm" onchange="this.form.submit()">
                 </div>
 
                 <!-- Date Picker Input -->
@@ -84,75 +88,117 @@
         <!-- Scrollable Item List -->
         <div class="px-4 pt-3 pb-24 space-y-3 overflow-y-auto flex-1">
             
-            @forelse($barangMasuk ?? [] as $item)
-                <div class="bg-white rounded-2xl shadow-sm border {{ ($item->status ?? 'pending') == 'pending' ? 'border-amber-200' : (($item->status ?? '') == 'approved' ? 'border-emerald-200' : 'border-rose-200') }} overflow-hidden">
-                    
-                    {{-- Foto Produk (jika ada) --}}
-                    @if(!empty($item->image))
-                        <div class="w-full h-28 bg-slate-100 overflow-hidden">
-                            <img src="{{ Storage::url($item->image) }}" alt="{{ $item->nama_barang }}" class="w-full h-full object-cover">
-                        </div>
-                    @endif
-
-                    <div class="p-3 flex items-start justify-between gap-2">
-                        <div class="flex-1 min-w-0">
-                            {{-- Badge Status --}}
-                            @if(($item->status ?? 'pending') == 'pending')
-                                <span class="inline-block text-[9px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md mb-1">⏳ Menunggu</span>
-                            @elseif($item->status == 'approved')
-                                <span class="inline-block text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md mb-1">✓ Disetujui</span>
-                            @else
-                                <span class="inline-block text-[9px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md mb-1">✕ Ditolak</span>
-                            @endif
-
-                            {{-- Nama Barang --}}
-                            <h3 class="text-xs font-bold text-slate-900 leading-snug truncate">{{ $item->nama_barang }}</h3>
-
-                            {{-- Detail Info --}}
-                            <div class="mt-1 space-y-0.5">
-                                <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
-                                    <span class="font-bold text-slate-700">{{ number_format($item->jumlah ?? 0) }} Pcs</span>
-                                    <span>•</span>
-                                    <span>Jual: <strong class="text-slate-800">Rp{{ number_format($item->harga ?? 0, 0, ',', '.') }}</strong></span>
-                                </div>
-                                @if(!empty($item->purchase_price))
-                                    <p class="text-[10px] text-slate-400">Beli: Rp{{ number_format($item->purchase_price, 0, ',', '.') }}</p>
-                                @endif
-                                @if(!empty($item->barcode))
-                                    <p class="text-[10px] text-slate-400 font-mono">Barcode: {{ $item->barcode }}</p>
-                                @endif
+            @if(request('tab') == 'keluar')
+                {{-- LIST BARANG KELUAR / PENJUALAN KASIR --}}
+                @forelse($barangKeluar ?? [] as $trx)
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <div>
+                                <span class="text-[10px] font-mono text-slate-400 block">{{ $trx->invoice_number }}</span>
+                                <span class="text-[11px] font-bold text-slate-800">{{ \Carbon\Carbon::parse($trx->created_at)->format('d M Y • H:i') }}</span>
                             </div>
-
-                            {{-- Waktu Input --}}
-                            <p class="text-[10px] text-slate-400 mt-1">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y • H:i') }}</p>
+                            <span class="inline-block text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                {{ $trx->payment_method ?? 'CASH' }}
+                            </span>
                         </div>
 
-                        {{-- Tombol Aksi --}}
-                        @if(($item->status ?? 'pending') == 'pending')
-                            <div class="flex flex-col gap-1.5 shrink-0">
-                                <form action="{{ route('report.approve', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                                        ✓ Setujui
-                                    </button>
-                                </form>
-                                <form action="{{ route('report.reject', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                                        ✕ Tolak
-                                    </button>
-                                </form>
+                        {{-- Item Details --}}
+                        <div class="space-y-1.5 pt-0.5">
+                            @foreach($trx->details as $detail)
+                                <div class="flex justify-between items-center text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                                        <span class="font-semibold text-slate-700">{{ $detail->product_name }}</span>
+                                        <span class="text-[11px] text-slate-400">x{{ number_format($detail->quantity) }}</span>
+                                    </div>
+                                    <span class="font-bold text-slate-800">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        {{-- Total Header --}}
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-100 text-xs">
+                            <span class="font-bold text-slate-500">Total Penjualan:</span>
+                            <span class="font-extrabold text-emerald-600 text-sm">Rp{{ number_format($trx->total_price, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-10">
+                        <p class="text-xs text-slate-400">Belum ada data barang keluar (penjualan kasir).</p>
+                    </div>
+                @endforelse
+            @else
+                {{-- LIST BARANG MASUK / GUDANG --}}
+                @forelse($barangMasuk ?? [] as $item)
+                    <div class="bg-white rounded-2xl shadow-sm border {{ ($item->status ?? 'pending') == 'pending' ? 'border-amber-200' : (($item->status ?? '') == 'approved' ? 'border-emerald-200' : 'border-rose-200') }} overflow-hidden">
+                        
+                        {{-- Foto Produk (jika ada) --}}
+                        @if(!empty($item->image))
+                            <div class="w-full h-28 bg-slate-100 overflow-hidden">
+                                <img src="{{ Storage::url($item->image) }}" alt="{{ $item->nama_barang }}" class="w-full h-full object-cover">
                             </div>
                         @endif
+
+                        <div class="p-3 flex items-start justify-between gap-2">
+                            <div class="flex-1 min-w-0">
+                                {{-- Badge Status --}}
+                                @if(($item->status ?? 'pending') == 'pending')
+                                    <span class="inline-block text-[9px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md mb-1">⏳ Menunggu</span>
+                                @elseif($item->status == 'approved')
+                                    <span class="inline-block text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md mb-1">✓ Disetujui</span>
+                                @else
+                                    <span class="inline-block text-[9px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md mb-1">✕ Ditolak</span>
+                                @endif
+
+                                {{-- Nama Barang --}}
+                                <h3 class="text-xs font-bold text-slate-900 leading-snug truncate">{{ $item->nama_barang }}</h3>
+
+                                {{-- Detail Info --}}
+                                <div class="mt-1 space-y-0.5">
+                                    <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                                        <span class="font-bold text-slate-700">{{ number_format($item->jumlah ?? 0) }} Pcs</span>
+                                        <span>•</span>
+                                        <span>Jual: <strong class="text-slate-800">Rp{{ number_format($item->harga ?? 0, 0, ',', '.') }}</strong></span>
+                                    </div>
+                                    @if(!empty($item->purchase_price))
+                                        <p class="text-[10px] text-slate-400">Beli: Rp{{ number_format($item->purchase_price, 0, ',', '.') }}</p>
+                                    @endif
+                                    @if(!empty($item->barcode))
+                                        <p class="text-[10px] text-slate-400 font-mono">Barcode: {{ $item->barcode }}</p>
+                                    @endif
+                                </div>
+
+                                {{-- Waktu Input --}}
+                                <p class="text-[10px] text-slate-400 mt-1">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y • H:i') }}</p>
+                            </div>
+
+                            {{-- Tombol Aksi --}}
+                            @if(($item->status ?? 'pending') == 'pending')
+                                <div class="flex flex-col gap-1.5 shrink-0">
+                                    <form action="{{ route('report.approve', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                                            ✓ Setujui
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('report.reject', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                                            ✕ Tolak
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                </div>
-            @empty
-                <div class="text-center py-10">
-                    <p class="text-xs text-slate-400">Belum ada pengajuan barang masuk.</p>
-                </div>
-            @endforelse
+                @empty
+                    <div class="text-center py-10">
+                        <p class="text-xs text-slate-400">Belum ada pengajuan barang masuk.</p>
+                    </div>
+                @endforelse
+            @endif
 
         </div>
 

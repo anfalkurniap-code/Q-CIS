@@ -4,32 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\BarangMasuk;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ReportkepalatokoController extends Controller
 {
     /**
-     * Menampilkan Halaman Laporan & Konfirmasi Barang Masuk
+     * Menampilkan Halaman Laporan & Konfirmasi Barang (Masuk & Keluar)
      */
     public function index(Request $request)
     {
         $search = $request->input('search');
         $date = $request->input('date');
+        $activeTab = $request->input('tab', 'masuk');
 
-        $query = BarangMasuk::query();
+        $barangMasuk = collect();
+        $barangKeluar = collect();
 
-        if ($search) {
-            $query->where('nama_barang', 'like', "%{$search}%");
+        if ($activeTab === 'keluar') {
+            $queryKeluar = Transaction::with('details')->latest();
+
+            if ($search) {
+                $queryKeluar->where(function ($q) use ($search) {
+                    $q->where('invoice_number', 'like', "%{$search}%")
+                        ->orWhereHas('details', function ($dq) use ($search) {
+                            $dq->where('product_name', 'like', "%{$search}%");
+                        });
+                });
+            }
+
+            if ($date) {
+                $queryKeluar->whereDate('created_at', $date);
+            }
+
+            $barangKeluar = $queryKeluar->get();
+        } else {
+            $queryMasuk = BarangMasuk::query();
+
+            if ($search) {
+                $queryMasuk->where('nama_barang', 'like', "%{$search}%");
+            }
+
+            if ($date) {
+                $queryMasuk->whereDate('created_at', $date);
+            }
+
+            $barangMasuk = $queryMasuk->latest()->get();
         }
 
-        if ($date) {
-            $query->whereDate('created_at', $date);
-        }
-
-        $barangMasuk = $query->latest()->get();
-
-        return view('Reportkepalatoko', compact('barangMasuk'));
+        return view('Reportkepalatoko', compact('barangMasuk', 'barangKeluar', 'activeTab'));
     }
 
     /**
