@@ -17,7 +17,7 @@
     
     <!-- Tombol Kembali -->
     <div class="mb-4">
-      <a href="{{ route('riwayat.transaksi') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1">
+      <a href="{{ Route::has('riwayat.transaksi') ? route('riwayat.transaksi') : url('/Riwayattransaksi') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1">
         <i class="fa-solid fa-arrow-left"></i> Kembali ke Riwayat
       </a>
     </div>
@@ -29,7 +29,7 @@
     <div class="space-y-4 text-sm">
       @foreach($transaksi->details as $detail)
       <div class="flex justify-between items-start gap-2">
-        <span class="text-gray-600 leading-snug">{{ $detail->product_name }} ({{ $detail->qty }}x)</span>
+        <span class="text-gray-600 leading-snug">{{ $detail->product_name }} ({{ $detail->quantity ?? $detail->qty ?? 1 }}x)</span>
         <span class="font-bold text-[#0F172A] whitespace-nowrap">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</span>
       </div>
       @endforeach
@@ -73,12 +73,18 @@
     <div class="space-y-2 text-xs">
       <div class="flex justify-between items-center">
         <span class="text-gray-500">ID Transaksi</span>
-        <span class="font-semibold text-gray-700">{{ $transaksi->code ?? 'TRX-'.$transaksi->id }}</span>
+        <span class="font-semibold text-gray-700">{{ $transaksi->invoice_number ?? $transaksi->code ?? ('TRX-'.$transaksi->id) }}</span>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-gray-500">Waktu Transaksi</span>
-        <span class="font-semibold text-gray-700">{{ $transaksi->created_at->format('d M Y, H:i') }} WIB</span>
+        <span class="font-semibold text-gray-700">
+          @if(!empty($transaksi->created_at))
+            {{ \Carbon\Carbon::parse($transaksi->created_at)->format('d M Y, H:i') }} WIB
+          @else
+            {{ $transaksi->waktu ?? '-' }}
+          @endif
+        </span>
       </div>
     </div>
   </div>

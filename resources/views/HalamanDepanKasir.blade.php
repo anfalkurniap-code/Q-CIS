@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Q-CIS E-Commerce</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -61,89 +62,63 @@
         </div>
         
         <div class="grid grid-cols-2 gap-3" id="featured-products-grid">
-          
-          <!-- Product 1 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative" data-category="minuman">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <svg class="w-12 h-24" viewBox="0 0 50 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="15" y="10" width="20" height="8" rx="2" fill="#2563EB"/>
-                <path d="M10 30C10 23.3726 15.3726 18 22 18H28C34.6274 18 40 23.3726 40 30V90C40 92.2091 38.2091 94 36 94H14C11.7909 94 10 92.2091 10 90V30Z" fill="#93C5FD" fill-opacity="0.6" stroke="#2563EB" stroke-width="2"/>
-                <rect x="10" y="45" width="30" height="15" fill="#3B82F6"/>
-              </svg>
+          @if(isset($featuredProducts) && count($featuredProducts) > 0)
+            @foreach($featuredProducts as $fp)
+            <a href="{{ url('/HalamanShop') }}" class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between relative hover:shadow-md transition group" data-category="{{ strtolower($fp->category->name ?? 'umum') }}">
+              <div class="bg-gray-50 h-36 flex items-center justify-center p-2 overflow-hidden">
+                <img src="{{ asset($fp->img) }}" alt="{{ $fp->name }}" class="h-28 max-w-full object-contain group-hover:scale-105 transition duration-300">
+              </div>
+              <div class="p-3">
+                <span class="product-category text-[10px] font-bold uppercase tracking-wider text-emerald-600 block mb-0.5">{{ $fp->category->name ?? 'Umum' }}</span>
+                <h4 class="product-title text-gray-800 text-sm font-semibold truncate">{{ $fp->name }}</h4>
+                <div class="flex items-center justify-between mt-1.5">
+                  <span class="text-xs font-bold text-emerald-700">Rp {{ number_format($fp->price, 0, ',', '.') }}</span>
+                  <span class="text-[10px] text-gray-400">Stok: {{ $fp->stock }}</span>
+                </div>
+              </div>
+            </a>
+            @endforeach
+          @else
+            <!-- Fallback Jika Tidak Ada Data Produk -->
+            <div class="col-span-2 text-center py-6 text-gray-500 text-xs">
+              Belum ada produk unggulan.
             </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-blue-600 block mb-0.5">Minuman</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Air Mineral 600ml</h4>
-            </div>
-          </div>
-
-          <!-- Product 2 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="makanan">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <svg class="w-16 h-16" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="15" width="50" height="40" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="2"/>
-                <path d="M5 25L30 5L55 25" stroke="#D97706" stroke-width="2" fill="#FEF3C7"/>
-              </svg>
-            </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-amber-600 block mb-0.5">Makanan</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Roti Coklat Lumer</h4>
-            </div>
-          </div>
-
-          <!-- Product 3 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="alat tulis">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <svg class="w-14 h-16" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="40" height="50" rx="3" fill="#F3F4F6" stroke="#4A5568" stroke-width="2"/>
-                <rect x="5" y="5" width="10" height="50" fill="#4A5568"/>
-                <line x1="20" y1="15" x2="38" y2="15" stroke="#9CA3AF" stroke-width="2"/>
-                <line x1="20" y1="25" x2="38" y2="25" stroke="#9CA3AF" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Buku Tulis Sidu</h4>
-            </div>
-          </div>
-
-          <!-- Product 4 -->
-          <div class="product-item bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between" data-category="alat tulis">
-            <div class="bg-[#EAEAEA] h-36 flex items-center justify-center p-2">
-              <svg class="w-6 h-20" viewBox="0 0 20 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="20" width="8" height="50" rx="1" fill="#1E293B"/>
-                <path d="M6 20L10 5L14 20H6Z" fill="#94A3B8"/>
-                <rect x="6" y="30" width="8" height="10" fill="#2563EB"/>
-              </svg>
-            </div>
-            <div class="p-3">
-              <span class="product-category text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-0.5">Alat Tulis</span>
-              <h4 class="product-title text-gray-800 text-sm font-semibold truncate">Pulpen Pilot 0.5</h4>
-            </div>
-          </div>
-
+          @endif
         </div>
       </section>
     </main>
 
     <!-- BOTTOM NAVBAR -->
-    <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 flex justify-around items-center z-50">
-      <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center justify-center bg-[#84FF95] text-[#006A33] px-5 py-1.5 rounded-xl font-bold text-xs gap-0.5">
-        <i data-lucide="home" class="w-5 h-5 stroke-[2.5]"></i>
-        <span>Home</span>
+    <nav class="absolute bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-100 px-6 py-2.5 flex justify-between items-center z-50">
+
+      <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center {{ Request::is('HalamanDepanKasir*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+        <div class="{{ Request::is('HalamanDepanKasir*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+          <i class="fa-solid fa-house {{ Request::is('HalamanDepanKasir*') ? 'text-sm' : 'text-lg' }}"></i>
+        </div>
+        <span class="text-[10px] {{ Request::is('HalamanDepanKasir*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Home</span>
       </a>
-      <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-        <span>Shop</span>
+
+      <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center {{ Request::is('HalamanShop*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+        <div class="{{ Request::is('HalamanShop*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+          <i class="fa-solid fa-bag-shopping {{ Request::is('HalamanShop*') ? 'text-sm' : 'text-lg' }}"></i>
+        </div>
+        <span class="text-[10px] {{ Request::is('HalamanShop*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Shop</span>
       </a>
-      <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-        <i data-lucide="receipt" class="w-5 h-5"></i>
-        <span>Trans</span>
+
+      <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center {{ Request::is('Riwayattransaksi*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+        <div class="{{ Request::is('Riwayattransaksi*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+          <i class="fa-solid fa-receipt {{ Request::is('Riwayattransaksi*') ? 'text-sm' : 'text-lg' }}"></i>
+        </div>
+        <span class="text-[10px] {{ Request::is('Riwayattransaksi*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Trans</span>
       </a>
-      <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-gray-800 text-[11px] font-medium gap-1">
-        <i data-lucide="user" class="w-5 h-5"></i>
-        <span>Profile</span>
+
+      <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center {{ Request::is('HalamanProfile*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+        <div class="{{ Request::is('HalamanProfile*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+          <i class="fa-solid fa-user {{ Request::is('HalamanProfile*') ? 'text-sm' : 'text-lg' }}"></i>
+        </div>
+        <span class="text-[10px] {{ Request::is('HalamanProfile*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
       </a>
+
     </nav>
 
   </div>
@@ -196,7 +171,6 @@
       });
     }
 
-    // Filter Produk berdasarkan Kategori
     function filterCategory(categoryName) {
       const productItems = document.querySelectorAll('.product-item');
       

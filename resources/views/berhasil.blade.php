@@ -9,6 +9,22 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
 
+    @php
+        // Ambil data transaksi dari session 'last_transaction' atau variabel $transaksi dari controller
+        $trxData = session('last_transaction', $transaksi ?? []);
+        
+        $cartItems = $trxData['cart_data'] ?? [];
+        if (is_string($cartItems)) {
+            $cartItems = json_decode($cartItems, true);
+        }
+
+        $subtotal = $trxData['subtotal'] ?? 0;
+        $discount = $trxData['discount'] ?? 0;
+        $totalPrice = $trxData['total_price'] ?? 0;
+        $cashAmount = $trxData['cash_amount'] ?? 0;
+        $kembalian = $cashAmount - $totalPrice;
+    @endphp
+
     <div class="w-full max-w-md bg-white min-h-screen flex flex-col justify-between p-5 shadow-2xl rounded-3xl border border-gray-200">
         
         <div>
@@ -29,7 +45,7 @@
                 <div class="mt-4 pt-3 border-t border-dashed border-emerald-200">
                     <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Pembayaran</p>
                     <p class="text-2xl font-black text-emerald-800 mt-0.5">
-                        Rp {{ number_format(session('total_price', $total_price ?? 0), 0, ',', '.') }}
+                        Rp {{ number_format($totalPrice, 0, ',', '.') }}
                     </p>
                 </div>
             </div>
@@ -39,19 +55,16 @@
                 <h3 class="font-bold text-gray-800 mb-3 text-sm">Ringkasan Pesanan</h3>
 
                 <div class="space-y-2.5 mb-4">
-                    @php
-                        // Membaca data item dari session atau variabel controller
-                        $cartItems = session('cart_data', $cartItems ?? []);
-                        if (is_string($cartItems)) {
-                            $cartItems = json_decode($cartItems, true);
-                        }
-                    @endphp
-
                     @forelse($cartItems as $item)
+                        @php
+                            $nama = $item['nama'] ?? $item['name'] ?? 'Produk';
+                            $qty = $item['qty'] ?? $item['jumlah'] ?? $item['quantity'] ?? 1;
+                            $harga = $item['harga'] ?? $item['price'] ?? 0;
+                        @endphp
                         <div class="flex justify-between items-center text-gray-600">
-                            <span>{{ $item['nama'] ?? $item['name'] }} ({{ $item['qty'] ?? $item['quantity'] }}x)</span>
+                            <span>{{ $nama }} ({{ $qty }}x)</span>
                             <span class="font-semibold text-gray-800">
-                                Rp {{ number_format(($item['harga'] ?? $item['price']) * ($item['qty'] ?? $item['quantity']), 0, ',', '.') }}
+                                Rp {{ number_format($harga * $qty, 0, ',', '.') }}
                             </span>
                         </div>
                     @empty
@@ -63,18 +76,28 @@
                 <div class="border-t border-gray-200 pt-3 space-y-1.5 text-gray-500">
                     <div class="flex justify-between">
                         <span>Subtotal</span>
-                        <span>Rp {{ number_format(session('subtotal', $subtotal ?? 0), 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </div>
-                    <div class="flex justify-between text-red-500">
-                        <span>Diskon</span>
-                        <span>-Rp {{ number_format(session('discount', $discount ?? 0), 0, ',', '.') }}</span>
+                    @if($discount > 0)
+                        <div class="flex justify-between text-red-500">
+                            <span>Diskon</span>
+                            <span>-Rp {{ number_format($discount, 0, ',', '.') }}</span>
+                        </div>
+                    @endif
+                    <div class="flex justify-between">
+                        <span>Uang Diterima</span>
+                        <span>Rp {{ number_format($cashAmount, 0, ',', '.') }}</span>
                     </div>
-                </div> 77
+                    <div class="flex justify-between text-emerald-700 font-medium">
+                        <span>Kembalian</span>
+                        <span>Rp {{ number_format(max(0, $kembalian), 0, ',', '.') }}</span>
+                    </div>
+                </div>
 
                 <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between font-bold text-sm text-gray-800">
                     <span>Total Akhir</span>
                     <span class="text-emerald-700">
-                        Rp {{ number_format(session('total_price', $total_price ?? 0), 0, ',', '.') }}
+                        Rp {{ number_format($totalPrice, 0, ',', '.') }}
                     </span>
                 </div>
 
@@ -82,21 +105,21 @@
                 <div class="border-t border-gray-200 pt-3 mt-3 space-y-1 text-[11px] text-gray-400">
                     <div class="flex justify-between">
                         <span>ID Transaksi</span>
-                        <span class="font-mono text-gray-600">{{ session('trx_id', $trx_id ?? 'TRX-'.time()) }}</span>
+                        <span class="font-mono text-gray-600">{{ $trxData['trx_id'] ?? 'TRX-'.time() }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Metode Pembayaran</span>
-                        <span class="uppercase font-semibold text-gray-600">{{ session('payment_method', 'CASH') }}</span>
+                        <span class="uppercase font-semibold text-gray-600">{{ $trxData['payment_method'] ?? 'CASH' }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Waktu Transaksi</span>
-                        <span class="text-gray-600">{{ session('waktu', now()->format('d M Y, H:i')) }}</span>
+                        <span class="text-gray-600">{{ $trxData['waktu'] ?? now()->format('d M Y, H:i') }}</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tombol Selesai (Struktur Tag Diperbaiki) -->
+        <!-- Tombol Selesai -->
         <div class="mt-6 mb-2">
             <a href="{{ url('/HalamanShop') }}" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl block text-center shadow-lg shadow-emerald-600/20 transition">
                 Selesai
@@ -105,5 +128,11 @@
 
     </div>
 
+    <script>
+        // Hapus isi keranjang di localStorage saat halaman berhasil dibuka
+        document.addEventListener('DOMContentLoaded', function() {
+            localStorage.removeItem('cartItems');
+        });
+    </script>
 </body>
 </html>

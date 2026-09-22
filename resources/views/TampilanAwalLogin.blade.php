@@ -19,17 +19,15 @@
     <div class="w-full max-w-[390px] bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden p-6 flex flex-col gap-6">
         
         <!-- Header -->
-        <header class="flex justify-between items-center w-full">
+        <header class="flex justify-start items-center w-full">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 bg-[#E8F5E9] border border-[#A5D6A7] rounded-md flex items-center justify-center">
                     <div class="w-2 h-2 bg-[#2E7D32] rounded-[2px]"></div>
                 </div>
                 <span class="text-base font-bold text-[#1A2E22]">Q-CIS</span>
             </div>
-
         </header>
         </header> 
-
         <!-- Welcome Section -->
         <section class="text-center my-2">
             <h1 class="text-[26px] font-extrabold text-[#1A2E22] leading-tight tracking-wide">

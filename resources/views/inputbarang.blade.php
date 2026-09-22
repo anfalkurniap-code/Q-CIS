@@ -209,22 +209,51 @@
                         </div>
                     </div>
 
-                    <!-- Bukti Nota / Resi -->
+                    <!-- Foto / Gambar Produk (Terhubung ke Kasir) -->
                     <div>
-                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">BUKTI NOTA / RESI</label>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase">FOTO / GAMBAR PRODUK</label>
+                            <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                <i class="fa-solid fa-store mr-0.5"></i> Tampil di Kasir
+                            </span>
+                        </div>
                         
-                        <div onclick="openChoiceModal()" class="w-full border-2 border-dashed border-slate-200 bg-[#f1f5f9]/60 hover:bg-[#e2e8f0]/60 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition min-h-[120px] relative overflow-hidden">
+                        <div onclick="openChoiceModal()" class="w-full border-2 border-dashed border-emerald-300/80 bg-emerald-50/30 hover:bg-emerald-50/60 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition min-h-[130px] relative overflow-hidden group">
                             
-                            <div id="default-ui" class="flex flex-col items-center justify-center">
-                                <i class="fa-solid fa-camera-retro text-2xl text-slate-400 mb-1.5"></i>
-                                <span class="text-xs font-semibold text-slate-500">Ketuk untuk Ambil / Pilih Foto</span>
+                            <div id="default-ui" class="flex flex-col items-center justify-center text-center">
+                                <div class="w-11 h-11 bg-emerald-100/80 text-[#024d35] rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-camera text-lg"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-700">Ketuk untuk Ambil / Pilih Foto Produk</span>
+                                <p class="text-[10px] text-slate-400 mt-0.5">Kamera HP/Webcam atau Galeri (Maks. 2MB)</p>
                             </div>
 
-                            <img id="image-preview" src="#" alt="Preview Foto" class="hidden w-full h-36 object-cover rounded-xl shadow-sm">
+                            <img id="image-preview" src="#" alt="Preview Foto Produk" class="hidden w-full h-44 object-cover rounded-xl shadow-sm">
+                            
+                            <div id="preview-overlay" class="hidden absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                                <button type="button" onclick="event.stopPropagation(); openChoiceModal();" class="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg shadow hover:bg-slate-50">
+                                    <i class="fa-solid fa-arrow-rotate-right mr-1"></i> Ganti
+                                </button>
+                                <button type="button" onclick="event.stopPropagation(); removePhoto();" class="px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-lg shadow hover:bg-red-600">
+                                    <i class="fa-solid fa-trash mr-1"></i> Hapus
+                                </button>
+                            </div>
                         </div>
 
-                        <input type="file" id="input-galeri" name="receipt_image" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
+                        <input type="file" id="input-galeri" name="image" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
 
+                        @error('image') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Bukti Nota / Resi (Opsional) -->
+                    <div>
+                        <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">BUKTI NOTA / RESI (OPSIONAL)</label>
+                        <input 
+                            type="file" 
+                            name="receipt_image" 
+                            accept="image/*" 
+                            class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-600 px-3 py-2 rounded-xl file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+                        />
                         @error('receipt_image') <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p> @enderror
                     </div>
 
@@ -394,6 +423,7 @@
             const canvas = document.getElementById('webcam-canvas');
             const imagePreview = document.getElementById('image-preview');
             const defaultUI = document.getElementById('default-ui');
+            const previewOverlay = document.getElementById('preview-overlay');
             const fileInput = document.getElementById('input-galeri');
 
             canvas.width = video.videoWidth;
@@ -402,7 +432,7 @@
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             canvas.toBlob((blob) => {
-                const file = new File([blob], "bukti_nota.jpg", { type: "image/jpeg" });
+                const file = new File([blob], "produk_" + Date.now() + ".jpg", { type: "image/jpeg" });
                 
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
@@ -410,6 +440,7 @@
 
                 imagePreview.src = URL.createObjectURL(blob);
                 imagePreview.classList.remove('hidden');
+                if (previewOverlay) previewOverlay.classList.remove('hidden');
                 defaultUI.classList.add('hidden');
 
                 stopCamera();
@@ -419,16 +450,33 @@
         function handleFileSelect(input) {
             const defaultUI = document.getElementById('default-ui');
             const imagePreview = document.getElementById('image-preview');
+            const previewOverlay = document.getElementById('preview-overlay');
 
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
+                    if (previewOverlay) previewOverlay.classList.remove('hidden');
                     defaultUI.classList.add('hidden');
                 }
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+
+        function removePhoto() {
+            const fileInput = document.getElementById('input-galeri');
+            const imagePreview = document.getElementById('image-preview');
+            const defaultUI = document.getElementById('default-ui');
+            const previewOverlay = document.getElementById('preview-overlay');
+
+            if (fileInput) fileInput.value = '';
+            if (imagePreview) {
+                imagePreview.src = '#';
+                imagePreview.classList.add('hidden');
+            }
+            if (previewOverlay) previewOverlay.classList.add('hidden');
+            if (defaultUI) defaultUI.classList.remove('hidden');
         }
     </script>
 

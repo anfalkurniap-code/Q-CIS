@@ -39,9 +39,8 @@
       </div>
 
       <div class="flex items-center gap-3">
-    
-        <!-- Avatar Header Kanan (Otomatis Sync dari Session) -->
-        <img id="header-avatar" src="{{ session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Header Avatar" class="w-9 h-9 rounded-full object-cover border border-gray-200">
+        <!-- Avatar Header Kanan (Database Utama) -->
+        <img id="header-avatar" src="{{ ($user->avatar ?? null) ? asset('storage/'.$user->avatar) : session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Header Avatar" class="w-9 h-9 rounded-full object-cover border border-gray-200">
       </div>
     </div>
 
@@ -50,34 +49,33 @@
       <!-- Card Profil Utama -->
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
         <div class="relative mb-3">
-          <!-- Avatar Utama (Otomatis Sync dari Session) -->
-          <img id="main-avatar" src="{{ session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Avatar User" class="w-28 h-28 rounded-full object-cover border-4 border-slate-50 shadow-inner">
+          <!-- Avatar Utama (Database Utama) -->
+          <img id="main-avatar" src="{{ ($user->avatar ?? null) ? asset('storage/'.$user->avatar) : session('user_dummy.avatar', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300') }}" alt="Avatar User" class="w-28 h-28 rounded-full object-cover border-4 border-slate-50 shadow-inner">
 
           <!-- Input Tersembunyi untuk Upload Foto Profil -->
           <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="previewImage(event)">
         </div>
 
-        <!-- Input Nama / Teks Nama (Mengambil dari Session Terbaru) -->
+        <!-- Info Profil Mengutamakan Database ($user) -->
         <div class="w-full flex flex-col justify-center items-center">
           <h2 id="nama-user" class="text-xl font-bold text-slate-800 outline-none rounded-lg px-2 py-0.5 border border-transparent transition-all">
-            {{ session('user_dummy.name', 'Budi Santoso') }}
+            {{ $user->name ?? session('user_dummy.name', 'Budi Santoso') }}
           </h2>
           
-          <!-- Info Sub-Profil Tambahan (Email, No HP, Kelas, Jurusan) -->
           <p id="email-user" class="text-xs text-slate-400 mt-0.5">
-            {{ session('user_dummy.email', 'budi.santoso@smk-qcis.sch.id') }}
+            {{ $user->email ?? session('user_dummy.email', 'budi.santoso@smk-qcis.sch.id') }}
           </p>
 
           <p class="text-[11px] text-slate-400 font-medium mt-0.5">
-            {{ session('user_dummy.phone', '+62 812-3456-7890') }}
+            {{ $user->phone ?? session('user_dummy.phone', '+62 812-3456-7890') }}
           </p>
 
           <div class="flex items-center gap-2 mt-2">
             <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-100">
-              Kelas {{ session('user_dummy.class', 'XI') }}
+              Kelas {{ $user->class ?? session('user_dummy.class', 'XI') }}
             </span>
             <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md">
-              {{ session('user_dummy.major', 'Rekayasa Perangkat Lunak') }}
+              {{ $user->major ?? session('user_dummy.major', 'Rekayasa Perangkat Lunak') }}
             </span>
           </div>
         </div>
@@ -164,10 +162,13 @@
       </div>
 
       <!-- Tombol Keluar Sesi -->
-      <a href="{{ url('/loginKasir') }}" class="w-full bg-red-100/80 hover:bg-red-200/80 text-red-500 font-bold p-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm transition-colors active:scale-98">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        Keluar Sesi
-      </a>
+      <form action="{{ route('logout') }}" method="POST" class="w-full">
+        @csrf
+        <button type="submit" class="w-full bg-red-100/80 hover:bg-red-200/80 text-red-500 font-bold p-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm transition-colors active:scale-98">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          Keluar Sesi
+        </button>
+      </form>
 
     </div>
 
@@ -201,50 +202,8 @@
 
   </div>
 
-  <!-- Script JavaScript (Sudah Bersih dari localStorage) -->
+  <!-- Script JavaScript -->
   <script>
-    function toggleEditNama() {
-      const namaEl = document.getElementById('nama-user');
-      const editBtn = document.getElementById('edit-btn');
-      const editIcon = document.getElementById('edit-icon');
-
-      if (namaEl.contentEditable === "true") {
-        namaEl.contentEditable = "false";
-
-        namaEl.classList.remove('bg-emerald-50', 'border-emerald-400', 'ring-2', 'ring-emerald-200');
-        namaEl.classList.add('border-transparent');
-
-        editIcon.className = "fa-solid fa-pen text-xs";
-        editBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-        editBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
-
-        showToast();
-      } else {
-        namaEl.contentEditable = "true";
-        namaEl.focus();
-
-        const range = document.createRange();
-        range.selectNodeContents(namaEl);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-
-        namaEl.classList.remove('border-transparent');
-        namaEl.classList.add('bg-emerald-50', 'border-emerald-400', 'ring-2', 'ring-emerald-200');
-
-        editIcon.className = "fa-solid fa-check text-xs";
-        editBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
-        editBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
-      }
-    }
-
-    document.getElementById('nama-user').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        toggleEditNama();
-      }
-    });
-
     function previewImage(event) {
       const reader = new FileReader();
       reader.onload = function() {

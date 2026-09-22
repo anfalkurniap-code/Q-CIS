@@ -30,6 +30,16 @@
             background: #f8f9fa;
         }
 
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border: 1px solid #f5c6cb;
+        }
+
         .card{background:#fff;border-radius:8px;padding:15px;margin-bottom:15px;box-shadow:0 1px 5px rgba(0,0,0,.1);}
         .title{font-size:11px;color:#777;font-weight:bold;margin-bottom:15px;text-transform:uppercase;}
         .right{float:right;font-weight:normal;}
@@ -72,6 +82,13 @@
             <i class="fa-solid fa-arrow-left"></i> Kembali
         </a>
 
+        <!-- Notifikasi jika ada Error dari Server / Controller -->
+        @if(session('error'))
+            <div class="alert-error">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
+            </div>
+        @endif
+
         <div class="card">
             <div class="title">RINCIAN PESANAN<span class="right" id="totalItemsText">0 Items</span></div>
             <div id="cartItemsContainer"></div>
@@ -82,7 +99,7 @@
             <div id="sectionCash">
                 <div class="input-group">
                     <label for="cashAmount">Jumlah Uang Diterima (Rp):</label>
-                    <input type="number" id="cashAmount" name="cash_amount" placeholder="Masukkan nominal, misal: 20000" oninput="calculateChange()">
+                    <input type="number" id="cashAmount" name="cash_amount" placeholder="Masukkan nominal, misal: 20000" oninput="calculateChange()" value="{{ old('cash_amount') }}">
                 </div>
                 <div class="change-box">
                     <span>Uang Kembalian:</span>
@@ -95,7 +112,7 @@
             <div class="title">RINGKASAN</div>
             <div class="summary"><span>Subtotal</span><span id="subtotalText">Rp 0</span></div>
             <div class="total"><strong>Total</strong><h2 id="totalText">Rp 0</h2></div>
-            <button type="button" class="btn-submit" onclick="processPayment()">
+            <button type="button" class="btn-submit" id="btnSubmit" onclick="processPayment()">
                 <i class="fa-solid fa-circle-check"></i> Selesaikan Pembayaran
             </button>
         </div>
@@ -128,13 +145,22 @@
             container.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kamu kosong.</p>';
         } else {
             cart.forEach((item, index) => {
+                const itemId = item.id || null;
                 const itemNama = item.nama || item.name || 'Produk';
                 const itemHarga = parseFloat(item.harga || item.price || 0);
-                const itemQty = parseInt(item.qty || item.quantity || 1);
+                const itemQty = parseInt(item.qty || item.jumlah || item.quantity || 1);
 
                 const itemTotal = itemHarga * itemQty;
                 subtotal += itemTotal;
                 totalCount += itemQty;
+
+                // Pastikan struktur item di memori rapi
+                cart[index] = {
+                    id: itemId,
+                    nama: itemNama,
+                    harga: itemHarga,
+                    qty: itemQty
+                };
 
                 const itemHTML = `
                     <div class="item">
@@ -151,15 +177,14 @@
             });
         }
 
-        // Total harga sekarang sama dengan subtotal
         totalPrice = subtotal;
 
-        // Update UI
+        // Update UI Text
         document.getElementById('totalItemsText').innerText = `${totalCount} Items`;
         document.getElementById('subtotalText').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
         document.getElementById('totalText').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         
-        // Update input hidden untuk Laravel
+        // Update input hidden untuk dikirim ke Laravel Controller
         document.getElementById('subtotalInput').value = subtotal;
         document.getElementById('discountInput').value = 0;
         document.getElementById('totalPriceInput').value = totalPrice;
@@ -202,14 +227,11 @@
             return;
         }
 
-        const btnSubmit = document.querySelector('.btn-submit');
+        const btnSubmit = document.getElementById('btnSubmit');
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
-        setTimeout(() => {
-            localStorage.removeItem('cartItems');
-        }, 100);
-
+        // Submit form pembayaran
         document.getElementById('paymentForm').submit();
     }
 </script>

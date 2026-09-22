@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Models\Transaction; // Menggunakan model Transaction agar konsisten
 
 class TransactionController extends Controller
 {
@@ -34,10 +34,12 @@ class TransactionController extends Controller
     }
 
     // Menampilkan detail transaksi berdasarkan ID
-    public function show($id)
+    public function show($id = null)
     {
-        $transaksi = Transaction::with('details')->findOrFail($id);
+        $transaksi = $id
+            ? Transaction::with('details')->findOrFail($id)
+            : Transaction::with('details')->latest()->firstOrFail();
 
-        return view('ringkasan_pesanan', compact('transaksi'));
+        return view('Ringkasanpesanan', compact('transaksi'));
     }
 }
