@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             // Cek terlebih dahulu apakah kolom category_id belum ada
-            if (!Schema::hasColumn('products', 'category_id')) {
+            if (! Schema::hasColumn('products', 'category_id')) {
                 $table->foreignId('category_id')->nullable()->after('id')->constrained()->nullOnDelete();
             }
         });

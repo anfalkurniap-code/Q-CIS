@@ -19,7 +19,7 @@ class AuthGudangController extends Controller
     {
         // 1. Validasi input
         $credentials = $request->validate([
-            'login'    => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 

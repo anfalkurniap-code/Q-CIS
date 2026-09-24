@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Hash;
 uses(RefreshDatabase::class);
 
 test('halaman keamanan akun can be rendered', function () {
-    $response = $this->get(route('keamanan.index'));
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('keamanan.index'));
 
     $response->assertSuccessful();
     $response->assertSee('Ubah Kata Sandi');

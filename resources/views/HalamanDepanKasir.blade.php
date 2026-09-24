@@ -24,10 +24,6 @@
         <div class="text-[#107C41] font-bold text-xl tracking-wide">Q-CIS</div>
         <div class="flex items-center gap-4 text-gray-700">
           
-          <button id="btn-toggle-search" onclick="toggleSearch()" class="p-1 hover:text-[#107C41] transition">
-            <i data-lucide="search" class="w-6 h-6 stroke-[2.5]"></i>
-          </button>
-          
           <a href="{{ url('/HalamanKeranjang') }}" class="relative p-1 hover:text-[#107C41] transition">
             <i data-lucide="shopping-cart" class="w-6 h-6 stroke-[2.5]"></i>
             <span id="badge-cart-header" class="absolute -top-1.5 -right-1.5 bg-[#D32F2F] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
@@ -78,13 +74,33 @@
               </div>
             </a>
             @endforeach
-          @else
-            <!-- Fallback Jika Tidak Ada Data Produk -->
-            <div class="col-span-2 text-center py-6 text-gray-500 text-xs">
-              Belum ada produk unggulan.
-            </div>
           @endif
+        </div>       
+        <!-- Grid Gambar Dummy -->
+        <div class="grid grid-cols-2 gap-3">
+          
+          <!-- Gambar 1 -->
+          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm transition-transform hover:scale-[1.02]">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80" alt="Produk 1" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Gambar 2 -->
+          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm transition-transform hover:scale-[1.02]">
+            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Produk 2" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Gambar 3 -->
+          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm transition-transform hover:scale-[1.02]">
+            <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80" alt="Produk 3" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Gambar 4 -->
+          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm transition-transform hover:scale-[1.02]">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80" alt="Produk 4" class="w-full h-full object-cover">
+          </div>
+
         </div>
+
       </section>
     </main>
 

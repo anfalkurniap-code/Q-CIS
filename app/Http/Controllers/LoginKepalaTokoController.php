@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +15,7 @@ class LoginKepalaTokoController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'login'    => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -24,11 +23,12 @@ class LoginKepalaTokoController extends Controller
 
         $credentials = [
             $fieldType => $request->login,
-            'password'  => $request->password,
+            'password' => $request->password,
         ];
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended('/dashboardkepalatoko');
         }
 

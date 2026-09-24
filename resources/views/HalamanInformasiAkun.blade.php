@@ -25,13 +25,13 @@
   <!-- Mobile Container Wrapper -->
   <div class="w-full max-w-md bg-[#F8FAFC] min-h-screen pb-28 relative px-4 pt-4">
 
-    <!-- Form Pembungkus Utama (Membungkus Seluruh Halaman) -->
+    <!-- Form Pembungkus Utama -->
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
       @csrf
+      @method('PUT')
 
       <!-- Top Navigation / Back Button -->
       <div class="w-full bg-[#F8FAFC]">
-        <!-- 1. Section Top Bar (Tombol Kembali + Garis Bawah) -->
         <div class="px-2 py-3 border-b border-gray-200">
             <a href="/HalamanProfile" class="inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -41,7 +41,6 @@
             </a>
         </div>
 
-        <!-- 2. Section Judul & Deskripsi -->
         <div class="px-2 pt-6 pb-4">
             <h1 class="text-2xl font-bold text-[#0F172A] tracking-tight mb-2">
                 Informasi Akun
@@ -67,19 +66,22 @@
           <div class="relative mb-4">
             <!-- Container Foto Profil -->
             <div class="w-28 h-28 rounded-full border-4 border-slate-100 overflow-hidden bg-slate-200 flex items-center justify-center">
-              <img id="avatar-preview" src="{{ session('user_dummy.avatar', $user->avatar_url ?? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300') }}" alt="Avatar" class="w-full h-full object-cover" />
+              <img id="avatar-preview" 
+                   src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300' }}" 
+                   alt="Avatar" 
+                   class="w-full h-full object-cover" />
             </div>
             
-            <!-- Tombol Edit Pensil Hijau Bulat -->
+            <!-- Tombol Edit Foto -->
             <label for="avatar_input" class="absolute bottom-1 right-1 bg-[#10B981] hover:bg-emerald-600 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95">
               <i class="fa-solid fa-pen text-xs"></i>
             </label>
             <input type="file" id="avatar_input" name="avatar" class="hidden" accept="image/*" onchange="previewAvatar(event)" />
           </div>
 
-          <!-- Nama Lengkap Top Card -->
+          <!-- Nama Lengkap Top Card (Langsung dari Database) -->
           <h2 class="text-xl font-bold text-[#0F172A] tracking-tight">
-            {{ session('user_dummy.name', $user->name ?? 'Budi Santoso') }}
+            {{ $user->name }}
           </h2>
         </section>
 
@@ -89,11 +91,11 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <span class="text-[11px] text-slate-500 font-medium block">Saldo</span>
-              <span class="text-base font-bold text-[#10B981] mt-0.5 block">Rp{{ isset($user->balance) ? number_format($user->balance, 0, ',', '.') : '120k' }}</span>
+              <span class="text-base font-bold text-[#10B981] mt-0.5 block">Rp{{ number_format($user->balance ?? 0, 0, ',', '.') }}</span>
             </div>
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <span class="text-[11px] text-slate-500 font-medium block">Poin</span>
-              <span class="text-base font-bold text-slate-800 mt-0.5 block">{{ $user->points ?? '840' }}</span>
+              <span class="text-base font-bold text-slate-800 mt-0.5 block">{{ $user->points ?? '0' }}</span>
             </div>
           </div>
         </section>
@@ -112,7 +114,7 @@
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Nama Lengkap</label>
               <div class="relative">
-                <input type="text" name="name" value="{{ session('user_dummy.name', old('name', $user->name ?? 'Budi Santoso')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
+                <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
                 <i class="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -121,7 +123,7 @@
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Email Sekolah</label>
               <div class="relative">
-                <input type="email" name="email" value="{{ session('user_dummy.email', old('email', $user->email ?? 'budi.santoso@smk-qcis.sch.id')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
+                <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" required />
                 <i class="fa-regular fa-envelope absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -130,12 +132,14 @@
             <div>
               <label class="block text-[11px] font-medium text-slate-600 mb-1">Nomor Telepon</label>
               <div class="relative">
-                <input type="text" name="phone" value="{{ session('user_dummy.phone', old('phone', $user->phone ?? '+62 812-3456-7890')) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" />
+                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500 transition-colors" />
                 <i class="fa-solid fa-phone absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               </div>
             </div>
+          </div>
+        </section>
 
-      </main> <!-- Penutup tag main (ditambahkan karena sebelumnya hilang) -->
+      </main>
         
       <!-- Bottom Sticky Save Button -->
       <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 flex justify-center z-10">
@@ -147,7 +151,7 @@
         </div>
       </div>
 
-    </form> <!-- Penutup Form Utama -->
+    </form>
 
   </div>
 

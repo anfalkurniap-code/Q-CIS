@@ -178,10 +178,10 @@
               </a>
 
               <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center {{ Request::is('HalamanProfile*') ? 'text-emerald-600' : 'text-slate-400' }} gap-0.5">
-                <div class="{{ Request::is('HalamanProfile*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+                <div class="{{ Request::is('HalamanProfile') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
                   <i class="fa-solid fa-user {{ Request::is('HalamanProfile*') ? 'text-sm' : 'text-lg' }}"></i>
                 </div>
-                <span class="text-[10px] {{ Request::is('HalamanProfile*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
+                <span class="text-[10px] {{ Request::is('HalamanProfile') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
               </a>
 
             </div>
