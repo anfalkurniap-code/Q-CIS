@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'gudang@gmail.com'],
             [
-                'name'     => 'Dimas Aditia Ananda',
+                'name' => 'Dimas Aditia Ananda',
                 'username' => 'gudang',
                 'password' => Hash::make('12345678'),
-                'role'     => 'gudang',
+                'role' => 'gudang',
             ]
         );
 
@@ -28,10 +28,10 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'kasir@gmail.com'],
             [
-                'name'     => 'Petugas Kasir',
+                'name' => 'Petugas Kasir',
                 'username' => 'kasir',
                 'password' => Hash::make('12345678'),
-                'role'     => 'kasir',
+                'role' => 'kasir',
             ]
         );
 
@@ -39,10 +39,10 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'kepala@smkmart.com'],
             [
-                'name'     => 'Kepala Toko',
+                'name' => 'Kepala Toko',
                 'username' => 'kepalatoko',
                 'password' => Hash::make('password123'),
-                'role'     => 'kepala_toko',
+                'role' => 'kepala_toko',
             ]
         );
 

@@ -22,4 +22,13 @@ class TransactionDetail extends Model
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
     }
+<<<<<<< HEAD
 }
+=======
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+}
+>>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5

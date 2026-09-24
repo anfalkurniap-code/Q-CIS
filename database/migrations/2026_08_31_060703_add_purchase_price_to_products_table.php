@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             // Pengecekan ini wajib ada agar tidak error Duplicate Column
-            if (!Schema::hasColumn('products', 'purchase_price')) {
+            if (! Schema::hasColumn('products', 'purchase_price')) {
                 $table->decimal('purchase_price', 15, 2)->default(0)->after('stock');
             }
         });

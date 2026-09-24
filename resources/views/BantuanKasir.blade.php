@@ -31,9 +31,6 @@
                         <p class="text-[9px] text-gray-500 font-medium uppercase tracking-wider">Mart Management</p>
                     </div>
                 </div>
-                <button class="text-gray-700 p-1">
-                    <i class="ri-menu-line text-xl"></i>
-                </button>
             </header>
 
             <!-- Main Content Area -->
@@ -211,13 +208,6 @@
                     <a href="#" class="text-emerald-600 font-medium underline">Kebijakan Privasi</a>
                 </div>
             </footer>
-        </div>
-
-        <!-- Floating Action Button (Kanan Bawah) -->
-        <div class="fixed bottom-4 right-4 z-50 max-w-md mx-auto">
-            <button class="w-12 h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg transition transform active:scale-95">
-                <i class="ri-shopping-bag-line text-xl"></i>
-            </button>
         </div>
 
     </div>

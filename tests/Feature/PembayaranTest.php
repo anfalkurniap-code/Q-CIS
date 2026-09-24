@@ -1,13 +1,22 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
 it('dapat menampilkan halaman pembayaran', function () {
-    $response = $this->get(route('pembayaran.index'));
+    $user = User::factory()->create(['role' => 'kasir']);
+
+    $response = $this->actingAs($user)->get(route('pembayaran.index'));
 
     $response->assertSuccessful();
 });
 
 it('route pembayaran.proses dapat diakses untuk memproses transaksi', function () {
-    $response = $this->post(route('pembayaran.proses'), [
+    $user = User::factory()->create(['role' => 'kasir']);
+
+    $response = $this->actingAs($user)->post(route('pembayaran.proses'), [
         'cart_data' => json_encode([]),
         'payment_method' => 'cash',
         'subtotal' => 10000,

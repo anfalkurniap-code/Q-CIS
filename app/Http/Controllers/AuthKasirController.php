@@ -11,7 +11,7 @@ class AuthKasirController extends Controller
     {
         // 1. Validasi input dari form
         $request->validate([
-            'login'    => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -31,15 +31,15 @@ class AuthKasirController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            
+
             // Mengubah role menjadi huruf kecil dan menghapus spasi ekstra agar lebih aman
             $role = strtolower(trim($user->role ?? ''));
 
             // 5. Arahkan ke halaman sesuai role
             if ($role === 'kasir') {
                 return redirect()->route('dashboard.kasir');
-            } 
-            
+            }
+
             if ($role === 'gudang') {
                 return redirect()->route('dashboard.gudang');
             }

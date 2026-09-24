@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // Tabel Transactions (Header)
-        if (!Schema::hasTable('transactions')) {
+        if (! Schema::hasTable('transactions')) {
             Schema::create('transactions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
@@ -22,7 +22,7 @@ return new class extends Migration
         }
 
         // Tabel Transaction Details (Rincian Item)
-        if (!Schema::hasTable('transaction_details')) {
+        if (! Schema::hasTable('transaction_details')) {
             Schema::create('transaction_details', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade');

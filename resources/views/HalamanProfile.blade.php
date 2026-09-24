@@ -69,17 +69,9 @@
           <p class="text-[11px] text-slate-400 font-medium mt-0.5">
             {{ $user->phone ?? session('user_dummy.phone', '+62 812-3456-7890') }}
           </p>
-
-          <div class="flex items-center gap-2 mt-2">
-            <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-100">
-              Kelas {{ $user->class ?? session('user_dummy.class', 'XI') }}
-            </span>
-            <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md">
-              {{ $user->major ?? session('user_dummy.major', 'Rekayasa Perangkat Lunak') }}
-            </span>
           </div>
         </div>
-
+        
       </div>
 
       <p class="text-xs font-semibold text-slate-400 tracking-wider px-1">Pengaturan Akun</p>
@@ -145,7 +137,7 @@
           </a>
 
           <!-- Tentang Aplikasi -->
-          <a href="#" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          <a href="{{ url('/Tentangaplikasi') }}" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div class="flex items-center gap-3.5">
               <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center">
                 <i class="fa-solid fa-circle-info text-lg"></i>

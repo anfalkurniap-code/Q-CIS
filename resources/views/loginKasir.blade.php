@@ -91,7 +91,7 @@
 
             <div class="text-center mt-8 text-xs">
                 <p class="text-gray-500 font-medium">Belum punya akses?</p>
-                <a href="#" class="text-emerald-700 font-bold hover:underline block mt-0.5">
+                <a href="Tampilanpendaftaran" class="text-emerald-700 font-bold hover:underline block mt-0.5">
                     Hubungi Admin Sekolah untuk Pendaftaran
                 </a>
             </div>

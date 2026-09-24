@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -26,13 +27,15 @@ class ShopController extends Controller
 
         // KATEGORI STATIS (Agar tidak error Query/Database Exception)
         $categories = collect([
-            (object)['id' => 1, 'name' => 'Minuman', 'slug' => 'minuman'],
-            (object)['id' => 2, 'name' => 'Makanan', 'slug' => 'makanan'],
-            (object)['id' => 3, 'name' => 'Alat Tulis', 'slug' => 'alat-tulis'],
-            (object)['id' => 4, 'name' => 'Seragam', 'slug' => 'seragam'],
+            (object) ['id' => 1, 'name' => 'Minuman', 'slug' => 'minuman'],
+            (object) ['id' => 2, 'name' => 'Makanan', 'slug' => 'makanan'],
+            (object) ['id' => 3, 'name' => 'Alat Tulis', 'slug' => 'alat-tulis'],
+            (object) ['id' => 4, 'name' => 'Seragam', 'slug' => 'seragam'],
         ]);
 
+        $user = Auth::user();
+
         // Kirim ke view
-        return view('HalamanShop', compact('products', 'categories'));
+        return view('HalamanShop', compact('products', 'categories', 'user'));
     }
 }
