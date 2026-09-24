@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BarangMasuk;
 use App\Models\Product;
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -16,44 +17,151 @@ class ReportkepalatokoController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $date = $request->input('date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $activeTab = $request->input('tab', 'masuk');
 
-        $barangMasuk = collect();
-        $barangKeluar = collect();
-
-        if ($activeTab === 'keluar') {
-            $queryKeluar = Transaction::with('details')->latest();
-
-            if ($search) {
-                $queryKeluar->where(function ($q) use ($search) {
-                    $q->where('invoice_number', 'like', "%{$search}%")
-                        ->orWhereHas('details', function ($dq) use ($search) {
-                            $dq->where('product_name', 'like', "%{$search}%");
-                        });
-                });
-            }
-
-            if ($date) {
-                $queryKeluar->whereDate('created_at', $date);
-            }
-
-            $barangKeluar = $queryKeluar->get();
-        } else {
-            $queryMasuk = BarangMasuk::query();
-
-            if ($search) {
-                $queryMasuk->where('nama_barang', 'like', "%{$search}%");
-            }
-
-            if ($date) {
-                $queryMasuk->whereDate('created_at', $date);
-            }
-
-            $barangMasuk = $queryMasuk->latest()->get();
+        // Fallback jika hanya input 'date' yang diisi
+        if (! $startDate && ! $endDate && $request->filled('date')) {
+            $startDate = $request->input('date');
+            $endDate = $request->input('date');
         }
 
-        return view('Reportkepalatoko', compact('barangMasuk', 'barangKeluar', 'activeTab'));
+        $queryMasuk = BarangMasuk::query();
+        if ($search) {
+            $queryMasuk->where('nama_barang', 'like', "%{$search}%");
+        }
+        if ($startDate) {
+            $queryMasuk->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryMasuk->whereDate('created_at', '<=', $endDate);
+        }
+        $allBarangMasuk = $queryMasuk->latest()->get();
+
+        $queryKeluar = Transaction::with('details')->latest();
+        if ($search) {
+            $queryKeluar->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                    ->orWhereHas('details', function ($dq) use ($search) {
+                        $dq->where('product_name', 'like', "%{$search}%");
+                    });
+            });
+        }
+        if ($startDate) {
+            $queryKeluar->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryKeluar->whereDate('created_at', '<=', $endDate);
+        }
+        $allBarangKeluar = $queryKeluar->get();
+
+        $barangMasuk = $activeTab === 'masuk' ? $allBarangMasuk : collect();
+        $barangKeluar = $activeTab === 'keluar' ? $allBarangKeluar : collect();
+
+        $summary = $this->calculateSummary($startDate, $endDate);
+
+        return view('Reportkepalatoko', compact(
+            'barangMasuk',
+            'barangKeluar',
+            'allBarangMasuk',
+            'allBarangKeluar',
+            'activeTab',
+            'summary',
+            'startDate',
+            'endDate'
+        ));
+    }
+
+    /**
+     * Export Laporan ke PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if (! $startDate && ! $endDate && $request->filled('date')) {
+            $startDate = $request->input('date');
+            $endDate = $request->input('date');
+        }
+
+        $queryMasuk = BarangMasuk::query();
+        if ($startDate) {
+            $queryMasuk->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryMasuk->whereDate('created_at', '<=', $endDate);
+        }
+        $barangMasuk = $queryMasuk->latest()->get();
+
+        $queryKeluar = Transaction::with('details')->latest();
+        if ($startDate) {
+            $queryKeluar->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryKeluar->whereDate('created_at', '<=', $endDate);
+        }
+        $barangKeluar = $queryKeluar->get();
+
+        $summary = $this->calculateSummary($startDate, $endDate);
+
+        $pdf = Pdf::loadView('pdf.report', compact('barangMasuk', 'barangKeluar', 'summary', 'startDate', 'endDate'));
+
+        $filename = 'Laporan-Q-CIS-SMK-MART';
+        if ($startDate || $endDate) {
+            $filename .= '-('.($startDate ?? 'awal').'-sd-'.($endDate ?? 'akhir').')';
+        }
+
+        return $pdf->download($filename.'.pdf');
+    }
+
+    /**
+     * Hitung Ringkasan Keuangan dan Unit
+     */
+    private function calculateSummary(?string $startDate, ?string $endDate): array
+    {
+        // Barang Masuk (Gudang)
+        $queryMasuk = BarangMasuk::query();
+        if ($startDate) {
+            $queryMasuk->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryMasuk->whereDate('created_at', '<=', $endDate);
+        }
+        $masukCollection = $queryMasuk->get();
+
+        $totalBarangMasuk = (int) $masukCollection->sum('jumlah');
+        $totalUangKeluar = (float) $masukCollection->sum(function ($item) {
+            $cost = $item->purchase_price > 0 ? $item->purchase_price : ($item->harga ?? 0);
+
+            return $cost * ($item->jumlah ?? 0);
+        });
+
+        // Barang Keluar (Kasir)
+        $queryKeluar = Transaction::with('details');
+        if ($startDate) {
+            $queryKeluar->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $queryKeluar->whereDate('created_at', '<=', $endDate);
+        }
+        $keluarCollection = $queryKeluar->get();
+
+        $totalBarangKeluar = (int) $keluarCollection->sum(function ($trx) {
+            return $trx->details->sum('quantity');
+        });
+        $totalUangMasuk = (float) $keluarCollection->sum('total_price');
+
+        $labaRugiNetto = $totalUangMasuk - $totalUangKeluar;
+
+        return [
+            'total_barang_masuk' => $totalBarangMasuk,
+            'total_barang_keluar' => $totalBarangKeluar,
+            'total_uang_masuk' => $totalUangMasuk,
+            'total_uang_keluar' => $totalUangKeluar,
+            'laba_rugi_netto' => $labaRugiNetto,
+        ];
     }
 
     /**

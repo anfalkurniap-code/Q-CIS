@@ -39,6 +39,10 @@ Route::get('/tampilan-awal', function () {
     return view('TampilanAwalLogin');
 });
 
+Route::get('/TampilanAwalLogin', function () {
+    return view('TampilanAwalLogin');
+});
+
 Route::get('/belajar', function () {
     return view('belajar');
 });
@@ -124,6 +128,7 @@ Route::post('/profile-kepalatoko/update-password', [profilekepalatokoController:
 Route::post('/profile-kepalatoko/update', [profilekepalatokoController::class, 'updateProfile']);
 
 Route::get('/report-kepalatoko', [ReportkepalatokoController::class, 'index'])->name('report.kepalatoko');
+Route::get('/report-kepalatoko/pdf', [ReportkepalatokoController::class, 'exportPdf'])->name('report.pdf');
 
 Route::get('/Reportkepalatoko', [ReportkepalatokoController::class, 'index']);
 
