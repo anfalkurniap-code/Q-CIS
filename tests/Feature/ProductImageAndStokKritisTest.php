@@ -4,6 +4,7 @@ use App\Http\Controllers\ReportkepalatokoController;
 use App\Models\BarangMasuk;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +19,11 @@ test('halaman stok kritis dapat diakses tanpa error view not found', function ()
 });
 
 test('halaman kasir shop dapat diakses dan menampilkan katalog', function () {
-    $response = $this->get('/shop');
+    $user = User::factory()->create(['role' => 'kasir']);
 
-    $response->assertStatus(200);
+    $response = $this->actingAs($user)->get('/shop');
+
+    $response->assertSuccessful();
     $response->assertViewIs('HalamanShop');
     $response->assertViewHas('products');
 });
@@ -68,8 +71,9 @@ test('bisa menginput produk dengan gambar dan langsung tersimpan ke database ser
     expect($product->image_url)->toContain('storage/'.$product->image);
 
     // Verifikasi tampil di halaman kasir
-    $kasirResponse = $this->get('/shop');
-    $kasirResponse->assertStatus(200);
+    $user = User::factory()->create(['role' => 'kasir']);
+    $kasirResponse = $this->actingAs($user)->get('/shop');
+    $kasirResponse->assertSuccessful();
     $kasirResponse->assertSee('Teh Botol Sosro Kotak');
 });
 

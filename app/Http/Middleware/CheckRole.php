@@ -14,7 +14,7 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         // 1. Cek apakah user sudah login
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect('/login');
         }
 

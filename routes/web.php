@@ -14,7 +14,7 @@ use App\Http\Controllers\ProfilGudangController;
 use App\Http\Controllers\ReportkepalatokoController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TransactionController;
-use App\Models\Product; // <--- Import Model Product ditambahkan di sini
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,11 @@ Route::get('/', function () {
     return view('TampilanAwalLogin');
 })->name('tampilan.awal');
 
-Route::get('/tampilan-awal', function () {
+Route::get('/Tampilan-Awal', function () {
+    return view('TampilanAwalLogin');
+})->name('Tampilan.Awal');
+
+Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');
 });
 
@@ -99,7 +103,7 @@ Route::get('/pendaftaran', function () {
     return view('pendaftaran');
 })->name('pendaftaran');
 
-Route::get('/tampilan-pendaftaran', function () {
+Route::get('/tampilanpendaftaran', function () {
     return view('Tampilanpendaftaran');
 })->name('tampilan.pendaftaran');
 
@@ -140,19 +144,6 @@ Route::post('/report/reject/{id}', [ReportkepalatokoController::class, 'reject']
 // ==========================================
 // 4. HALAMAN PETUGAS GUDANG (GUDANGCONTROLLER & PROFIL)
 // ==========================================
-// Dashboard Kasir
-Route::get('/HalamanDepanKasir', function () {
-    $featuredProduct = Product::where('status', 'approved')
-        ->where('stock', '>', 0)
-        ->latest()
-        ->take(6)
-        ->get();
-
-    return view('HalamanDepanKasir', compact('featuredProduct'));
-})->name('dashboard.kasir');
-
-Route::get('/shop', [ShopController::class, 'index'])->name('halaman.shop');
-Route::get('/HalamanShop', [ShopController::class, 'index']);
 
 // Kelola Gudang & Stok Kritis
 Route::get('/dashboard-gudang', [GudangController::class, 'dashboard'])->name('dashboard.gudang');
@@ -209,27 +200,69 @@ Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('pro
 Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
 
 // ==========================================
-// 5. KATALOG, SHOP & PEMBAYARAN
+// 5. AREA KASIR (DIPROTEKSI LOGIN)
 // ==========================================
-Route::get('/HalamanShop', [ShopController::class, 'index'])->name('halaman.shop');
-Route::get('/HalamanKeranjang', function () {
-    return view('HalamanKeranjang');
-});
+Route::middleware(['auth'])->group(function () {
+    // Dashboard / Home Kasir
+    Route::get('/HalamanDepanKasir', function () {
+        $featuredProduct = Product::where('status', 'approved')
+            ->where('stock', '>', 0)
+            ->latest()
+            ->take(6)
+            ->get();
+        $user = Auth::user();
 
-Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
+        return view('HalamanDepanKasir', compact('featuredProduct', 'user'));
+    })->name('dashboard.kasir');
 
-// Pembayaran & Transaksi
-Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-Route::get('/halamanpembayaran', [PembayaranController::class, 'index']);
-Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+    // Katalog & Shop Kasir
+    Route::get('/shop', [ShopController::class, 'index'])->name('halaman.shop');
+    Route::get('/HalamanShop', [ShopController::class, 'index']);
+    Route::get('/HalamanKeranjang', function () {
+        return view('HalamanKeranjang');
+    });
+    Route::get('/katalog', [TransactionController::class, 'katalog'])->name('katalog');
 
-Route::get('/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
+    // Pembayaran & Transaksi
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::get('/halamanpembayaran', [PembayaranController::class, 'index']);
+    Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+    Route::get('/berhasil', [PembayaranController::class, 'berhasil'])->name('pembayaran.berhasil');
+    Route::get('/riwayat-transaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
+    Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat']);
+    Route::get('/transaksi', function () {
+        return view('transaksi');
+    });
 
-Route::get('/riwayat-transaksi', [PembayaranController::class, 'riwayat'])->name('riwayat.transaksi');
-Route::get('/Riwayattransaksi', [PembayaranController::class, 'riwayat']);
+    // Profil Kasir & Informasi Akun
+    Route::get('/profile', function () {
+        $user = Auth::user();
 
-Route::get('/transaksi', function () {
-    return view('transaksi');
+        return view('HalamanProfile', compact('user'));
+    })->name('profile.index');
+
+    Route::get('/HalamanProfile', function () {
+        $user = Auth::user();
+
+        return view('HalamanProfile', compact('user'));
+    });
+
+    Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/informasi-akun', function () {
+        return view('HalamanInformasiAkun');
+    })->name('informasi.akun');
+
+    Route::match(['post', 'put'], '/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Keamanan Akun & Bantuan Kasir
+    Route::get('/HalamanKeamananAkun', [PasswordController::class, 'index'])->name('keamanan.index');
+    Route::match(['post', 'put'], '/HalamanKeamananAkun', [PasswordController::class, 'update'])->name('keamanan.update');
+    Route::get('/BantuanKasir', function () {
+        return view('BantuanKasir');
+    })->name('Bantuan.Kasir');
+    Route::get('/Tentangaplikasi', function () {
+        return view('Tentangaplikasi');
+    });
 });
 
 // ==========================================
@@ -242,50 +275,17 @@ Route::post('/profilekepalatoko/update', [profilekepalatokoController::class, 'u
 
 // Report Kepala Toko (Laporan & Konfirmasi Persetujuan)
 Route::get('/Reportkepalatoko', [ReportkepalatokoController::class, 'index'])->name('report.kepalatoko');
+Route::get('/report-index', [ReportkepalatokoController::class, 'index'])->name('report.index');
+Route::get('/ReportIndex', [ReportkepalatokoController::class, 'index']);
 
 Route::get('/ManajemenKaryawan', function () {
     return view('ManajemenKaryawan');
 });
 
-Route::get('/HalamanInformasiAkun', function () {
-    return view('HalamanInformasiAkun');
-});
-
-// Profil Kasir
-Route::get('/profile', function () {
-    return view('HalamanProfile');
-})->name('profile.index');
-Route::get('/HalamanProfile', function () {
-    return view('HalamanProfile');
-});
-
-Route::get('/informasi-akun', function () {
-    return view('HalamanInformasiAkun');
-})->name('informasi.akun');
-
-// Keamanan Akun
-Route::get('/HalamanKeamananAkun', [PasswordController::class, 'index'])->name('keamanan.index');
-Route::match(['post', 'put'], '/HalamanKeamananAkun', [PasswordController::class, 'update'])->name('keamanan.update');
-
-Route::get('/bantuan-kasir', function () {
-    return view('BantuanKasir');
-})->name('bantuan.kasir');
-
-// ROUTE LAPORAN INDEX
-Route::get('/report-index', [ReportkepalatokoController::class, 'index'])->name('report.index');
-Route::get('/ReportIndex', [ReportkepalatokoController::class, 'index']);
-
-// ROUTE DIPROTEKSI AUTHENTICATION
+// ROUTE DIPROTEKSI AUTHENTICATION KEPALA TOKO
 Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
     Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
     Route::get('/kepalatoko/orders', [dashboardkepalatokoController::class, 'orders'])->name('kepalatoko.orders');
     Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
-});
-
-Route::get('/HalamanInformasiAkun', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-Route::get('/BantuanKasir', function () {
-    return view('BantuanKasir');
 });

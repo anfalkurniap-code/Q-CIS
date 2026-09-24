@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarangMasuk;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -82,7 +83,13 @@ class GudangController extends Controller
     // 4. Halaman Riwayat Gudang
     public function riwayat()
     {
-        $riwayatProduk = Product::latest()->get();
+        $riwayatMasuk = BarangMasuk::latest()->get();
+
+        if ($riwayatMasuk->isNotEmpty()) {
+            $riwayatProduk = $riwayatMasuk;
+        } else {
+            $riwayatProduk = Product::latest()->get();
+        }
 
         return view('Riwayatgudang', compact('riwayatProduk'));
     }

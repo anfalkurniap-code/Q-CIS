@@ -82,10 +82,16 @@
 
                     @forelse($list as $item)
                         @php
-                            $hargaBeli = $item->purchase_price ?? $item->price ?? $item->selling_price ?? 0;
-                            $totalHargaItem = $hargaBeli * $item->stock;
-                            $grandTotalPengeluaran += $totalHargaItem;
-                            $totalStokMasuk += $item->stock;
+                            $namaBarang = $item->nama_barang ?? $item->name ?? $item->product_name ?? 'Barang';
+                            $stokItem = $item->jumlah ?? $item->stock ?? 0;
+                            $hargaBeli = $item->purchase_price ?? $item->harga ?? $item->price ?? $item->selling_price ?? 0;
+                            $totalHargaItem = $hargaBeli * $stokItem;
+                            $statusItem = strtolower($item->status ?? 'approved');
+
+                            if ($statusItem === 'approved') {
+                                $grandTotalPengeluaran += $totalHargaItem;
+                                $totalStokMasuk += $stokItem;
+                            }
                             
                             // Ambil tanggal mentah format ISO (YYYY-MM-DD) untuk komparasi JavaScript
                             $dateRaw = \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
@@ -94,17 +100,17 @@
                             class="transaction-item bg-white rounded-xl p-3.5 border border-slate-200/90 shadow-sm relative"
                             data-date="{{ $dateRaw }}"
                             data-total="{{ $totalHargaItem }}"
-                            data-stock="{{ $item->stock }}"
+                            data-stock="{{ $stokItem }}"
                         >
                             
                             <!-- Baris Atas: Nama Barang & Jumlah Stok Masuk -->
                             <div class="flex justify-between items-start mb-0.5">
                                 <h3 class="item-title text-sm font-extrabold text-slate-800 leading-tight">
-                                    {{ $item->name ?? $item->product_name }}
+                                    {{ $namaBarang }}
                                 </h3>
                                 <div class="text-right">
-                                    <span class="text-xs font-bold text-emerald-600 font-mono-custom">
-                                        +{{ $item->stock }} <span class="text-[10px] font-normal text-emerald-600">pcs</span>
+                                    <span class="text-xs font-bold {{ $statusItem === 'rejected' ? 'text-rose-600' : ($statusItem === 'pending' ? 'text-amber-600' : 'text-emerald-600') }} font-mono-custom">
+                                        +{{ $stokItem }} <span class="text-[10px] font-normal text-slate-500">pcs</span>
                                     </span>
                                 </div>
                             </div>
@@ -127,9 +133,19 @@
 
                             <!-- Baris Bawah: Badge Status & Nomor PO -->
                             <div class="flex justify-between items-center pt-1 border-t border-slate-50">
-                                <span class="bg-[#00f0aa] text-[#024d35] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                                    DITERIMA
-                                </span>
+                                @if($statusItem === 'rejected')
+                                    <span class="bg-rose-100 text-rose-700 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-xmark text-rose-600"></i> DITOLAK
+                                    </span>
+                                @elseif($statusItem === 'pending')
+                                    <span class="bg-amber-100 text-amber-700 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-clock text-amber-600"></i> MENUNGGU
+                                    </span>
+                                @else
+                                    <span class="bg-[#00f0aa] text-[#024d35] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-check text-[#024d35]"></i> DITERIMA
+                                    </span>
+                                @endif
                                 <span class="text-[10px] font-medium text-slate-400 font-mono-custom">
                                     PO-{{ \Carbon\Carbon::parse($item->created_at)->format('Ymd') }}-{{ sprintf('%02d', $item->id) }}
                                 </span>

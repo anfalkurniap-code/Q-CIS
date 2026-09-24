@@ -22,9 +22,9 @@
         <div>
             <!-- Header Navigasi -->
             <div class="flex items-center space-x-3 mb-6">
-                <button class="text-emerald-600 hover:text-emerald-700 text-xl font-bold">
+                <a href="{{ url('/HalamanProfile') }}" class="text-emerald-600 hover:text-emerald-700 text-xl font-bold inline-flex items-center">
                     <i class="fa-solid fa-arrow-left"></i>
-                </button>
+                </a>
                 <h1 class="text-xl font-bold text-emerald-600">Tentang Aplikasi</h1>
             </div>
 
@@ -92,25 +92,10 @@
                 </div>
                 <div>
                     <p class="text-[10px] text-slate-400 font-medium">Dikembangkan oleh</p>
-                    <p class="text-xs font-bold text-slate-800 leading-tight">SMK IT Team Development Division</p>
+                    <p class="text-xs font-bold text-slate-800 leading-tight">SMK IT Team Development Division Q-CIS (Rekayasa Perangkat Lunak)</p>
                 </div>
             </div>
         </div>
-
-        <!-- Footer Contact & Copyright -->
-        <div class="pt-4 text-center">
-            <!-- Icon Sosial/Kontak -->
-            <div class="flex justify-center space-x-3 mb-4">
-                <a href="#" class="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-emerald-600 transition shadow-sm">
-                    <i class="fa-regular fa-envelope text-sm"></i>
-                </a>
-                <a href="#" class="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-emerald-600 transition shadow-sm">
-                    <i class="fa-solid fa-phone text-sm"></i>
-                </a>
-                <a href="#" class="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-emerald-600 transition shadow-sm">
-                    <i class="fa-solid fa-globe text-sm"></i>
-                </a>
-            </div>
 
             <!-- Copyright Text -->
             <p class="text-[10px] text-slate-500 font-medium">

@@ -14,11 +14,12 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        /** @var User $user */
         $user = Auth::user();
 
-        if ($user && $user->role === 'kepala_toko') {
-            return view('profilekepalatoko', compact('user'));
-        }
+        // if ($user->role === 'kepala_toko') {
+        //     return view('profilekepalatoko', compact('user'));
+        // }
 
         return view('HalamanProfile', compact('user'));
     }
@@ -28,6 +29,7 @@ class ProfileController extends Controller
      */
     public function edit()
     {
+        /** @var User $user */
         $user = Auth::user();
 
         return view('HalamanInformasiAkun', compact('user'));
@@ -38,55 +40,35 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        /** @var User|null $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // 1. Validasi Input
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|max:255|unique:users,email,'.($user?->id ?? 0),
-            'phone'  => 'nullable|string|max:20',
-            'class'  => 'nullable|string|max:50',
-            'major'  => 'nullable|string|max:100',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'phone' => 'nullable|string|max:20',
+            'class' => 'nullable|string|max:50',
+            'major' => 'nullable|string|max:100',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Default value jika input jurusan kosong
-        $majorValue = $request->input('major', 'Rekayasa Perangkat Lunak');
-
         // 2. Olah Upload Foto (Avatar) jika ada
         if ($request->hasFile('avatar')) {
-            if ($user && $user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-
-            if ($user) {
-                $user->avatar = $avatarPath;
-            }
-
-            session(['user_dummy.avatar' => Storage::url($avatarPath)]);
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
-        // 3. Update Database jika user login
-        if ($user) {
-            $user->name  = $request->name;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->class = $request->class;
-            $user->major = $majorValue;
-            $user->save();
-        }
-
-        // 4. Update Session untuk Sinkronisasi Tampilan
-        session([
-            'user_dummy.name'  => $request->name,
-            'user_dummy.email' => $request->email,
-            'user_dummy.phone' => $request->phone,
-            'user_dummy.class' => $request->class,
-            'user_dummy.major' => $majorValue,
-        ]);
+        // 3. Update Data User di Database
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->class = $request->class;
+        $user->major = $request->input('major', 'Rekayasa Perangkat Lunak');
+        $user->save();
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
     }

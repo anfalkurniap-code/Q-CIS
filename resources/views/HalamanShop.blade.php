@@ -70,8 +70,7 @@
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
                 @forelse($products as $item)         
-                <div data-category="{{ $item->kategori ?? ($item->category->name ?? 'semua') }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm flex flex-col justify-between relative">
-                    
+                <div data-category="{{ $item->category_id ?? 'semua' }}" class="product-card bg-white border border-...">
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md z-10">
                         {{ $item->badge }}
@@ -179,10 +178,10 @@
               </a>
 
               <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center {{ Request::is('HalamanProfile*') ? 'text-emerald-600' : 'text-slate-400' }} gap-0.5">
-                <div class="{{ Request::is('HalamanProfile*') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
+                <div class="{{ Request::is('HalamanProfile') ? 'bg-emerald-600 text-white px-4 py-1.5 rounded-xl flex items-center justify-center shadow-sm' : 'flex items-center justify-center' }}">
                   <i class="fa-solid fa-user {{ Request::is('HalamanProfile*') ? 'text-sm' : 'text-lg' }}"></i>
                 </div>
-                <span class="text-[10px] {{ Request::is('HalamanProfile*') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
+                <span class="text-[10px] {{ Request::is('HalamanProfile') ? 'font-bold text-emerald-600' : 'font-semibold text-slate-400' }}">Profile</span>
               </a>
 
             </div>

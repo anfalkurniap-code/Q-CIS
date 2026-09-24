@@ -216,6 +216,11 @@ class ReportkepalatokoController extends Controller
         $riwayat = BarangMasuk::findOrFail($id);
         $riwayat->update(['status' => 'rejected']);
 
-        return redirect()->back()->with('error', 'Pengajuan barang ditolak.');
+        // Update status di tabel Product jika ada produk ber-status pending/approved dengan nama sama
+        Product::where('name', $riwayat->nama_barang)
+            ->whereIn('status', ['pending', 'approved'])
+            ->update(['status' => 'rejected']);
+
+        return redirect()->back()->with('error', 'Pengajuan barang "'.$riwayat->nama_barang.'" ditolak oleh Kepala Toko.');
     }
 }
