@@ -85,21 +85,6 @@
           </h2>
         </section>
 
-        <!-- Statistik Mart -->
-        <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-          <h3 class="text-[10px] font-bold text-slate-400 tracking-wider uppercase mb-2">Statistik Mart</h3>
-          <div class="grid grid-cols-2 gap-3">
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
-              <span class="text-[11px] text-slate-500 font-medium block">Saldo</span>
-              <span class="text-base font-bold text-[#10B981] mt-0.5 block">Rp{{ number_format($user->balance ?? 0, 0, ',', '.') }}</span>
-            </div>
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
-              <span class="text-[11px] text-slate-500 font-medium block">Poin</span>
-              <span class="text-base font-bold text-slate-800 mt-0.5 block">{{ $user->points ?? '0' }}</span>
-            </div>
-          </div>
-        </section>
-
         <!-- Detail Personal -->
         <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
           <div class="flex items-center gap-2 pb-3 border-b border-slate-100">

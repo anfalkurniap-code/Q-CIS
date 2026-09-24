@@ -167,14 +167,9 @@
     <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-100 px-6 py-2.5 flex justify-between items-center z-20">
 
-      <a href="{{ url('/HalamanDepanKasir') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
+      <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
         <i class="fa-solid fa-house text-lg"></i>
         <span class="text-[10px] font-semibold">Home</span>
-      </a>
-
-      <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
-        <i class="fa-solid fa-bag-shopping text-lg"></i>
-        <span class="text-[10px] font-semibold">Shop</span>
       </a>
 
       <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">

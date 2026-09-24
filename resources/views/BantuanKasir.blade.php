@@ -6,9 +6,13 @@
     <title>Pusat Bantuan & FAQ - Q-CIS SMK</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js untuk fitur Accordion -->
+    
+    <!-- Alpine.js Collapse Plugin (Wajib ada untuk x-collapse) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine.js Core -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Remixicon / FontAwesome untuk Ikon -->
+    
+    <!-- Remixicon untuk Ikon -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -53,29 +57,12 @@
                     <p class="text-xs text-gray-500 mt-0.5">Cari solusi cepat untuk kendala transaksi Anda.</p>
                 </div>
 
-                <!-- Search Card & Populer Tag -->
-                <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100 space-y-3">
-                    <div class="relative">
-                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-emerald-600 text-base"></i>
-                        <input type="text" placeholder="Ketik kata kunci (QRIS, PIN, Topup)..." class="w-full bg-slate-50 border border-gray-200 text-xs rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500 placeholder-gray-400">
-                    </div>
-                    
-                    <div class="flex items-center space-x-2 text-[10px]">
-                        <span class="text-gray-400">Populer:</span>
-                        <div class="flex space-x-1.5 overflow-x-auto no-scrollbar">
-                            <button class="bg-slate-100 hover:bg-slate-200 text-gray-600 px-2.5 py-1 rounded-md font-medium whitespace-nowrap">Masalah Login</button>
-                            <button class="bg-slate-100 hover:bg-slate-200 text-gray-600 px-2.5 py-1 rounded-md font-medium whitespace-nowrap">Reset PIN</button>
-                            <button class="bg-slate-100 hover:bg-slate-200 text-gray-600 px-2.5 py-1 rounded-md font-medium whitespace-nowrap">Scan QR</button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Pertanyaan Umum (Accordion dengan AlpineJS) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ openFaq: null }">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ openFaq: 1 }">
                     <div class="p-3.5 flex items-center justify-between border-b border-gray-100 bg-white">
                         <h3 class="font-bold text-gray-800 text-sm">Pertanyaan Umum</h3>
-                        <div class="text-emerald-600 bg-emerald-50 p-1 rounded-md">
-                            <i class="ri-questionnaire-line text-sm"></i>
+                        <div class="text-emerald-600 bg-emerald-50 p-1.5 rounded-lg flex items-center justify-center">
+                            <i class="ri-questionnaire-line text-base"></i>
                         </div>
                     </div>
 
@@ -109,7 +96,7 @@
                                 <i class="ri-arrow-down-s-line text-base text-gray-400 transition-transform duration-200" :class="{'rotate-180': openFaq === 3}"></i>
                             </button>
                             <div x-show="openFaq === 3" x-collapse class="px-3.5 pb-3.5 text-gray-500 text-[11px] leading-relaxed">
-                                Masuk ke menu Profile > Pengaturan Keamanan > Ubah PIN Transaksi. Masukkan PIN lama lalu buat PIN baru Anda.
+                                Masuk ke menu Profile &gt; Pengaturan Keamanan &gt; Ubah PIN Transaksi. Masukkan PIN lama lalu buat PIN baru Anda.
                             </div>
                         </div>
 
@@ -128,7 +115,6 @@
 
                 <!-- Kontak Bantuan -->
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3 relative overflow-hidden">
-                    <!-- Hiasan background lengkungan halus kanan atas -->
                     <div class="absolute -top-6 -right-6 w-16 h-16 bg-emerald-50 rounded-full pointer-events-none"></div>
 
                     <div>
@@ -167,46 +153,11 @@
                     </div>
                 </div>
 
-                <!-- Jam Operasional Banner -->
-                <div class="bg-emerald-600 rounded-2xl p-4 text-white relative overflow-hidden shadow-md">
-                    <div class="flex justify-between items-start">
-                        <div class="space-y-1 z-10">
-                            <p class="text-[9px] uppercase font-semibold tracking-wider text-emerald-200">Jam Operasional</p>
-                            <h4 class="text-base font-bold">Senin - Jumat</h4>
-                            <p class="text-xs text-emerald-100 font-medium">07:30 - 15:45 WIB</p>
-                        </div>
-                        <div class="text-emerald-300 text-3xl opacity-80">
-                            <i class="ri-time-line"></i>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-2 border-t border-emerald-500/50 flex items-center space-x-1.5 text-[10px] text-emerald-100">
-                        <i class="ri-information-line"></i>
-                        <span>Tutup pada hari libur nasional</span>
-                    </div>
-                </div>
-
-                <!-- Banner Panduan Pengguna Image -->
-                <div class="relative rounded-2xl overflow-hidden shadow-sm h-32 bg-slate-800 group cursor-pointer">
-                    <!-- Image Background -->
-                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80" alt="Panduan Pengguna" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-300">
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-                        <span class="bg-emerald-600 text-white text-[10px] font-semibold px-2.5 py-1 rounded-md shadow">
-                            Panduan Pengguna v2.0
-                        </span>
-                    </div>
-                </div>
-
             </main>
 
             <!-- Footer -->
             <footer class="text-center py-6 px-4 space-y-2 border-t border-gray-100 mt-4">
                 <p class="text-[10px] text-gray-400">© 2024 Q-CIS SMK Mart Management System</p>
-                <div class="flex justify-center space-x-3 text-[10px]">
-                    <a href="#" class="text-emerald-600 font-medium underline">Syarat & Ketentuan</a>
-                    <a href="#" class="text-emerald-600 font-medium underline">Kebijakan Privasi</a>
-                </div>
             </footer>
         </div>
 

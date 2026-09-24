@@ -94,15 +94,10 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 max-w-sm w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-10">
-            <a href="{{ route('dashboard.kasir') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
+            <a href="{{ route('halaman.shop') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
                 <i class="fa-solid fa-house text-base mb-1"></i>
                 <span>Home</span>
-            </a>
-            
-            <a href="{{ route('halaman.shop') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
-                <i class="fa-solid fa-bag-shopping text-base mb-1"></i>
-                <span>Shop</span>
-            </a>
+            </a>         
             
             <a href="{{ route('riwayat.transaksi') }}" class="flex flex-col items-center text-white text-xs">
                 <div class="bg-emerald-600 px-4 py-2 rounded-xl flex flex-col items-center">
