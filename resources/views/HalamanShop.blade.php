@@ -45,16 +45,7 @@
                 <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
                 <input type="text" placeholder="Cari produk di mart..." class="w-full bg-blue-50 text-gray-700 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
             </div>
-           
-            <!-- Filter Kategori -->
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-sm font-medium" id="category-filters">
-                <button onclick="filterProduk('all', this)" class="category-btn bg-emerald-800 text-white px-5 py-1.5 rounded-full whitespace-nowrap">Semua</button>
-                @foreach($categories ?? [] as $cat)
-                    <button onclick="filterProduk('{{ addslashes($cat->name) }}', this)" class="category-btn bg-blue-50 text-slate-600 px-5 py-1.5 rounded-full whitespace-nowrap">
-                        {{ $cat->name }}
-                    </button>
-                @endforeach
-            </div>
+    
         </div>
 
         <hr class="border-gray-100">
@@ -170,7 +161,7 @@
 
               <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center {{ Request::is('Riwayattransaksi*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
                 <i class="fa-solid fa-receipt text-lg"></i>
-                <span class="text-[10px] font-semibold">Trans</span>
+                <span class="text-[10px] font-semibold">Transaksi</span>
               </a>
 
               <a href="{{ url('/HalamanProfile') }}" class="flex flex-col items-center {{ Request::is('HalamanProfile*') ? 'text-emerald-600' : 'text-slate-400' }} gap-0.5">

@@ -57,62 +57,6 @@
                     <p class="text-xs text-gray-500 mt-0.5">Cari solusi cepat untuk kendala transaksi Anda.</p>
                 </div>
 
-                <!-- Pertanyaan Umum (Accordion dengan AlpineJS) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ openFaq: 1 }">
-                    <div class="p-3.5 flex items-center justify-between border-b border-gray-100 bg-white">
-                        <h3 class="font-bold text-gray-800 text-sm">Pertanyaan Umum</h3>
-                        <div class="text-emerald-600 bg-emerald-50 p-1.5 rounded-lg flex items-center justify-center">
-                            <i class="ri-questionnaire-line text-base"></i>
-                        </div>
-                    </div>
-
-                    <div class="divide-y divide-gray-100">
-                        <!-- FAQ 1 -->
-                        <div class="text-xs">
-                            <button @click="openFaq = (openFaq === 1 ? null : 1)" class="w-full text-left p-3.5 font-semibold text-gray-800 flex justify-between items-center hover:bg-slate-50 transition">
-                                <span class="pr-2">Bagaimana cara melakukan pembayaran QRIS?</span>
-                                <i class="ri-arrow-down-s-line text-base text-gray-400 transition-transform duration-200" :class="{'rotate-180': openFaq === 1}"></i>
-                            </button>
-                            <div x-show="openFaq === 1" x-collapse class="px-3.5 pb-3.5 text-gray-500 text-[11px] leading-relaxed">
-                                Anda dapat melakukan pembayaran QRIS dengan menekan tombol Scan QR di halaman utama, lalu arahkan kamera ke kode QRIS merchant.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 2 -->
-                        <div class="text-xs">
-                            <button @click="openFaq = (openFaq === 2 ? null : 2)" class="w-full text-left p-3.5 font-semibold text-gray-800 flex justify-between items-center hover:bg-slate-50 transition">
-                                <span class="pr-2">Apa yang harus dilakukan jika transaksi gagal?</span>
-                                <i class="ri-arrow-down-s-line text-base text-gray-400 transition-transform duration-200" :class="{'rotate-180': openFaq === 2}"></i>
-                            </button>
-                            <div x-show="openFaq === 2" x-collapse class="px-3.5 pb-3.5 text-gray-500 text-[11px] leading-relaxed">
-                                Pastikan koneksi internet Anda stabil dan saldo mencukupi. Jika saldo terpotong namun transaksi gagal, hubungi support kami.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 3 -->
-                        <div class="text-xs">
-                            <button @click="openFaq = (openFaq === 3 ? null : 3)" class="w-full text-left p-3.5 font-semibold text-gray-800 flex justify-between items-center hover:bg-slate-50 transition">
-                                <span class="pr-2">Bagaimana cara mengganti PIN transaksi?</span>
-                                <i class="ri-arrow-down-s-line text-base text-gray-400 transition-transform duration-200" :class="{'rotate-180': openFaq === 3}"></i>
-                            </button>
-                            <div x-show="openFaq === 3" x-collapse class="px-3.5 pb-3.5 text-gray-500 text-[11px] leading-relaxed">
-                                Masuk ke menu Profile &gt; Pengaturan Keamanan &gt; Ubah PIN Transaksi. Masukkan PIN lama lalu buat PIN baru Anda.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 4 -->
-                        <div class="text-xs">
-                            <button @click="openFaq = (openFaq === 4 ? null : 4)" class="w-full text-left p-3.5 font-semibold text-gray-800 flex justify-between items-center hover:bg-slate-50 transition">
-                                <span class="pr-2">Di mana saya bisa melihat riwayat transaksi?</span>
-                                <i class="ri-arrow-down-s-line text-base text-gray-400 transition-transform duration-200" :class="{'rotate-180': openFaq === 4}"></i>
-                            </button>
-                            <div x-show="openFaq === 4" x-collapse class="px-3.5 pb-3.5 text-gray-500 text-[11px] leading-relaxed">
-                                Riwayat transaksi dapat diakses pada tab 'Riwayat' di bagian bawah aplikasi atau melalui dasbor akun Anda.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Kontak Bantuan -->
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3 relative overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 bg-emerald-50 rounded-full pointer-events-none"></div>

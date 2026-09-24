@@ -136,23 +136,6 @@
             <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
           </a>
 
-          <!-- Tentang Aplikasi -->
-          <a href="{{ url('/Tentangaplikasi') }}" class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center">
-                <i class="fa-solid fa-circle-info text-lg"></i>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-slate-800">Tentang Aplikasi</h3>
-                <p class="text-xs text-slate-400">Versi, lisensi & syarat</p>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
-          </a>
-
-        </div>
-      </div>
-
       <!-- Tombol Keluar Sesi -->
       <form action="{{ route('logout') }}" method="POST" class="w-full">
         @csrf
@@ -174,7 +157,7 @@
 
       <a href="{{ url('/Riwayattransaksi') }}" class="flex flex-col items-center text-slate-400 gap-1 hover:text-emerald-600">
         <i class="fa-solid fa-receipt text-lg"></i>
-        <span class="text-[10px] font-semibold">Trans</span>
+        <span class="text-[10px] font-semibold">Transaksi</span>
       </a>
 
       <!-- Menu Profile Aktif (Kotak Hijau) -->
