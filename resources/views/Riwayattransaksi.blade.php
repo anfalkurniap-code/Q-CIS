@@ -18,7 +18,7 @@
         <div>
             <!-- Header Top Bar -->
             <header class="bg-white px-5 py-4 flex justify-between items-center border-b border-gray-100">
-                <h1 class="text-emerald-600 font-bold text-lg">Q-CIS SMK Mart</h1>
+                <h1 class="text-emerald-600 font-bold text-lg">Q-CIS </h1>
             </header>
 
             <!-- Main Content -->

@@ -31,11 +31,9 @@
                 </svg>
             </a>
 
-            <!-- Logo Icon (Shopping Bag / Lock in White Circle) -->
-            <div class="bg-white text-[#046e4e] rounded-full w-14 h-14 flex items-center justify-center shadow-md mb-3 text-2xl">
-                <svg class="w-7 h-7 fill-[#046e4e]" viewBox="0 0 24 24">
-                    <path d="M19 6h-2c0-2.21-1.79-4-4-4S9 3.79 9 6H7c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm0 10c-1.66 0-3-1.34-3-3h2c0 .55.45 1 1 1s1-.45 1-1h2c0 1.66-1.34 3-3 3z"/>
-                </svg>
+            <!-- Logo Icon -->
+            <div class="w-14 h-14 rounded-2xl shadow-md mb-3 overflow-hidden flex items-center justify-center bg-white p-0.5 border-2 border-white/30">
+                <img src="{{ asset('images/qcis-logo.png') }}" alt="Logo Q-CIS" class="w-full h-full object-cover rounded-[14px]">
             </div>
 
             <!-- Title & Subtitle Header -->

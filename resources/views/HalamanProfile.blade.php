@@ -35,7 +35,7 @@
         <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center border border-slate-100 shadow-sm">
           <i class="fa-solid fa-bag-shopping text-[#0d624a] text-sm"></i>
         </div>
-        <span class="font-bold text-emerald-600 text-lg tracking-tight">Q-CIS SMK Mart</span>
+        <span class="font-bold text-emerald-600 text-lg tracking-tight">Q-CIS</span>
       </div>
 
       <div class="flex items-center gap-3">

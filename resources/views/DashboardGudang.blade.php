@@ -26,9 +26,6 @@
             <!-- 1. Header Top Navbar -->
             <header class="bg-white px-5 py-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-20 shadow-sm">
                 <div class="flex items-center gap-2">
-                    <div class="text-[#024d35] text-xl">
-                        <i class="fa-solid fa-warehouse"></i>
-                    </div>
                     <span class="text-xl font-extrabold text-[#024d35] tracking-tight">Q-CIS</span>
                 </div>
             </header>

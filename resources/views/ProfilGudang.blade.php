@@ -29,7 +29,6 @@
             <!-- Header -->
             <header class="flex items-center justify-between px-5 py-4 bg-white/50 backdrop-blur-md border-b border-gray-100 sticky top-0 z-10">
                 <div class="flex items-center gap-2 text-[#004D40]">
-                    <i class="fa-solid fa-store text-lg"></i>
                     <span class="font-extrabold text-base tracking-tight">Q-CIS</span>
                 </div>
             </header>

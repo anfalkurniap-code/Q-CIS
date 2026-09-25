@@ -20,7 +20,7 @@
         <div class="px-5 pt-5 pb-3">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2.5">
-                    <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS SMK</h1>
+                    <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS </h1>
                 </div>
                             
                 <div class="flex items-center gap-3">   

@@ -30,7 +30,7 @@
         <div>
             <!-- Header App -->
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-emerald-700 font-bold text-lg">Q-CIS SMK Mart</h1>
+                <h1 class="text-emerald-700 font-bold text-lg">Q-CIS</h1>
                 <a href="#" class="text-xs text-gray-500 hover:underline">Bantuan</a>
             </div>
 
