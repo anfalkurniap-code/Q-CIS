@@ -53,11 +53,42 @@
 
                 @php
                     $pendingCount = \App\Models\BarangMasuk::where('status', 'pending')->count();
+                    $dismissedRejections = session('dismissed_rejections', []);
+                    $rejectedItems = \App\Models\BarangMasuk::where('status', 'rejected')
+                        ->whereNotIn('id', $dismissedRejections)
+                        ->latest()
+                        ->get();
+
+                    if ($rejectedItems->isNotEmpty()) {
+                        session()->put('dismissed_rejections', array_merge($dismissedRejections, $rejectedItems->pluck('id')->toArray()));
+                    }
                 @endphp
                 @if($pendingCount > 0)
                     <div class="bg-amber-50 border border-amber-300 text-amber-800 text-xs px-3 py-2 rounded-xl flex items-center gap-2">
                         <i class="fa-solid fa-clock text-amber-500"></i>
                         <span><strong>{{ $pendingCount }} barang</strong> menunggu persetujuan Kepala Toko.</span>
+                    </div>
+                @endif
+
+                @if($rejectedItems->isNotEmpty())
+                    <div class="rejected-alert bg-rose-50 border border-rose-300 text-rose-800 text-xs px-3.5 py-2.5 rounded-xl space-y-1 shadow-sm relative">
+                        <div class="flex items-center justify-between font-bold">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark text-rose-600 text-sm"></i>
+                                <span>{{ $rejectedItems->count() }} Pengajuan Barang Ditolak</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ Route::has('Riwayatgudang') ? route('Riwayatgudang') : url('/Riwayatgudang') }}" class="text-[10px] text-rose-700 underline hover:text-rose-900 font-extrabold">Lihat Riwayat &rarr;</a>
+                                <button type="button" onclick="this.closest('.rejected-alert').remove()" class="text-rose-400 hover:text-rose-800 text-sm font-black leading-none px-1" title="Tutup">&times;</button>
+                            </div>
+                        </div>
+                        <ul class="list-disc list-inside text-[11px] text-rose-700 space-y-0.5 pt-0.5">
+                            @foreach($rejectedItems->take(3) as $rej)
+                                <li>
+                                    <strong>{{ $rej->nama_barang }}</strong> ({{ $rej->jumlah }} pcs) ditolak oleh Kepala Toko.
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 

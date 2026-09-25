@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Controllers\PendaftaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,9 +34,13 @@ use Illuminate\Validation\Rules\Password;
 // ==========================================
 Route::get('/', function () {
     return view('TampilanAwalLogin');
-})->name('Tampilan.Awal');
+})->name('tampilan.awal');
 
 Route::get('/Tampilan-Awal', function () {
+    return view('TampilanAwalLogin');
+})->name('Tampilan.Awal');
+
+Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');
 });
 
@@ -128,6 +133,7 @@ Route::post('/profile-kepalatoko/update-password', [profilekepalatokoController:
 Route::post('/profile-kepalatoko/update', [profilekepalatokoController::class, 'updateProfile']);
 
 Route::get('/report-kepalatoko', [ReportkepalatokoController::class, 'index'])->name('report.kepalatoko');
+Route::get('/report-kepalatoko/pdf', [ReportkepalatokoController::class, 'exportPdf'])->name('report.pdf');
 
 Route::get('/Reportkepalatoko', [ReportkepalatokoController::class, 'index']);
 
@@ -277,45 +283,7 @@ Route::get('/ManajemenKaryawan', function () {
     return view('ManajemenKaryawan');
 });
 
-<<<<<<< HEAD
-Route::get('/HalamanInformasiAkun', function () {
-    return view('HalamanInformasiAkun');
-});
-
-// Profil Kasir
-// Route utama untuk profile
-Route::get('/profile', function () {
-    $user = Auth::user();
-    return view('HalamanProfile', compact('user'));
-})->name('profile.index')->middleware('auth');
-
-// Route alias / pendukung jika masih ada link yang mengarah ke /HalamanProfile
-Route::get('/HalamanProfile', function () {
-    $user = Auth::user();
-    return view('HalamanProfile', compact('user'));
-})->middleware('auth');
-
-Route::get('/informasi-akun', function () {
-    return view('HalamanInformasiAkun');
-})->name('informasi.akun');
-
-// Keamanan Akun
-Route::get('/HalamanKeamananAkun', [PasswordController::class, 'index'])->name('keamanan.index');
-Route::match(['post', 'put'], '/HalamanKeamananAkun', [PasswordController::class, 'update'])->name('keamanan.update');
-
-Route::get('/BantuanKasir', function () {
-    return view('BantuanKasir');
-})->name('Bantuan.Kasir');
-
-// ROUTE LAPORAN INDEX
-Route::get('/report-index', [ReportkepalatokoController::class, 'index'])->name('report.index');
-Route::get('/ReportIndex', [ReportkepalatokoController::class, 'index']);
-
-
-// ROUTE DIPROTEKSI AUTHENTICATION
-=======
 // ROUTE DIPROTEKSI AUTHENTICATION KEPALA TOKO
->>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5
 Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/home', [dashboardkepalatokoController::class, 'index'])->name('kepalatoko.home');
     Route::get('/kepalatoko/stock', [dashboardkepalatokoController::class, 'stock'])->name('kepalatoko.stock');
@@ -324,9 +292,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Detail Transaksi & Ringkasan Pesanan
 Route::get('/transaksi/{id}', [PembayaranController::class, 'show'])->name('transaksi.detail');
 Route::get('/Ringkasanpesanan/{id?}', [PembayaranController::class, 'show'])->name('ringkasan.pesanan');
 
 =======
 >>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5
+=======
+Route::get('/Tampilanpendaftaran', [PendaftaranController::class, 'index']);
+>>>>>>> 71d9b13f7e122fb0a67ac2ce4ecfb075671a8e54

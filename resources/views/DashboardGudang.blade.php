@@ -79,6 +79,39 @@
                     </div>
                 </div>
 
+                @php
+                    $dismissedRejectionsDash = session('dismissed_rejections', []);
+                    $rejectedItemsDash = \App\Models\BarangMasuk::where('status', 'rejected')
+                        ->whereNotIn('id', $dismissedRejectionsDash)
+                        ->latest()
+                        ->get();
+
+                    if ($rejectedItemsDash->isNotEmpty()) {
+                        session()->put('dismissed_rejections', array_merge($dismissedRejectionsDash, $rejectedItemsDash->pluck('id')->toArray()));
+                    }
+                @endphp
+                @if($rejectedItemsDash->isNotEmpty())
+                    <div class="rejected-alert bg-rose-50 border border-rose-300 text-rose-800 text-xs px-3.5 py-2.5 rounded-xl space-y-1 shadow-sm relative">
+                        <div class="flex items-center justify-between font-bold">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark text-rose-600 text-sm"></i>
+                                <span>{{ $rejectedItemsDash->count() }} Pengajuan Barang Ditolak</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ Route::has('Riwayatgudang') ? route('Riwayatgudang') : url('/Riwayatgudang') }}" class="text-[10px] text-rose-700 underline hover:text-rose-900 font-extrabold">Lihat Riwayat &rarr;</a>
+                                <button type="button" onclick="this.closest('.rejected-alert').remove()" class="text-rose-400 hover:text-rose-800 text-sm font-black leading-none px-1" title="Tutup">&times;</button>
+                            </div>
+                        </div>
+                        <ul class="list-disc list-inside text-[11px] text-rose-700 space-y-0.5 pt-0.5">
+                            @foreach($rejectedItemsDash->take(3) as $rej)
+                                <li>
+                                    <strong>{{ $rej->nama_barang }}</strong> ({{ $rej->jumlah }} pcs) ditolak Kepala Toko.
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <!-- 4. Title Operational View -->
                 <div class="pt-1">
                     <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block mb-0.5">OPERATIONAL VIEW</span>
