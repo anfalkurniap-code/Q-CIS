@@ -141,34 +141,6 @@
         <h3 class="font-semibold text-gray-800">Sesi Aktif</h3>
       </div>
 
-      <!-- Device 1 -->
-      <div class="flex items-center justify-between pt-1">
-        <div class="flex items-center space-x-3">
-          <i class="fa-solid fa-desktop text-gray-500 text-lg"></i>
-          <div>
-            <p class="text-xs font-semibold text-gray-800">Chrome on MacOS</p>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wide">JAKARTA • SESI INI</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Device 2 -->
-      <div class="flex items-center justify-between pt-1">
-        <div class="flex items-center space-x-3">
-          <i class="fa-solid fa-mobile-screen-button text-gray-500 text-lg"></i>
-          <div>
-            <p class="text-xs font-semibold text-gray-800">iPhone 13 - App</p>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wide">JAKARTA • 2 JAM LALU</p>
-          </div>
-        </div>
-        <form action="{{ route('logout') }}" method="POST" class="inline">
-          @csrf
-          <button type="submit" class="text-red-500 hover:text-red-700 cursor-pointer" title="Keluar sesi">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </button>
-        </form>
-      </div>
-
       <!-- Logout All Button -->
       <div class="pt-2 text-center">
         <form action="{{ route('logout') }}" method="POST">

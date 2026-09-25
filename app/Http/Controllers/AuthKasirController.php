@@ -37,7 +37,7 @@ class AuthKasirController extends Controller
 
             // 5. Arahkan ke halaman sesuai role
             if ($role === 'kasir') {
-                return redirect()->route('dashboard.kasir');
+                return redirect()->route('halaman.shop');
             }
 
             if ($role === 'gudang') {

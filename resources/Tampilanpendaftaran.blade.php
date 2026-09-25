@@ -15,9 +15,9 @@
     
     <!-- Header -->
     <div class="bg-white px-5 py-4 border-b border-gray-200 flex items-center space-x-3">
-      <button class="text-emerald-800 hover:opacity-80">
-        <i data-lucide="arrow-left" class="w-6 h-6"></i>
-      </button>
+      <a href="{{ url()->previous() }}" class="text-emerald-800 hover:opacity-80 inline-block">
+          <i data-lucide="arrow-left" class="w-6 h-6"></i>
+      </a>
       <h1 class="text-xl font-bold text-emerald-800">Pendaftaran</h1>
     </div>
 

@@ -69,22 +69,8 @@
                         </div>
                         @endforelse
 
-                        <!-- Dummy Top-Up Saldo Pelengkap -->
-                        <div class="flex items-center justify-between py-3 px-1">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center">
-                                    <i class="fa-solid fa-wallet"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 text-sm">Top-Up Saldo</h3>
-                                    <div class="flex items-center space-x-2 mt-0.5">
-                                        <span class="text-[10px] text-gray-400">10 Okt 2023</span>
-                                        <span class="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded tracking-wider uppercase">TOP-UP</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-emerald-500 font-semibold text-sm">+ Rp 50.000</span>
-                        </div>
+                        
+                               
 
                     </div>
 
@@ -94,20 +80,15 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 max-w-sm w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-10">
-            <a href="{{ route('dashboard.kasir') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
+            <a href="{{ route('halaman.shop') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
                 <i class="fa-solid fa-house text-base mb-1"></i>
                 <span>Home</span>
-            </a>
-            
-            <a href="{{ route('halaman.shop') }}" class="flex flex-col items-center text-gray-500 hover:text-emerald-600 text-xs">
-                <i class="fa-solid fa-bag-shopping text-base mb-1"></i>
-                <span>Shop</span>
-            </a>
+            </a>         
             
             <a href="{{ route('riwayat.transaksi') }}" class="flex flex-col items-center text-white text-xs">
                 <div class="bg-emerald-600 px-4 py-2 rounded-xl flex flex-col items-center">
                     <i class="fa-solid fa-receipt text-base mb-0.5"></i>
-                    <span class="font-medium text-[11px]">Trans</span>
+                    <span class="font-medium text-[11px]">Transaksi</span>
                 </div>
             </a>
             

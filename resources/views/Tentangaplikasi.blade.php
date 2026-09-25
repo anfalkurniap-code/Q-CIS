@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Aplikasi</title>
+    <title>Tentang Aplikasi & Bantuan</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN (untuk Ikon) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js (Untuk Handle Buka-Tutup Accordion) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -45,45 +47,62 @@
                 Sistem Informasi Manajemen Kantin Sekolah yang Modern dan Terintegrasi dengan standar Academic Precision. Dirancang untuk meningkatkan efisiensi transaksi dan transparansi keuangan di lingkungan sekolah.
             </div>
 
-            <!-- Seksi Informasi Hukum & Bantuan -->
+            <!-- Seksi Informasi Hukum & Bantuan (Accordion) -->
             <div class="mb-6">
                 <p class="text-xs font-semibold text-slate-500 mb-2">Informasi Hukum & Bantuan</p>
                 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 divide-y divide-slate-100">
-                    <!-- Item 1 -->
-                    <a href="#" class="flex items-center justify-between p-3.5 hover:bg-slate-50 transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
-                                <i class="fa-solid fa-scale-balanced text-sm"></i>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 divide-y divide-slate-100 overflow-hidden">
+                    
+                    <!-- Item 1: Syarat & Ketentuan -->
+                    <div x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between p-3.5 hover:bg-slate-50 transition text-left">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
+                                    <i class="fa-solid fa-scale-balanced text-sm"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-700">Syarat & Ketentuan</span>
                             </div>
-                            <span class="text-xs font-semibold text-slate-700">Syarat & Ketentuan</span>
+                            <i class="fa-solid text-xs text-slate-400" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="p-3.5 bg-slate-50/50 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                            Setiap pengguna wajib menjaga kerahasiaan akun dan PIN transaksi. Layanan ini digunakan khusus untuk transaksi resmi di lingkungan sekolah.
                         </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                    </a>
+                    </div>
 
-                    <!-- Item 2 -->
-                    <a href="#" class="flex items-center justify-between p-3.5 hover:bg-slate-50 transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
-                                <i class="fa-solid fa-shield-halved text-sm"></i>
+                    <!-- Item 2: Kebijakan Privasi -->
+                    <div x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between p-3.5 hover:bg-slate-50 transition text-left">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
+                                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-700">Kebijakan Privasi</span>
                             </div>
-                            <span class="text-xs font-semibold text-slate-700">Kebijakan Privasi</span>
+                            <i class="fa-solid text-xs text-slate-400" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="p-3.5 bg-slate-50/50 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                            Data pribadi Anda seperti riwayat transaksi terlindungi secara aman dan hanya digunakan untuk keperluan operasional sekolah.
                         </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                    </a>
+                    </div>
 
-                    <!-- Item 3 -->
-                    <a href="#" class="flex items-center justify-between p-3.5 hover:bg-slate-50 transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
-                                <i class="fa-solid fa-book-open text-sm"></i>
+                    <!-- Item 3: Panduan Pengguna -->
+                    <div x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between p-3.5 hover:bg-slate-50 transition text-left">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
+                                    <i class="fa-solid fa-book-open text-sm"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-700">Panduan Pengguna</span>
                             </div>
-                            <span class="text-xs font-semibold text-slate-700">Panduan Pengguna</span>
+                            <i class="fa-solid text-xs text-slate-400" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="p-3.5 bg-slate-50/50 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                            Pilih produk dari katalog, masukkan ke keranjang belanja, lalu selesaikan pembayaran dengan melakukan pemindaian kode QRIS.
                         </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                    </a>
+                    </div>
+
                 </div>
-            </div>
+            </div>                       
 
             <!-- Kartu Pengembang -->
             <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3 mb-6 relative overflow-hidden">
@@ -97,11 +116,10 @@
             </div>
         </div>
 
-            <!-- Copyright Text -->
-            <p class="text-[10px] text-slate-500 font-medium">
-                © 2024 Q-CIS SMK Mart. Hak Cipta Dilindungi.
-            </p>
-        </div>
+        <!-- Copyright Text -->
+        <p class="text-[10px] text-slate-500 font-medium text-center">
+            © 2024 Q-CIS SMK Mart. Hak Cipta Dilindungi.
+        </p>
 
     </div>
 
