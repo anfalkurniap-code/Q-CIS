@@ -14,7 +14,7 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen font-sans">
    
-    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative pb-20">
+    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative pb-36">
              
         <!-- ================= TOP HEADER BAR ================= -->
         <div class="px-5 pt-5 pb-3">
