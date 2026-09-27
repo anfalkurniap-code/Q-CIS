@@ -8,17 +8,31 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        #product-scroll-area::-webkit-scrollbar {
+            width: 5px;
+        }
+        #product-scroll-area::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        #product-scroll-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        #product-scroll-area::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen font-sans">
+<body class="bg-gray-100 min-h-screen flex justify-center items-center p-0 md:p-4 font-sans">
    
-    <div class="w-full max-w-md bg-white min-h-screen shadow-lg flex flex-col justify-between relative pb-20">
+    <div class="w-full max-w-md bg-white h-screen md:h-[820px] md:max-h-[92vh] md:rounded-3xl shadow-xl border border-slate-200 relative flex flex-col justify-between overflow-hidden">
              
         <!-- ================= TOP HEADER BAR ================= -->
-        <div class="px-5 pt-5 pb-3">
-            <div class="flex justify-between items-center mb-4">
+        <div class="px-5 pt-5 pb-3 bg-white shrink-0 border-b border-gray-100 z-10">
+            <div class="flex justify-between items-center mb-3">
                 <div class="flex items-center gap-2.5">
                     <h1 class="text-xl font-bold text-emerald-800 tracking-wide">Q-CIS </h1>
                 </div>
@@ -41,17 +55,15 @@
             </div>
           
             <!-- Input Search Produk -->
-            <div class="relative mb-4">
+            <div class="relative">
                 <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
                 <input type="text" placeholder="Cari produk di mart..." class="w-full bg-blue-50 text-gray-700 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
             </div>
     
         </div>
-
-        <hr class="border-gray-100">
        
-        <!-- ================= KATALOG PRODUK ================= -->
-        <div class="px-5 py-4 flex-1">
+        <!-- ================= KATALOG PRODUK (SCROLLABLE) ================= -->
+        <div class="px-5 pt-4 pb-48 flex-1 overflow-y-auto" id="product-scroll-area">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-slate-800">Katalog Produk</h2>
                 <span class="text-xs font-semibold text-slate-500"><b class="text-emerald-700">{{ count($products ?? []) }}</b> Produk</span>
@@ -61,7 +73,7 @@
                 
                 {{-- PERULANGAN DATA PRODUK DARI DATABASE --}}
                 @forelse($products as $item)         
-                <div data-category="{{ $item->category_id ?? 'semua' }}" class="product-card bg-white border border-...">
+                <div data-category="{{ $item->category_id ?? 'semua' }}" class="product-card bg-white border border-gray-100 rounded-2xl p-3 shadow-sm relative flex flex-col justify-between hover:shadow-md transition">
                     @if(!empty($item->badge))
                     <span class="absolute top-3 right-3 {{ $item->warna_badge ?? 'bg-emerald-600' }} text-[9px] font-bold text-white px-2 py-0.5 rounded-md z-10">
                         {{ $item->badge }}
@@ -131,7 +143,7 @@
         </div>
        
         <!-- ================= BOTTOM BAR & NAVIGATION ================= -->
-        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 shadow-2xl z-50 rounded-t-2xl">
+        <div class="absolute bottom-0 inset-x-0 bg-white border-t border-gray-100 shadow-[0_-8px_20px_rgba(0,0,0,0.08)] z-30 rounded-t-2xl">
                 
             <!-- Total Harga & Tombol Checkout -->
             <div class="bg-blue-50/70 px-5 py-3 flex justify-between items-center border-b border-gray-100 rounded-t-2xl">
@@ -153,7 +165,7 @@
             <!-- Bottom Navigation Bar -->
             <div class="bg-white border-t border-slate-100 px-6 py-2.5 flex justify-between items-center">
 
-              <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center {{ Request::is('HalamanDepanKasir*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
+              <a href="{{ url('/HalamanShop') }}" class="flex flex-col items-center {{ Request::is('HalamanDepanKasir*') || Request::is('HalamanShop*') ? 'text-emerald-600' : 'text-slate-400' }} gap-1 hover:text-emerald-600">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] font-semibold">Home</span>
               </a>

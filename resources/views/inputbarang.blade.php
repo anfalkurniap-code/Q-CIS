@@ -75,7 +75,7 @@
                                 type="text" 
                                 name="barcode"
                                 id="barcode"
-                                value="{{ old('barcode') }}"
+                                value="{{ old('barcode', $product->barcode ?? '') }}"
                                 placeholder="Scan atau ketik barcode..." 
                                 class="w-full bg-white border border-[#028b5e] text-xs font-mono-custom text-slate-800 pl-3.5 pr-10 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
                             />
@@ -92,7 +92,7 @@
                         <input 
                             type="text" 
                             name="product_name"
-                            value="{{ old('product_name') }}"
+                            value="{{ old('product_name', $product->name ?? '') }}"
                             required
                             placeholder="Contoh: Pallet Kayu Standard" 
                             class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-800 px-3.5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35] placeholder:text-slate-400"
@@ -105,9 +105,9 @@
                         <label class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase block mb-1">KATEGORI BARANG</label>
                         <div class="relative">
                             <select name="category_id" required class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-700 px-3.5 py-3 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#024d35]">
-                                <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>Pilih Kategori</option>
+                                <option value="" disabled {{ old('category_id', $product->category_id ?? '') ? '' : 'selected' }}>Pilih Kategori</option>
                                 @foreach($categories ?? [] as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name ?? $category->nama_kategori ?? $category->nama }}
                                     </option>
                                 @endforeach
@@ -124,7 +124,7 @@
                             <input 
                                 type="date" 
                                 name="expired_date"
-                                value="{{ old('expired_date') }}"
+                                value="{{ old('expired_date', $product->expired_date ?? '') }}"
                                 required
                                 class="w-full bg-white border border-slate-200 text-xs font-medium text-slate-800 px-3.5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
                             />
@@ -181,7 +181,7 @@
                                 <input 
                                     type="number" 
                                     name="purchase_price"
-                                    value="{{ old('purchase_price', 0) }}"
+                                    value="{{ old('purchase_price', $product->purchase_price ?? 0) }}"
                                     placeholder="0" 
                                     class="w-full bg-white border border-slate-200 text-xs font-bold text-slate-800 pl-9 pr-3 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"
                                 />
@@ -196,7 +196,7 @@
                                 <input 
                                     type="number" 
                                     name="selling_price"
-                                    value="{{ old('selling_price', 0) }}"
+                                    value="{{ old('selling_price', $product->price ?? 0) }}"
                                     required
                                     placeholder="0" 
                                     class="w-full bg-white border border-slate-200 text-xs font-bold text-slate-800 pl-9 pr-3 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#024d35]"

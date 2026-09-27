@@ -49,9 +49,8 @@
         <div class="print-only p-6 bg-white text-slate-800">
             <!-- Kop Surat -->
             <div class="text-center border-b-2 border-[#064e3b] pb-3 mb-4">
-                <h1 class="text-2xl font-extrabold text-[#064e3b] tracking-wider uppercase">Q-CIS SMK MART</h1>
-                <p class="text-xs text-slate-600 font-medium">Laporan Rekapitulasi Transaksi & Financial Summary</p>
-                <p class="text-[10px] text-slate-500">SMK Negeri kepala Toko • Email: info@smkmart.sch.id</p>
+                <h1 class="text-2xl font-extrabold text-[#064e3b] tracking-wider uppercase">Q-CIS </h1>
+                <p class="text-xs text-slate-600 font-medium">Laporan Rekapitulasi Transaksi </p>
             </div>
 
             <!-- Periode & Meta Info -->
@@ -182,11 +181,8 @@
         <!-- Header & Nav Top (Bagian Atas Tetap) -->
         <div class="p-4 pb-2 space-y-3 bg-[#f8faf9] shrink-0 no-print">
             <div class="flex items-center justify-between text-[#064e3b]">
-                <div class="flex items-center gap-2 font-bold text-sm">
-                    <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                    </svg>
-                    <span>Q-CIS SMK MART</span>
+                <div class="font-bold text-sm">
+                    <span>Q-CIS </span>
                 </div>
                 <!-- Tombol Printer / Cetak Laporan (Header Right Side) -->
                 <div class="relative">

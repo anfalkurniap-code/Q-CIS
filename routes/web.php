@@ -7,6 +7,7 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginKepalaTokoController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\profilekepalatokoController;
@@ -21,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
-use App\Http\Controllers\PendaftaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +39,6 @@ Route::get('/', function () {
 Route::get('/Tampilan-Awal', function () {
     return view('TampilanAwalLogin');
 })->name('Tampilan.Awal');
-
-Route::get('/TampilanAwalLogin', function () {
-    return view('TampilanAwalLogin');
-});
 
 Route::get('/TampilanAwalLogin', function () {
     return view('TampilanAwalLogin');

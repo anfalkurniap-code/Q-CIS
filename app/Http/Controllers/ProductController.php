@@ -13,14 +13,21 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     /**
-     * Tampilkan form input barang
+     * Tampilkan form input barang.
+     * Jika ada query parameter `product_id`, data produk akan di-auto-fill ke form.
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
         $suppliers = class_exists(Supplier::class) ? Supplier::all() : collect();
 
-        return view('inputbarang', compact('categories', 'suppliers'));
+        $product = null;
+
+        if ($request->filled('product_id')) {
+            $product = Product::find($request->query('product_id'));
+        }
+
+        return view('inputbarang', compact('categories', 'suppliers', 'product'));
     }
 
     /**

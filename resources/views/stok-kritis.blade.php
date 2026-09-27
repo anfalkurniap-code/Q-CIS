@@ -36,7 +36,7 @@
             <main class="p-4 space-y-4">
 
                 <!-- Card Total Stok Kritis Dinamis -->
-                <div class="bg-[#024d35] text-white rounded-2xl p-5 relative overflow-hidden shadow-sm">
+                <div class="bg-[#9B111E] text-white rounded-2xl p-5 relative overflow-hidden shadow-sm">
                     <i class="fa-solid fa-triangle-exclamation text-8xl absolute -right-3 -bottom-3 text-emerald-900/40 pointer-events-none"></i>
                     
                     <p class="text-[10px] font-extrabold tracking-widest text-emerald-300 uppercase mb-1">TOTAL STOK KRITIS</p>
@@ -57,7 +57,7 @@
                             $stok = $item->stock ?? 0;
                             $ambang = $item->threshold ?? 100;
                             // Persentase stok terhadap ambang batas (maksimal 100%)
-                            $percentage = min(100, max(0, ($ambang > 0 ? ($stok / $ambang) * 100 : 0)));
+                            $percentage = min(10, max(0, ($ambang > 0 ? ($stok / $ambang) * 100 : 0)));
                             $isVeryCritical = $percentage <= 30;
                         @endphp
 
@@ -103,8 +103,8 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('kelola.gudang') }}" class="block text-center w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
-                                Detail
+                            <a href="{{ route('products.create', ['product_id' => $item->id]) }}" class="block text-center w-full py-2 border-2 border-[#024d35] text-[#024d35] font-extrabold rounded-xl text-xs hover:bg-[#024d35] hover:text-white transition-colors">
+                                Tambah Stok
                             </a>
                         </div>
                     @empty
@@ -119,13 +119,7 @@
             </main>
         </div>
 
-        <!-- Floating Action Button (+ Plus) -->
-        <div class="absolute bottom-16 right-4 z-20">
-            <a href="{{ route('input.barang') }}" class="w-12 h-12 bg-[#024d35] text-white rounded-2xl flex items-center justify-center shadow-xl hover:bg-[#013826] transition-all">
-                <i class="fa-solid fa-plus text-lg"></i>
-            </a>
-        </div>
-
+       
         <!-- Bottom Navigation Bar (Fixed at bottom) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around z-30">
             <!-- Tab Dashboard -->
