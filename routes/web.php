@@ -7,6 +7,7 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginKepalaTokoController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\profilekepalatokoController;
@@ -21,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
-use App\Http\Controllers\PendaftaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -291,14 +291,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kepalatoko/staff', [dashboardkepalatokoController::class, 'staff'])->name('kepalatoko.staff');
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Detail Transaksi & Ringkasan Pesanan
 Route::get('/transaksi/{id}', [PembayaranController::class, 'show'])->name('transaksi.detail');
 Route::get('/Ringkasanpesanan/{id?}', [PembayaranController::class, 'show'])->name('ringkasan.pesanan');
-
-=======
->>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5
-=======
 Route::get('/Tampilanpendaftaran', [PendaftaranController::class, 'index']);
->>>>>>> 71d9b13f7e122fb0a67ac2ce4ecfb075671a8e54

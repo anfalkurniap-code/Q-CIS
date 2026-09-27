@@ -68,7 +68,7 @@
                             </div>
                             <!-- Nominal pengeluaran & action hint -->
                             <div class="text-right">
-                                <span class="text-rose-500 font-semibold text-sm block">- Rp {{ number_format($item->total_price ?? 0, 0, ',', '.') }}</span>
+                                <span class="text-emerald-600 font-semibold text-sm block">+ Rp {{ number_format($item->total_price ?? 0, 0, ',', '.') }}</span>
                                 <span class="text-[10px] text-gray-400 group-hover:text-emerald-600 flex items-center justify-end gap-1 mt-0.5">
                                     Detail <i class="fa-solid fa-chevron-right text-[8px]"></i>
                                 </span>

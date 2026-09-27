@@ -24,11 +24,7 @@ class TransactionController extends Controller
 
         return redirect()->route('pembayaran.berhasil')->with([
             'trx_id' => $trxId,
-<<<<<<< HEAD
-            'waktu'  => $waktu
-=======
             'waktu' => $waktu,
->>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5
         ]);
     }
 
@@ -36,7 +32,6 @@ class TransactionController extends Controller
     {
         return view('berhasil');
     }
-<<<<<<< HEAD
 
     // Menampilkan detail transaksi berdasarkan ID
     public function show($id = null)
@@ -48,6 +43,3 @@ class TransactionController extends Controller
         return view('Ringkasanpesanan', compact('transaksi'));
     }
 }
-=======
-}
->>>>>>> 8e3129cae8956f17d92deca875c8be449ebbe1b5
